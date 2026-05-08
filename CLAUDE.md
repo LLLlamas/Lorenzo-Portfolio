@@ -49,7 +49,8 @@ src/
 │   ├── sections/            ← Hero, About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
-│   │                          EntrySequence, FloatingGeometry, CustomCursor, ScanLine, Modal
+│   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
+│   │                          CustomCursor, ScanLine, Modal
 │   ├── nav/                 ← Header (3D hex-prism brand + 3D cube nav links), Footer (large mailto), ThemeToggle (tetrahedron icon)
 │   └── theme/               ← ThemeProvider (next-themes wrapper)
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH for all copy/data ***
@@ -72,9 +73,10 @@ src/
 | Hero headline / subhead | `src/content/copy.ts` → `copy.hero` |
 | About paragraphs / pull-quote | `src/content/copy.ts` → `copy.about` |
 | About portrait | Drop a real photo at `/public/about/portrait.{webp,jpg}` and replace `<AboutPlaceholder />` in `About.tsx` with `<Image>`. Layout uses 4:5 aspect — no reflow on swap |
-| Capability cards | `src/content/copy.ts` → `copy.capabilities.items` |
+| Capability cards | `src/content/copy.ts` → `copy.capabilities.items`. Each item has a `tags` array that drives the hover-revealed tech-pill row below the cards (`Capabilities.tsx`) |
 | A project card | `src/content/projects.ts` (one entry). Cover lives at `public/projects/<slug>.webp`; omit the `cover` field for projects without a screenshot — card falls back to a category-tinted gradient. Card click opens a modal showing `description`, `highlights`, `role`, `gallery`, and `link`. The "rest" grid auto-detects trailing gaps and renders a `WorkGapFiller` (LOADING placeholder) to fill them |
 | Add / replace a project screenshot | Drop the source file into `screenshots/<anything>.PNG`, add a `[filename, outputName]` row to `MAPPINGS` in `scripts/resize-screenshots.mjs` (use `<slug>` for the cover, `<slug>-1`, `<slug>-2`, … for gallery shots), then run `npm run resize-screenshots`. Outputs optimized webp to `public/projects/`. The `screenshots/` directory is gitignored — only the optimized webp is committed |
+| Add / replace a brand asset (e.g. logo) | Drop the source into `screenshots/<filename>.PNG`, add a row to `BRAND_MAPPINGS` in `scripts/resize-screenshots.mjs`, run `npm run resize-screenshots`. Outputs to `public/brand/<name>.webp` at 512px max, quality 92. The current llama logo lives at `public/brand/llama-logo.webp` and is rendered by `BrandHexPrism` in the Header |
 | A modal anywhere | `src/components/motion/Modal.tsx` is the generic primitive — backdrop fade + spring panel, slides up on mobile, ESC / click-outside / X close, body scroll lock, focus trap, **pauses Lenis + sets `data-lenis-prevent` so wheel scrolls the panel not the page**. Compose project-specific content inside it (see `src/components/sections/ProjectModal.tsx`) |
 | A price | `src/content/packages.ts` |
 | An FAQ | `src/content/faqs.ts` |
@@ -88,6 +90,7 @@ src/
 - Decorative CSS animations (Ken Burns, blob drift, soft pulse, hairline draw, loading-blink, cursor-breathe) are tagged `motion-decorative` so the global `@media (prefers-reduced-motion: reduce)` rule kills them outright
 - Lenis (smooth scroll) bypasses on touch devices and reduced-motion users — both via runtime checks in `SmoothScroll.tsx`
 - **`SmoothScroll` exposes `window.__lenis = { stop, start }`** so overlays (Modal) can pause/resume Lenis when they take over the scroll surface. Lenis runs on its own RAF loop, so `body.overflow:hidden` alone is not enough.
+- **`RotationSpeedSlider` exposes `window.__geoSpeed`** (number, 0–4, default 1) which `FloatingGeometry`'s RAF tick reads each frame to scale rotation deltas. Plumbing-via-global is the intentional pattern (matches `window.__lenis`); avoids prop-drilling through dynamic imports
 - **`Modal` panels must have `data-lenis-prevent`** so wheel events on the panel scroll the panel rather than bleeding into Lenis. Already wired in `Modal.tsx`.
 - Easings live as CSS custom properties: `--ease-out-expo`, `--ease-out-back`, `--ease-in-out-circ`, `--ease-physical`
 - The `Stagger` primitive's `childAs` prop must be `"li"` when wrapping inside `<ul>`/`<ol>` to keep HTML valid (see `src/components/sections/FAQ.tsx`)
@@ -108,7 +111,8 @@ src/
 | `ScanLine` | Thin accent rule that draws across when scrolled into viewport. Used above every `<SectionHeader>` eyebrow |
 | `Modal` | Generic dialog primitive. Pauses `window.__lenis`, sets `data-lenis-prevent` on the panel, body scroll lock, focus management |
 | `NavCube` (in `Header.tsx`) | True 3D cube nav link. 6 face divs (front/back/top/bottom/left/right) on a `transform-style: preserve-3d` parent. Sits FLAT at rest (`rotateY(0)`) — the 3D-ness reveals during the hover spin to `rotateY(180deg)`, ending on the accent-bordered back face. All faces use `backface-visibility: hidden` so only the camera-facing side renders (prevents the back-face label from bleeding through the front) |
-| `BrandHexPrism` (in `Header.tsx`) | 2-face hex prism for the brand mark. Each face is an SVG outline of a flat-top horizontal hexagon, sitting at ±depth/2 along Z. Same flat-at-rest / `rotateY(180deg)`-on-hover pattern as `NavCube`. `backface-visibility: hidden` is **load-bearing** here — without it the mirrored back-face label leaks through the transparent front face (the cubes hide this naturally with their opaque face backgrounds; the hex faces only have an SVG outline). No wrapping side faces — true hex sides require 6 rotated rects per edge, too much DOM for the visual gain |
+| `BrandHexPrism` (in `Header.tsx`) | 2-face flip card holding the chef-llama logo (`public/brand/llama-logo.webp`). Both faces render the same image — on hover the parent rotates `rotateY(180deg)` and the back face's combined rotation lands back at +Z, so the logo isn't mirrored when seen. Function name is historical (used to be a hex prism with text); the SVG hex outline was dropped when the logo replaced "Lorenzo Llamas" text. Square 4.5rem × 4.5rem container |
+| `RotationSpeedSlider` (in `motion/`) | Custom-styled discrete bar (range input, 0–4 in 0.5 steps, default 1) that adjusts the floating tetrahedron's rotation speed. Communicates with `FloatingGeometry` via the global `window.__geoSpeed` (read each RAF tick, multiplied into rotation deltas). No labels or numeric readout — just the bar. Hidden on touch + reduced-motion. Mounted in `Hero.tsx` just below the geometry on desktop |
 
 ## Theming
 
@@ -132,7 +136,8 @@ src/
 | `section-scan` | One-shot scan-line draw used by `<ScanLine>` |
 | `motion-decorative` | Tag for purely decorative animations — globally killed under reduced-motion |
 | `nav-cube` / `nav-cube__inner` / `nav-cube__face` (`--front` / `--back` / `--top` / `--bottom` / `--left` / `--right`) | CSS classes that build the 3D cube. Sized via `--cube-w` / `--cube-h` / `--cube-d` custom properties on the root |
-| `brand-hex` / `brand-hex__inner` / `brand-hex__face` / `brand-hex__svg` / `brand-hex__label` | CSS classes for the 3D hex prism. Sized via `--hex-w` / `--hex-h` / `--hex-d` custom properties on the root |
+| `brand-hex` / `brand-hex__inner` / `brand-hex__face` (`--front` / `--back`) | CSS classes for the brand mark's 2-face flip card. Sized via `--hex-w` / `--hex-h` / `--hex-d` custom properties on the root (currently 4.5rem square × 18px depth) |
+| `speed-slider` | Custom range input styling (track + thumb, both `::-webkit-` and `::-moz-` selectors). Used by `RotationSpeedSlider`. Track reads `--line`, thumb reads `--accent` |
 
 ## Build & deploy
 

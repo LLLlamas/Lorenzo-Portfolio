@@ -41,11 +41,12 @@ export function Button({
   size = 'md',
   href,
   className,
+  style: externalStyle,
   children,
   ...rest
 }: Props) {
   const cls = cn(base, variants[variant], sizes[size], className);
-  const style = sweepStyles[variant];
+  const style = { ...sweepStyles[variant], ...externalStyle };
 
   if (href) {
     const isExternal = /^https?:\/\//.test(href);

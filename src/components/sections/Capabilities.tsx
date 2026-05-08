@@ -1,12 +1,16 @@
+'use client';
+
+import { useState } from 'react';
 import { Globe, Layers, Smartphone } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { AnimatePresence, motion } from 'motion/react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { Stagger } from '@/components/motion/Stagger';
 import { copy } from '@/content/copy';
 
 const icons = [Globe, Layers, Smartphone];
 
 export function Capabilities() {
+  const [hovered, setHovered] = useState<number | null>(null);
+
   return (
     <section
       id="capabilities"
@@ -19,13 +23,36 @@ export function Capabilities() {
           subhead={copy.capabilities.subhead}
         />
 
-        <Stagger className="grid gap-6 md:grid-cols-3" step={0.1}>
+        <motion.div
+          className="grid gap-6 md:grid-cols-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1 } },
+          }}
+        >
           {copy.capabilities.items.map((item, i) => {
             const Icon = icons[i];
             return (
-              <Card
+              <motion.article
                 key={item.title}
-                className="group relative h-full overflow-hidden p-6 transition-transform duration-300 hover:-translate-y-1.5"
+                onHoverStart={() => setHovered(i)}
+                onHoverEnd={() => setHovered((current) => (current === i ? null : current))}
+                onFocus={() => setHovered(i)}
+                onBlur={() => setHovered((current) => (current === i ? null : current))}
+                tabIndex={0}
+                variants={{
+                  hidden: { opacity: 0, y: 18, filter: 'blur(6px)' },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: 'blur(0px)',
+                    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="card-glow group relative h-full overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none transition-transform duration-300 hover:-translate-y-1.5 focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <div className="grid size-10 place-items-center rounded-full bg-accent-soft text-accent transition-transform duration-300 group-hover:scale-110">
                   <Icon className="size-5" aria-hidden />
@@ -47,10 +74,55 @@ export function Capabilities() {
                   aria-hidden
                   className="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
                 />
-              </Card>
+              </motion.article>
             );
           })}
-        </Stagger>
+        </motion.div>
+
+        {/* Tech pills row — mirrors the card columns above. Hovering a card
+            reveals the corresponding column's pills with a small staggered
+            blur-resolve. Min-height keeps the layout from jumping. */}
+        <div
+          className="mt-6 grid min-h-[5rem] gap-6 md:min-h-[3.5rem] md:grid-cols-3"
+          aria-hidden
+        >
+          {copy.capabilities.items.map((item, i) => (
+            <div
+              key={item.title}
+              className="flex flex-wrap items-start gap-1.5"
+            >
+              <AnimatePresence>
+                {hovered === i
+                  ? item.tags.map((tag, j) => (
+                      <motion.span
+                        key={tag}
+                        initial={{ opacity: 0, y: 8, filter: 'blur(4px)' }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          filter: 'blur(0px)',
+                          transition: {
+                            duration: 0.35,
+                            delay: j * 0.045,
+                            ease: [0.16, 1, 0.3, 1],
+                          },
+                        }}
+                        exit={{
+                          opacity: 0,
+                          y: -4,
+                          filter: 'blur(2px)',
+                          transition: { duration: 0.18 },
+                        }}
+                        className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-accent"
+                      >
+                        {tag}
+                      </motion.span>
+                    ))
+                  : null}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

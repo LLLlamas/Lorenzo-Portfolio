@@ -21,17 +21,24 @@ export function ProjectModal({ project, onClose }: Props) {
   return (
     <Modal open={Boolean(project)} onClose={onClose} label={project?.title}>
       {project ? (
-        <article className="overflow-hidden">
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink md:right-4 md:top-4"
-          >
-            <X className="size-4" />
-          </button>
+        <>
+          {/* 0-height sticky wrapper sits at the top of the panel scroll
+              viewport and pins the X to the top-right as the user scrolls.
+              Lives outside <article> because article has overflow-hidden,
+              which would clip sticky behavior relative to the panel. */}
+          <div className="sticky top-0 z-20 h-0">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="pointer-events-auto absolute right-3 top-3 grid size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink md:right-4 md:top-4"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
 
-          <ProjectCover project={project} />
+          <article className="overflow-hidden">
+            <ProjectCover project={project} />
 
           <div className="relative px-5 pb-7 pt-6 md:px-8 md:pb-9 md:pt-8">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
@@ -117,7 +124,8 @@ export function ProjectModal({ project, onClose }: Props) {
               </section>
             ) : null}
           </div>
-        </article>
+          </article>
+        </>
       ) : null}
     </Modal>
   );

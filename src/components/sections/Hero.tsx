@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
+import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { copy } from '@/content/copy';
 
 const FloatingGeometry = dynamic(
@@ -32,15 +33,28 @@ export function Hero() {
         }}
       />
 
-      {/* Floating tetrahedron — sits behind copy, far right */}
+      {/* Floating tetrahedron — sits behind copy, far right.
+          top-12 (was top-1/4) keeps the bottom clear of the section's
+          overflow-hidden clip on shorter hero stacks. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute right-[-4%] top-1/4 -z-10 hidden size-[420px] md:block lg:size-[560px]"
+        className="pointer-events-none absolute right-[-4%] top-12 -z-10 hidden size-[420px] md:block lg:size-[520px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <FloatingGeometry className="h-full w-full" />
+      </motion.div>
+
+      {/* Speed control for the floating tetrahedron. Sits just below the
+          geometry on the right; itself hidden on touch + reduced-motion. */}
+      <motion.div
+        className="absolute right-[6%] top-[480px] z-10 hidden md:block lg:top-[580px]"
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <RotationSpeedSlider />
       </motion.div>
 
       <div className="mx-auto max-w-5xl">

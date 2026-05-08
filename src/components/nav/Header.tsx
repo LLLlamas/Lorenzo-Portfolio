@@ -1,9 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
-import { cn } from '@/lib/utils';
+import { cn, withBasePath } from '@/lib/utils';
 
 const navLinks = [
   { href: '/#work', label: 'Work' },
@@ -81,13 +82,13 @@ function NavCube({ href, label }: { href: string; label: string }) {
 }
 
 /**
- * 2-face hex prism. Each face is an SVG outline of a flat-top horizontal
- * hexagon, with the brand label centered in front of it. The two faces
- * sit at ±depth/2 along Z. Same hover flip as NavCube — rotateY +180.
+ * Square 2-face flip card holding the chef-llama brand logo. Front + back
+ * both render the same image; on hover the parent rotates rotateY(180deg)
+ * for a card-flip flourish (and the back face's combined rotation lands
+ * back at +Z so the logo isn't mirrored). `backface-visibility: hidden`
+ * on each face means only the camera-facing side renders.
  */
 function BrandHexPrism() {
-  const hexPoints = '35,5 165,5 195,50 165,95 35,95 5,50';
-
   return (
     <Link
       href="/"
@@ -96,42 +97,23 @@ function BrandHexPrism() {
     >
       <div className="brand-hex__inner">
         <div className="brand-hex__face brand-hex__face--front">
-          <svg
-            aria-hidden
-            className="brand-hex__svg"
-            viewBox="0 0 200 100"
-            preserveAspectRatio="none"
-          >
-            <polygon
-              points={hexPoints}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-          <span className="brand-hex__label text-base md:text-[17px]">
-            Lorenzo&nbsp;Llamas
-          </span>
+          <Image
+            src={withBasePath('/brand/llama-logo.webp')}
+            alt=""
+            width={512}
+            height={512}
+            priority
+            className="size-full object-contain"
+          />
         </div>
         <div className="brand-hex__face brand-hex__face--back">
-          <svg
-            aria-hidden
-            className="brand-hex__svg"
-            viewBox="0 0 200 100"
-            preserveAspectRatio="none"
-          >
-            <polygon
-              points={hexPoints}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-          <span className="brand-hex__label text-base text-accent md:text-[17px]">
-            Lorenzo&nbsp;Llamas
-          </span>
+          <Image
+            src={withBasePath('/brand/llama-logo.webp')}
+            alt=""
+            width={512}
+            height={512}
+            className="size-full object-contain"
+          />
         </div>
       </div>
     </Link>

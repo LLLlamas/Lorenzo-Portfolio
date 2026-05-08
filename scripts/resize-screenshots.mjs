@@ -22,6 +22,7 @@ const ROOT = path.resolve(__dirname, '..');
 
 const SRC_DIR = path.join(ROOT, 'screenshots');
 const OUT_DIR = path.join(ROOT, 'public', 'projects');
+const BRAND_DIR = path.join(ROOT, 'public', 'brand');
 
 /**
  * [sourceFilename, outputName]
@@ -45,12 +46,25 @@ const MAPPINGS = [
   ['train-watcher.PNG', 'train-watcher'],
 ];
 
+/**
+ * Brand assets — square logos, smaller max dim, output to public/brand/.
+ *
+ * [sourceFilename, outputName]
+ */
+const BRAND_MAPPINGS = [
+  ['Official_Llama_Logo.PNG', 'llama-logo'],
+];
+
 const MAX_WIDTH = 1600;
 const MAX_HEIGHT = 1200;
 const WEBP_QUALITY = 82;
 
+const BRAND_MAX = 512;
+const BRAND_QUALITY = 92;
+
 async function main() {
   await fs.mkdir(OUT_DIR, { recursive: true });
+  await fs.mkdir(BRAND_DIR, { recursive: true });
 
   const results = [];
   for (const [filename, slug] of MAPPINGS) {
@@ -87,13 +101,46 @@ async function main() {
     });
   }
 
+  for (const [filename, slug] of BRAND_MAPPINGS) {
+    const inPath = path.join(SRC_DIR, filename);
+    const outPath = path.join(BRAND_DIR, `${slug}.webp`);
+
+    try {
+      await fs.access(inPath);
+    } catch {
+      console.warn(`skip brand: ${filename} (not found)`);
+      continue;
+    }
+
+    const inSize = (await fs.stat(inPath)).size;
+    const meta = await sharp(inPath).metadata();
+    await sharp(inPath)
+      .resize(BRAND_MAX, BRAND_MAX, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+      .webp({ quality: BRAND_QUALITY })
+      .toFile(outPath);
+
+    const outSize = (await fs.stat(outPath)).size;
+    const outMeta = await sharp(outPath).metadata();
+    results.push({
+      filename,
+      slug: `brand/${slug}`,
+      inSize,
+      outSize,
+      inDims: `${meta.width}×${meta.height}`,
+      outDims: `${outMeta.width}×${outMeta.height}`,
+    });
+  }
+
   console.log('\nResults:\n');
   for (const r of results) {
     const inKb = (r.inSize / 1024).toFixed(0);
     const outKb = (r.outSize / 1024).toFixed(0);
     const ratio = ((r.outSize / r.inSize) * 100).toFixed(0);
     console.log(
-      `  ${r.slug.padEnd(20)} ${r.inDims.padEnd(12)} → ${r.outDims.padEnd(12)}  ${inKb.padStart(5)}kb → ${outKb.padStart(5)}kb (${ratio}%)`,
+      `  ${r.slug.padEnd(24)} ${r.inDims.padEnd(12)} → ${r.outDims.padEnd(12)}  ${inKb.padStart(5)}kb → ${outKb.padStart(5)}kb (${ratio}%)`,
     );
   }
   console.log();

@@ -110,8 +110,10 @@ export function FloatingGeometry({ className }: { className?: string }) {
         const dt = Math.min((now - prev) / 1000, 0.1);
         prev = now;
         if (visible) {
-          group.rotation.x += dt * 0.12;
-          group.rotation.y += dt * 0.18;
+          // window.__geoSpeed is set by RotationSpeedSlider (default 1, 0–4).
+          const speed = window.__geoSpeed ?? 1;
+          group.rotation.x += dt * 0.12 * speed;
+          group.rotation.y += dt * 0.18 * speed;
           group.position.y = Math.sin(now * 0.0006) * 0.15;
           renderer.render(scene, camera);
         }

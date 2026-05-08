@@ -78,7 +78,8 @@ export function Packages() {
                 <Button
                   href="/contact"
                   variant={pkg.popular ? 'accent' : 'primary'}
-                  className="w-full"
+                  className="cascade-step cascade-1 w-full"
+                  style={{ transitionDelay: `${240 + pkg.features.length * 40}ms` }}
                 >
                   Start a {pkg.name} project
                 </Button>

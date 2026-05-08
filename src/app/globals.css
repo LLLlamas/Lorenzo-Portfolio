@@ -286,7 +286,7 @@ html[data-cursor="custom"] *::after {
    backface-visibility: hidden so only the camera-facing side renders. */
 
 .nav-cube {
-  --cube-w: 7.5rem;
+  --cube-w: 8.5rem;
   --cube-h: 3rem;
   --cube-d: 16px;
   display: inline-block;
@@ -314,8 +314,10 @@ html[data-cursor="custom"] *::after {
   justify-content: center;
   background: var(--bg);
   border: 1px solid var(--line);
-  font-size: 0.875rem;
-  color: var(--ink-soft);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transition: border-color 350ms var(--ease-out-expo), color 350ms var(--ease-out-expo);
@@ -372,13 +374,12 @@ html[data-cursor="custom"] *::after {
   transform-origin: right;
 }
 
-/* Brand hex prism — 2 hex faces (SVG outline) with depth between them.
-   No wrapping side faces (true hex prism sides require 6 rotated rects per
-   edge — too much DOM); the front/back separation through perspective is
+/* Brand mark — 2-face flip card holding the llama logo. Square. No
+   wrapping side faces; the front/back separation through perspective is
    enough to read as 3D when it spins. */
 .brand-hex {
-  --hex-w: 13rem;
-  --hex-h: 4rem;
+  --hex-w: 4.5rem;
+  --hex-h: 4.5rem;
   --hex-d: 18px;
   display: inline-block;
   width: var(--hex-w);
@@ -415,21 +416,6 @@ html[data-cursor="custom"] *::after {
 .brand-hex__face--back {
   transform: translateZ(calc(var(--hex-d) / -2)) rotateY(180deg);
 }
-.brand-hex__svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.brand-hex__label {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  white-space: nowrap;
-}
 
 /* ─── Project-card sequential cascade on hover ───
    Title bolds first, then tagline, then each tag chip lights up in accent
@@ -446,6 +432,65 @@ html[data-cursor="custom"] *::after {
 .group:hover .cascade-3 {
   color: var(--accent);
   border-color: var(--line-accent);
+}
+
+/* ─── Custom range slider — used by RotationSpeedSlider ─── */
+.speed-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  height: 13px;
+  outline: none;
+}
+.speed-slider::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--line);
+  border-radius: 999px;
+}
+.speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-elevated);
+  cursor: grab;
+  transition: transform 200ms var(--ease-out-expo);
+}
+.speed-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+.speed-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.25);
+}
+.speed-slider::-moz-range-track {
+  height: 3px;
+  background: var(--line);
+  border: none;
+  border-radius: 999px;
+}
+.speed-slider::-moz-range-thumb {
+  height: 13px;
+  width: 13px;
+  border: 2px solid var(--bg-elevated);
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: grab;
+  transition: transform 200ms var(--ease-out-expo);
+}
+.speed-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+.speed-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.speed-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 /* ─── Button "sweep" effect ───
