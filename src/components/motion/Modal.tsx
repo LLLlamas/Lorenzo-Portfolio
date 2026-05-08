@@ -81,7 +81,7 @@ export function Modal({ open, onClose, children, label }: Props) {
             aria-modal="true"
             aria-label={label}
             tabIndex={-1}
-            className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-2xl border border-line bg-bg-elevated shadow-2xl outline-none md:max-h-[90vh] md:rounded-2xl"
+            className="relative max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-t-2xl border border-line bg-bg-elevated shadow-2xl outline-none md:max-h-[90vh] md:rounded-2xl"
             initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
             animate={prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}

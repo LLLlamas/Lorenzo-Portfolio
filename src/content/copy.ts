@@ -29,7 +29,17 @@ export const copy = {
   work: {
     eyebrow: 'Work',
     headline: 'Selected projects.',
-    subhead: 'Eight things I have shipped. Featured three on top.',
+    subhead: 'Web, React, and iOS work grouped so the screenshots can breathe.',
+  },
+
+  projectModal: {
+    overview: 'Overview',
+    highlights: 'Highlights',
+    stack: 'Stack',
+    role: 'Role',
+    year: 'Year',
+    more: 'More views',
+    visitLive: 'Visit live',
   },
 
   workGapFiller: {

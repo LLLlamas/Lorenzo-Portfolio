@@ -15,6 +15,7 @@ import { projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 
 const COLS = 3;
+const FEATURED_SPAN_CLASS = 'md:col-span-2';
 
 const SPAN_CLASS: Record<1 | 2, string> = {
   1: 'md:col-span-1',
@@ -26,6 +27,7 @@ export function Work() {
 
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
+  const featuredChildClassName = featured.map(() => FEATURED_SPAN_CLASS);
 
   const gapCount = rest.length > 0 ? (COLS - (rest.length % COLS)) % COLS : 0;
   const showGapFiller = gapCount === 1 || gapCount === 2;
@@ -44,7 +46,11 @@ export function Work() {
             subhead={copy.work.subhead}
           />
 
-          <Stagger className="grid gap-6 md:grid-cols-3" step={0.08}>
+          <Stagger
+            className="grid gap-6 md:grid-cols-4"
+            step={0.08}
+            childClassName={featuredChildClassName}
+          >
             {featured.map((project) => (
               <ProjectCard
                 key={project.slug}
@@ -92,7 +98,12 @@ type ProjectCardProps = {
 function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) {
   const hasCover = Boolean(project.cover);
   const fit = project.coverFit ?? 'cover';
-  const isPhone = project.category === 'mobile' && fit === 'contain';
+  const isPhone = isPhoneProject(project);
+  let coverAspect = 'aspect-[16/10]';
+
+  if (isPhone) {
+    coverAspect = featured ? 'aspect-[5/4]' : 'aspect-[4/3]';
+  }
 
   return (
     <Card
@@ -110,7 +121,8 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
         {/* Cover */}
         <div
           className={cn(
-            'relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius-card)] bg-gradient-to-br',
+            'relative overflow-hidden rounded-t-[var(--radius-card)] bg-gradient-to-br',
+            coverAspect,
             project.category === 'mobile' && 'from-accent-soft to-bg',
             project.category === 'web' && 'from-accent-secondary-soft to-bg',
             project.category === 'game' && 'from-accent-soft via-accent-secondary-soft to-bg',
@@ -118,18 +130,7 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
         >
           {hasCover ? (
             isPhone ? (
-              <div className="absolute inset-0">
-                <PhoneFrame className="py-3 md:py-4">
-                  <Image
-                    src={withBasePath(project.cover!)}
-                    alt={`${project.title} screenshot`}
-                    fill
-                    sizes="(min-width: 768px) 200px, 40vw"
-                    className="object-cover"
-                    priority={featured}
-                  />
-                </PhoneFrame>
-              </div>
+              <PhoneCoverPreview project={project} featured={featured} />
             ) : (
               <div
                 className={cn(
@@ -144,7 +145,7 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
                   sizes="(min-width: 768px) 33vw, 100vw"
                   className={cn(
                     fit === 'cover' && 'object-cover object-top',
-                    fit === 'contain' && 'object-contain p-4',
+                    fit === 'contain' && 'object-contain p-3 md:p-5',
                   )}
                   priority={featured}
                 />
@@ -163,7 +164,12 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
         <div className={cn('p-5', featured && 'md:p-6')}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="font-display text-lg font-semibold tracking-tight text-ink">
+              <h3
+                className={cn(
+                  'font-display text-lg font-semibold tracking-tight text-ink',
+                  featured && 'md:text-xl',
+                )}
+              >
                 {project.title}
               </h3>
               <p className="mt-1 text-sm text-ink-soft">{project.tagline}</p>
@@ -182,6 +188,48 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
         </div>
       </button>
     </Card>
+  );
+}
+
+function isPhoneProject(project: Project) {
+  return project.category === 'mobile' && project.coverFit === 'contain';
+}
+
+function PhoneCoverPreview({
+  project,
+  featured,
+}: {
+  project: Project;
+  featured: boolean;
+}) {
+  const shots = [
+    project.cover ? { src: project.cover, caption: `${project.title} screenshot` } : null,
+    ...(project.gallery ?? []).filter((image) => image.device === 'phone'),
+  ].filter(Boolean).slice(0, 2) as { src: string; caption?: string }[];
+
+  return (
+    <div className="absolute inset-0 flex items-center justify-center gap-4 px-5 py-4 md:gap-6 md:px-8 md:py-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,var(--accent-soft),transparent_58%)]" />
+      {shots.map((shot, index) => (
+        <PhoneFrame
+          key={`${shot.src}-${index}`}
+          className={cn(
+            'relative h-full min-h-0',
+            featured ? 'max-h-[390px]' : 'max-h-[280px]',
+            index > 0 && 'hidden translate-y-5 sm:grid',
+          )}
+        >
+          <Image
+            src={withBasePath(shot.src)}
+            alt={shot.caption ?? `${project.title} screenshot ${index + 1}`}
+            fill
+            sizes="(min-width: 768px) 180px, 44vw"
+            className="object-cover"
+            priority={featured && index === 0}
+          />
+        </PhoneFrame>
+      ))}
+    </div>
   );
 }
 
