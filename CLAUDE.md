@@ -86,6 +86,7 @@ src/
 - The `Stagger` primitive accepts a `childClassName: ReadonlyArray<string | undefined>` for per-child styling (e.g. variable col-spans on a trailing gap-filler). Function form is **not** supported because it can't cross the server→client component boundary in `output: 'export'` builds
 - Project covers: `coverFit: 'cover'` for landscape screenshots (default — fills the 16:10 card, crops as needed); `coverFit: 'contain'` for portrait / mobile screenshots (fits inside the card with padding so the whole screen is visible)
 - The hero `.split-word` mask has `padding-top: 0.18em` / `padding-bottom: 0.22em` (with negative margins to compensate) to prevent ascender/descender clipping during the word reveal animation
+- **`next/image` src + basePath:** because `images.unoptimized: true` bypasses Next's loader, `basePath` is **not** auto-prepended to image `src`. Always wrap with `withBasePath()` from `@/lib/utils` for any `/public/*` asset rendered through `next/image` — otherwise the deployed site emits bare `/foo.webp` paths that 404 under `/Lorenzo-Portfolio/`. (Plain `<img>` and CSS `background-image` have the same issue.) `_next/*` chunks are NOT affected — Next.js handles those correctly.
 - New motion primitive? Mirror the reduced-motion gate from `Reveal.tsx` and `Stagger.tsx`
 
 ## Theming
