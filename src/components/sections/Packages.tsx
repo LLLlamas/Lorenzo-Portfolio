@@ -23,7 +23,7 @@ export function Packages() {
             <Card
               key={pkg.name}
               className={cn(
-                'relative p-7 transition-all duration-300 md:p-8',
+                'group relative p-7 transition-all duration-300 md:p-8',
                 pkg.popular &&
                   'border-accent/40 shadow-[0_0_0_1px_var(--accent-soft)] ring-1 ring-accent/20',
               )}
@@ -35,7 +35,10 @@ export function Packages() {
               ) : null}
 
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-display text-2xl font-semibold tracking-tight text-ink">
+                <h3
+                  className="cascade-step cascade-1 font-display text-2xl font-semibold tracking-tight text-ink"
+                  style={{ transitionDelay: '0ms' }}
+                >
                   {pkg.name}
                 </h3>
                 <span className="font-mono text-xs uppercase tracking-[0.12em] text-ink-quiet">
@@ -43,17 +46,30 @@ export function Packages() {
                 </span>
               </div>
 
-              <p className="mt-1 text-sm text-ink-soft">{pkg.description}</p>
+              <p
+                className="cascade-step cascade-2 mt-1 text-sm text-ink-soft"
+                style={{ transitionDelay: '80ms' }}
+              >
+                {pkg.description}
+              </p>
 
-              <p className="mt-6 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+              <p
+                className="cascade-step cascade-1 mt-6 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl"
+                style={{ transitionDelay: '160ms' }}
+              >
                 {pkg.price}
               </p>
 
               <ul className="mt-6 space-y-2.5 text-sm text-ink-soft">
-                {pkg.features.map((feat) => (
+                {pkg.features.map((feat, i) => (
                   <li key={feat} className="flex gap-3">
                     <Check className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
-                    <span className="leading-relaxed">{feat}</span>
+                    <span
+                      className="cascade-step cascade-2 leading-relaxed"
+                      style={{ transitionDelay: `${240 + i * 40}ms` }}
+                    >
+                      {feat}
+                    </span>
                   </li>
                 ))}
               </ul>

@@ -107,8 +107,8 @@ src/
 | `CustomCursor` | Golden/accent dot + lerping reticle ring. Sets `data-cursor="custom"` on `<html>` so global CSS hides the system cursor. Auto-disabled on touch + reduced-motion. **`z-[120]`** — sits above modals (z-100) |
 | `ScanLine` | Thin accent rule that draws across when scrolled into viewport. Used above every `<SectionHeader>` eyebrow |
 | `Modal` | Generic dialog primitive. Pauses `window.__lenis`, sets `data-lenis-prevent` on the panel, body scroll lock, focus management |
-| `NavCube` (in `Header.tsx`) | True 3D cube nav link. 6 face divs (front/back/top/bottom/left/right) on a `transform-style: preserve-3d` parent. Persistent `rotateX(-12) rotateY(-15)` keeps depth visible; hover adds `+180deg` to Y for a card flip to the back face (accent-bordered) |
-| `BrandHexPrism` (in `Header.tsx`) | 2-face hex prism for the brand mark. Each face is an SVG outline of a flat-top horizontal hexagon, sitting at ±depth/2 along Z. Same hover Y-flip pattern. No wrapping side faces — true hex sides require 6 rotated rects per edge, too much DOM for the visual gain |
+| `NavCube` (in `Header.tsx`) | True 3D cube nav link. 6 face divs (front/back/top/bottom/left/right) on a `transform-style: preserve-3d` parent. Sits FLAT at rest (`rotateY(0)`) — the 3D-ness reveals during the hover spin to `rotateY(180deg)`, ending on the accent-bordered back face. All faces use `backface-visibility: hidden` so only the camera-facing side renders (prevents the back-face label from bleeding through the front) |
+| `BrandHexPrism` (in `Header.tsx`) | 2-face hex prism for the brand mark. Each face is an SVG outline of a flat-top horizontal hexagon, sitting at ±depth/2 along Z. Same flat-at-rest / `rotateY(180deg)`-on-hover pattern as `NavCube`. `backface-visibility: hidden` is **load-bearing** here — without it the mirrored back-face label leaks through the transparent front face (the cubes hide this naturally with their opaque face backgrounds; the hex faces only have an SVG outline). No wrapping side faces — true hex sides require 6 rotated rects per edge, too much DOM for the visual gain |
 
 ## Theming
 
@@ -127,7 +127,7 @@ src/
 |---|---|
 | `card-glow` | Soft accent shadow + accent border on hover. Baked into `<Card>`. Don't apply twice |
 | `btn-sweep` | Accent-color sweep slides in from the left on hover. Drives `<Button>` and the header CTA. Reads `--sweep-bg` (default `var(--accent)`); pass `style={{ ['--sweep-bg' as never]: 'var(--ink)' }}` to invert. **Replaced** the old `btn-glow` (which produced ugly double-ring outlines — don't reintroduce it) |
-| `cascade-step` + `cascade-1` / `cascade-2` / `cascade-3` | Project-card sequential bold cascade on hover. Title bolds → tagline bolds → tag chips light up accent. Per-element `transitionDelay` inline-style controls the wave timing |
+| `cascade-step` + `cascade-1` / `cascade-2` / `cascade-3` | Sequential bold/brighten/accent cascade on `.group:hover`. `cascade-1` → font-weight 800; `cascade-2` → font-weight 600 + color brightens to `--ink`; `cascade-3` → color shifts to `--accent` + border-color to `--line-accent` (designed for `<Tag>` chips). Per-element `transitionDelay` inline-style controls the wave timing. Used on Work cards (title → tagline → tag chips) and Package cards (name → description → price → feature lines) |
 | `loading-blink` | 1.6s steps blink for "LOADING" placeholder text |
 | `section-scan` | One-shot scan-line draw used by `<ScanLine>` |
 | `motion-decorative` | Tag for purely decorative animations — globally killed under reduced-motion |
@@ -161,7 +161,7 @@ npm run typecheck  # tsc --noEmit
 
 There is **no active-section indicator** — the user removed it. Nav links don't change appearance based on scroll. If you ever need it back, the right pattern is a scroll-driven check (rAF-throttled) for whichever section straddles a "reading line" ≈33% from the top of the viewport — not IntersectionObserver thresholds, which behave poorly on variable-height sections.
 
-Header is **`h-24`** (the 3D hex prism + cubes need extra vertical room for perspective + tilt). Coupling: `<main>` uses `pt-24`, Lenis anchor scroll offset is `-96`, and section `scroll-margin-top` is `6rem`. **Change one, change all four.**
+Header is **`h-24`** (the 3D hex prism + cubes need extra vertical room for perspective during the hover flip). Coupling: `<main>` uses `pt-24`, Lenis anchor scroll offset is `-96`, and section `scroll-margin-top` is `6rem`. **Change one, change all four.**
 
 ## Phase status
 
@@ -207,7 +207,7 @@ Header is **`h-24`** (the 3D hex prism + cubes need extra vertical room for pers
 - Don't reintroduce `btn-glow` — it produced a double-ring outline that read as ugly. Use `btn-sweep`
 - Don't import `three` synchronously anywhere outside `FloatingGeometry.tsx` — it's only allowed there because the component is dynamic-imported with `ssr: false`. Synchronous import will pull ~150 kB into First Load JS
 - Don't import `@react-three/fiber` or `@react-three/drei` — they were tried and removed; raw three.js is the chosen path
-- Don't change the Header's `h-24` without also updating `<main>` `pt-24`, the Lenis anchor offset (`SmoothScroll.tsx` `offset: -96`), and section `scroll-margin-top: 6rem`. The 3D cubes/hex prism need the extra vertical room for perspective + always-on tilt
+- Don't change the Header's `h-24` without also updating `<main>` `pt-24`, the Lenis anchor offset (`SmoothScroll.tsx` `offset: -96`), and section `scroll-margin-top: 6rem`. The 3D cubes/hex prism need the extra vertical room for perspective during the hover flip
 - Don't reintroduce the active-section indicator (the pixel/dot under nav links). The user explicitly removed it. If you must add a "you are here" cue back, ask first
 - Don't switch `next-themes` `defaultTheme` away from `'dark'` without checking the FloatingGeometry CSS vars and the EntrySequence radial-glow values still read sensibly under the new default
 
