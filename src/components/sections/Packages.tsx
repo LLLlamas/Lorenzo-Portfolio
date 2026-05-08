@@ -2,6 +2,8 @@ import { Check } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Button } from '@/components/ui/Button';
+import { Stagger } from '@/components/motion/Stagger';
+import { Reveal } from '@/components/motion/Reveal';
 import { copy } from '@/content/copy';
 import { packages, modifiers } from '@/content/packages';
 import { cn } from '@/lib/utils';
@@ -16,17 +18,18 @@ export function Packages() {
           subhead={copy.packages.subhead}
         />
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <Stagger className="grid gap-6 md:grid-cols-2" step={0.12}>
           {packages.map((pkg) => (
             <Card
               key={pkg.name}
               className={cn(
-                'relative p-7 md:p-8',
-                pkg.popular && 'border-accent/40 ring-1 ring-accent/20',
+                'relative p-7 transition-all duration-300 md:p-8',
+                pkg.popular &&
+                  'border-accent/40 shadow-[0_0_0_1px_var(--accent-soft)] ring-1 ring-accent/20',
               )}
             >
               {pkg.popular ? (
-                <span className="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent-on">
+                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent-on">
                   Most projects land here
                 </span>
               ) : null}
@@ -66,9 +69,9 @@ export function Packages() {
               </div>
             </Card>
           ))}
-        </div>
+        </Stagger>
 
-        <div className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
+        <Reveal as="div" className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
             Modifiers
           </p>
@@ -83,7 +86,7 @@ export function Packages() {
               </div>
             ))}
           </dl>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

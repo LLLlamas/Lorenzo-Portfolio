@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { Reveal } from '@/components/motion/Reveal';
 
 type Props = {
   eyebrow?: string;
@@ -17,7 +18,8 @@ export function SectionHeader({
   className,
 }: Props) {
   return (
-    <div
+    <Reveal
+      as="div"
       className={cn(
         'mb-12 flex flex-col gap-3',
         align === 'center' && 'items-center text-center',
@@ -37,6 +39,6 @@ export function SectionHeader({
           {subhead}
         </p>
       ) : null}
-    </div>
+    </Reveal>
   );
 }

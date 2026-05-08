@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/Button';
+import { Reveal } from '@/components/motion/Reveal';
 import { copy } from '@/content/copy';
 
 export function ContactCTA() {
   return (
     <section id="contact-cta" className="px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-4xl text-center">
+      <Reveal as="div" className="mx-auto max-w-4xl text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
           {copy.contactCta.eyebrow}
         </p>
@@ -29,7 +30,7 @@ export function ContactCTA() {
             {copy.meta.email}
           </Button>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

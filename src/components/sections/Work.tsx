@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Tag } from '@/components/ui/Tag';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { Stagger } from '@/components/motion/Stagger';
 import { copy } from '@/content/copy';
 import { projects, type Project } from '@/content/projects';
 import { cn } from '@/lib/utils';
@@ -19,17 +20,17 @@ export function Work() {
           subhead={copy.work.subhead}
         />
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <Stagger className="grid gap-6 md:grid-cols-3" step={0.08}>
           {featured.map((project) => (
             <ProjectCard key={project.slug} project={project} featured />
           ))}
-        </div>
+        </Stagger>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <Stagger className="mt-6 grid gap-6 md:grid-cols-3" step={0.06} delay={0.1}>
           {rest.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -52,10 +53,19 @@ function ProjectCard({
           project.category === 'game' && 'from-accent-soft via-accent-secondary-soft to-bg',
         )}
       >
-        <div className="absolute inset-0 grid place-items-center">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
-            Screenshot pending
-          </span>
+        {/* Inner layer that takes the Ken Burns motion on featured cards.
+            Once real screenshots land, swap the gradient for an <img> here. */}
+        <div
+          className={cn(
+            'absolute inset-0',
+            featured && 'ken-burns motion-decorative',
+          )}
+        >
+          <div className="absolute inset-0 grid place-items-center">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+              Screenshot pending
+            </span>
+          </div>
         </div>
       </div>
 
@@ -69,7 +79,7 @@ function ProjectCard({
         {project.link ? (
           <ArrowUpRight
             aria-hidden
-            className="size-4 shrink-0 text-ink-quiet transition-colors group-hover:text-ink"
+            className="size-4 shrink-0 text-ink-quiet transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
           />
         ) : null}
       </div>
@@ -83,7 +93,7 @@ function ProjectCard({
   );
 
   const cardClass = cn(
-    'group block p-5 transition-shadow hover:shadow-sm',
+    'group block p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md',
     featured && 'md:p-6',
   );
 

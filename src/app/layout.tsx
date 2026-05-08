@@ -3,6 +3,8 @@ import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Header } from '@/components/nav/Header';
 import { Footer } from '@/components/nav/Footer';
+import { ScrollProgress } from '@/components/motion/ScrollProgress';
+import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { copy } from '@/content/copy';
 import './globals.css';
 
@@ -63,6 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-dvh bg-bg text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SmoothScroll />
+          <ScrollProgress />
           <Header />
           <main className="pt-16">{children}</main>
           <Footer />
