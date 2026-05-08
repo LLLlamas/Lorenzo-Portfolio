@@ -247,15 +247,14 @@ function WorkGapFiller({ wide }: { wide: boolean }) {
         wide ? 'flex-col md:flex-row md:items-center md:gap-10' : 'flex-col items-center justify-center text-center',
       )}
     >
-      {/* Aspect spacer so the LOADING block matches a real card cover */}
       <div className={cn('flex flex-col items-start gap-3', wide ? 'md:flex-1' : 'items-center')}>
         <span
-          className="loading-blink font-mono text-[11px] uppercase tracking-[0.32em] text-accent"
+          className="loading-blink font-mono text-[10px] uppercase tracking-[0.18em] text-accent"
           aria-hidden
         >
-          LOADING
+          {copy.workGapFiller.eyebrow}
         </span>
-        <p className="font-display text-2xl tracking-[0.04em] text-ink md:text-3xl">
+        <p className="font-display text-xl font-semibold tracking-tight text-ink md:text-2xl">
           {copy.workGapFiller.headline}
         </p>
         <p className={cn('text-sm text-ink-soft', wide ? 'max-w-md' : 'max-w-xs')}>
@@ -265,7 +264,7 @@ function WorkGapFiller({ wide }: { wide: boolean }) {
 
       <span
         className={cn(
-          'inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-accent transition-transform duration-200 group-hover:translate-x-0.5',
+          'inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-transform duration-200 group-hover:translate-x-0.5',
           wide ? 'mt-0 md:shrink-0' : 'mt-5',
         )}
       >

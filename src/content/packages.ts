@@ -10,7 +10,7 @@ export type PricingPackage = {
 export const packages: PricingPackage[] = [
   {
     name: 'Spark',
-    price: 'Starting at $2,000',
+    price: 'Starting at $1,200',
     cadence: '~1–2 weeks',
     description: 'A landing page, single-purpose site, or small web tool.',
     popular: true,
@@ -25,7 +25,7 @@ export const packages: PricingPackage[] = [
   },
   {
     name: 'Studio',
-    price: 'Starting at $6,500',
+    price: 'Starting at $4,500',
     cadence: '~3–5 weeks',
     description: 'A bigger site, web tool, or focused web app.',
     features: [

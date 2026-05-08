@@ -13,10 +13,10 @@ export default function ContactPage() {
   return (
     <section className="px-6 py-24 md:py-32">
       <div className="mx-auto max-w-4xl">
-        <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-accent">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
           Contact
         </p>
-        <h1 className="mt-3 font-display text-balance text-5xl tracking-[0.01em] md:text-6xl">
+        <h1 className="mt-3 font-display text-balance text-5xl font-semibold tracking-tight md:text-6xl">
           {copy.contact.headline}
         </h1>
         <p className="mt-5 max-w-xl text-pretty text-lg text-ink-soft md:text-xl">
@@ -123,7 +123,8 @@ function ContactForm() {
         <div className="mt-2">
           <button
             type="submit"
-            className="btn-glow inline-flex h-12 items-center justify-center rounded-full border border-accent bg-accent px-6 font-mono text-[13px] uppercase tracking-[0.16em] text-accent-on hover:bg-transparent hover:text-accent"
+            className="btn-sweep group inline-flex h-12 items-center justify-center rounded-full border border-accent bg-accent px-6 text-[15px] font-medium tracking-tight text-accent-on transition-colors hover:text-bg hover:border-ink"
+            style={{ ['--sweep-bg' as never]: 'var(--ink)' }}
           >
             Send note
           </button>

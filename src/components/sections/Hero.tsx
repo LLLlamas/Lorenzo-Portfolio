@@ -45,7 +45,7 @@ export function Hero() {
 
       <div className="mx-auto max-w-5xl">
         <motion.p
-          className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-accent"
+          className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet"
           initial={prefersReduced ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -55,7 +55,7 @@ export function Hero() {
 
         <SplitTextReveal
           as="h1"
-          className="font-display text-balance text-5xl leading-[1.05] tracking-[0.01em] md:text-7xl"
+          className="font-display text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
           text={copy.hero.headline}
           delay={0.3}
           step={0.06}

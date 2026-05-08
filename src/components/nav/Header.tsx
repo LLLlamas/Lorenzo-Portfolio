@@ -56,10 +56,10 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
         <Link
           href="/"
-          className="font-display text-sm tracking-[0.06em] text-ink transition-colors hover:text-accent"
+          className="font-display text-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
           aria-label="Lorenzo Llamas — Home"
         >
-          LORENZO&nbsp;LLAMAS
+          Lorenzo&nbsp;Llamas
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -94,7 +94,8 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className="btn-glow hidden rounded-full border border-accent bg-transparent px-4 py-2 font-mono text-xs uppercase tracking-[0.16em] text-accent md:inline-flex"
+            className="btn-sweep group hidden items-center rounded-full border border-ink bg-ink px-4 py-2 text-xs font-medium tracking-tight text-bg transition-colors hover:border-accent hover:text-accent-on md:inline-flex"
+            style={{ ['--sweep-bg' as never]: 'var(--accent)' }}
           >
             Start a project
           </Link>

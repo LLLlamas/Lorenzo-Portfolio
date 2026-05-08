@@ -5,6 +5,12 @@ import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 const TOUCH_QUERY = '(hover: none) and (pointer: coarse)';
 
+declare global {
+  interface Window {
+    __lenis?: { stop: () => void; start: () => void };
+  }
+}
+
 /**
  * Lenis-powered smooth scroll. Mounts at the root.
  *
@@ -13,6 +19,9 @@ const TOUCH_QUERY = '(hover: none) and (pointer: coarse)';
  *  - touch devices (native momentum is better there)
  *
  * Lenis is dynamically imported to keep it out of the initial bundle.
+ *
+ * Exposes the instance at `window.__lenis` so overlays (Modal) can
+ * pause / resume it when they take over the scroll surface.
  */
 export function SmoothScroll() {
   const prefersReduced = usePrefersReducedMotion();
@@ -38,6 +47,7 @@ export function SmoothScroll() {
       });
 
       lenisRef.current = lenis;
+      window.__lenis = { stop: () => lenis.stop(), start: () => lenis.start() };
 
       const tick = (time: number) => {
         lenis.raf(time);
@@ -66,6 +76,7 @@ export function SmoothScroll() {
         destroy: () => {
           document.removeEventListener('click', handleAnchorClick);
           lenis.destroy();
+          delete window.__lenis;
         },
       };
     })();

@@ -4,8 +4,8 @@
 
 @theme {
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-serif: var(--font-dm-sans), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
   --color-bg: var(--bg);
@@ -37,60 +37,84 @@
   --duration-phase: 600ms;
 }
 
-/* ─── Light mode — "The Presence" (PS1 Phase 1) ─── */
+/* ─── Light mode neutrals (shared across palettes) ─── */
 :root {
-  --bg: #F7F4EE;
-  --bg-elevated: #EDEAE3;
-  --ink: #1A1610;
-  --ink-soft: #5A5040;
-  --ink-quiet: #9A8E78;
-  --line: rgba(26, 22, 16, 0.08);
-  --line-accent: rgba(200, 134, 10, 0.30);
+  --bg: #FAFAF7;
+  --bg-elevated: #FFFFFF;
+  --ink: #141414;
+  --ink-soft: #5A5A5A;
+  --ink-quiet: #9A9A95;
+  --line: #E8E6E0;
+  --line-accent: rgba(61, 46, 92, 0.30);
 
-  --accent: #C8860A;
-  --accent-soft: rgba(200, 134, 10, 0.12);
-  --accent-on: #F7F4EE;
+  /* Default primary accent: Ink Purple */
+  --accent: #3D2E5C;
+  --accent-soft: #ECE7F2;
+  --accent-on: #FFFFFF;
 
-  /* Geometry / decorative tones (light) */
-  --geo-face: #DDD8CE;
-  --geo-edge: #C8860A;
-  --geo-opacity: 0.6;
+  /* Secondary accent: Deep Navy (used sparingly) */
+  --accent-secondary: #1B2A4E;
+  --accent-secondary-soft: #E5EAF3;
 
-  /* Secondary — kept identical to primary; old palette removed */
-  --accent-secondary: #C8860A;
-  --accent-secondary-soft: rgba(200, 134, 10, 0.12);
+  /* Geometry tones (light) */
+  --geo-face: #ECE7F2;
+  --geo-edge: #3D2E5C;
+  --geo-opacity: 0.55;
 
   color-scheme: light;
 }
 
-/* ─── Dark mode — "The Void" (PS1 Phase 2, default) ─── */
+/* ─── Dark mode neutrals (shared) ─── */
 .dark {
-  --bg: #000000;
-  --bg-elevated: #020201;
-  --ink: rgba(255, 255, 255, 0.92);
-  --ink-soft: rgba(255, 255, 255, 0.60);
-  --ink-quiet: rgba(255, 255, 255, 0.30);
-  --line: rgba(255, 255, 255, 0.07);
-  --line-accent: rgba(240, 192, 64, 0.22);
+  --bg: #0F0F0E;
+  --bg-elevated: #18181A;
+  --ink: #F5F4EE;
+  --ink-soft: #B5B4AE;
+  --ink-quiet: #6E6E68;
+  --line: #2A2A28;
+  --line-accent: rgba(166, 151, 200, 0.32);
 
-  --accent: #F0C040;
-  --accent-soft: rgba(240, 192, 64, 0.15);
-  --accent-on: #000000;
+  /* Ink Purple (dark) */
+  --accent: #A697C8;
+  --accent-soft: #2A2240;
+  --accent-on: #0F0F0E;
 
-  --geo-face: #0D0D0B;
-  --geo-edge: #F0C040;
-  --geo-opacity: 1;
+  /* Deep Navy (dark) */
+  --accent-secondary: #6B85C0;
+  --accent-secondary-soft: #1F2A45;
 
-  --accent-secondary: #F0C040;
-  --accent-secondary-soft: rgba(240, 192, 64, 0.15);
+  /* Geometry tones (dark) */
+  --geo-face: #1A1426;
+  --geo-edge: #A697C8;
+  --geo-opacity: 0.95;
 
   color-scheme: dark;
 }
 
-/* ─── 600ms phase transition between modes ─── */
-/* Applied to virtually everything so dark↔light feels like the PS1 phase
-   switch. Excludes transforms (lets motion components keep their easing)
-   and opacity (keeps reveals snappy). */
+/* ─── Palette opt-in: data-palette="navy" makes Deep Navy primary ─── */
+:root[data-palette="navy"] {
+  --accent: #1B2A4E;
+  --accent-soft: #E5EAF3;
+  --accent-on: #FFFFFF;
+  --accent-secondary: #3D2E5C;
+  --accent-secondary-soft: #ECE7F2;
+  --line-accent: rgba(27, 42, 78, 0.30);
+  --geo-edge: #1B2A4E;
+  --geo-face: #E5EAF3;
+}
+
+.dark[data-palette="navy"] {
+  --accent: #6B85C0;
+  --accent-soft: #1F2A45;
+  --accent-on: #0F0F0E;
+  --accent-secondary: #A697C8;
+  --accent-secondary-soft: #2A2240;
+  --line-accent: rgba(107, 133, 192, 0.32);
+  --geo-edge: #6B85C0;
+  --geo-face: #14182A;
+}
+
+/* ─── Phase transition between modes (kept light — colors only) ─── */
 *,
 *::before,
 *::after {
@@ -99,8 +123,7 @@
     color var(--duration-phase) var(--ease-out-expo),
     border-color var(--duration-phase) var(--ease-out-expo),
     fill var(--duration-phase) var(--ease-out-expo),
-    stroke var(--duration-phase) var(--ease-out-expo),
-    box-shadow var(--duration-phase) var(--ease-out-expo);
+    stroke var(--duration-phase) var(--ease-out-expo);
 }
 
 /* ─── Reduced-motion gate (single source of truth) ─── */
@@ -129,7 +152,6 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01" on;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -174,10 +196,7 @@ html[data-cursor="custom"] *::after {
   will-change: transform;
 }
 
-/* SplitText word reveal helper — applied by SplitTextReveal primitive.
-   The mask needs vertical breathing room so descenders ('g', 'p', 'y')
-   and ascenders aren't clipped. Padding adds room; negative margin keeps
-   the visible layout unchanged. */
+/* SplitText word reveal helper */
 .split-word {
   display: inline-block;
   overflow: hidden;
@@ -193,7 +212,7 @@ html[data-cursor="custom"] *::after {
   will-change: transform;
 }
 
-/* Subtle pulse for "popular" badge — paused under reduced motion */
+/* Subtle pulse for "popular" badge */
 @keyframes soft-pulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.025); }
@@ -223,41 +242,7 @@ html[data-cursor="custom"] *::after {
   animation: hairline-draw 800ms var(--ease-out-expo) both;
 }
 
-/* ─── PS1-coded additions ─── */
-
-/* Radial glow used by hero and entry sequence */
-.radial-glow {
-  background: radial-gradient(
-    circle at 50% 50%,
-    var(--accent-soft) 0%,
-    transparent 60%
-  );
-}
-
-/* Pixel-blur character entry — reduces from blur(8px)+opacity(0) to clean */
-@keyframes pixel-resolve {
-  0%   { filter: blur(10px); opacity: 0; transform: translateY(4px); }
-  60%  { filter: blur(2px);  opacity: 1; transform: translateY(0); }
-  100% { filter: blur(0);    opacity: 1; transform: translateY(0); }
-}
-
-/* Scan line drawing across screen */
-@keyframes scan-line-sweep {
-  0%   { transform: translateX(-100%); opacity: 0; }
-  20%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateX(100%); opacity: 0; }
-}
-.scan-line-sweep {
-  animation: scan-line-sweep 1400ms var(--ease-out-expo) both;
-}
-
-/* CRT phosphor glow on the accent text — tiny, present on hover */
-.crt-text-glow {
-  text-shadow: 0 0 1px var(--accent-soft), 0 0 12px var(--accent-soft);
-}
-
-/* "LOADING" blink cadence — slower than a cursor blink so it feels mechanical */
+/* "LOADING" blink cadence */
 @keyframes loading-blink {
   0%, 60%  { opacity: 1; }
   61%, 99% { opacity: 0.25; }
@@ -265,15 +250,6 @@ html[data-cursor="custom"] *::after {
 }
 .loading-blink {
   animation: loading-blink 1.6s steps(1, end) infinite;
-}
-
-/* Cursor breathing — only used by the dot SVG underlay */
-@keyframes cursor-breathe {
-  0%, 100% { transform: scale(1); opacity: 0.85; }
-  50%      { transform: scale(1.18); opacity: 1; }
-}
-.cursor-breathe {
-  animation: cursor-breathe 2.2s var(--ease-in-out-circ) infinite;
 }
 
 /* Section scan-line — draws once when section enters viewport */
@@ -287,7 +263,7 @@ html[data-cursor="custom"] *::after {
   animation: section-scan 900ms var(--ease-out-expo) both;
 }
 
-/* Project card golden border ring on hover */
+/* Project card subtle hover lift + accent border */
 .card-glow {
   box-shadow: 0 0 0 1px transparent;
   transition:
@@ -297,39 +273,31 @@ html[data-cursor="custom"] *::after {
     border-color var(--duration-phase) var(--ease-out-expo);
 }
 .card-glow:hover {
-  box-shadow:
-    0 0 0 1px var(--line-accent),
-    0 8px 30px -12px var(--accent-soft);
+  border-color: var(--line-accent);
+  box-shadow: 0 14px 40px -22px var(--accent);
 }
 
-/* Button activate glow — primary CTA */
-.btn-glow {
+/* ─── Button "sweep" effect ───
+   No double-ring outline. Instead a fluid color sweep slides in from the
+   left on hover, ink/accent text inverts. Border stays singular. */
+.btn-sweep {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
   transition:
-    box-shadow var(--duration-base) var(--ease-out-expo),
-    transform var(--duration-base) var(--ease-out-expo),
-    background-color var(--duration-phase) var(--ease-out-expo),
-    color var(--duration-phase) var(--ease-out-expo);
+    color var(--duration-base) var(--ease-out-expo),
+    border-color var(--duration-phase) var(--ease-out-expo);
 }
-.btn-glow::after {
+.btn-sweep::before {
   content: "";
   position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  border: 1px solid var(--accent);
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 200ms var(--ease-out-expo), transform 200ms var(--ease-out-expo);
-  pointer-events: none;
+  inset: 0;
+  background: var(--sweep-bg, var(--accent));
+  transform: translateX(-101%);
+  transition: transform 420ms var(--ease-out-expo);
   z-index: -1;
 }
-.btn-glow:hover {
-  box-shadow:
-    0 0 0 1px var(--accent),
-    0 8px 32px -10px var(--accent);
-}
-.btn-glow:hover::after {
-  opacity: 0.6;
-  transform: scale(1.04);
+.btn-sweep:hover::before,
+.btn-sweep:focus-visible::before {
+  transform: translateX(0);
 }

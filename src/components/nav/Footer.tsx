@@ -5,7 +5,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative border-t border-line">
-      {/* Hairline accent — the closing scan line */}
+      {/* Hairline accent */}
       <span
         aria-hidden
         className="absolute left-0 right-0 top-0 mx-auto h-px max-w-6xl bg-gradient-to-r from-transparent via-accent/40 to-transparent"
@@ -14,30 +14,21 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-12 pt-20 md:pt-28">
         <a
           href={`mailto:${copy.meta.email}`}
-          className="group block font-display text-3xl leading-tight tracking-[0.02em] text-ink transition-colors hover:text-accent md:text-5xl lg:text-6xl"
+          className="group block font-display text-3xl font-semibold leading-tight tracking-tight text-ink transition-colors hover:text-accent md:text-5xl lg:text-6xl"
         >
-          <span className="opacity-60">&gt;</span>{' '}
           <span className="underline decoration-line decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-accent">
             {copy.meta.email}
           </span>
         </a>
 
-        <div className="flex flex-col items-start justify-between gap-4 border-t border-line pt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet md:flex-row md:items-center">
+        <div className="flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-sm text-ink-soft md:flex-row md:items-center">
           <p>
             © {year} {copy.meta.name}. Built solo.
           </p>
-          <div className="flex items-center gap-6">
-            <Link href="/contact" className="transition-colors hover:text-accent">
+          <div className="flex items-center gap-5">
+            <Link href="/contact" className="transition-colors hover:text-ink">
               Contact
             </Link>
-            <a
-              href={copy.meta.siteUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="transition-colors hover:text-accent"
-            >
-              v1
-            </a>
           </div>
         </div>
       </div>

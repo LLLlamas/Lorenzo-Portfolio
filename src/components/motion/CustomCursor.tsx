@@ -116,7 +116,7 @@ export function CustomCursor() {
       <div
         ref={dotRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[90] size-[6px] rounded-full opacity-0 transition-opacity duration-200"
+        className="pointer-events-none fixed left-0 top-0 z-[120] size-[6px] rounded-full opacity-0 transition-opacity duration-200"
         style={{
           background: 'var(--accent)',
           boxShadow: '0 0 12px var(--accent), 0 0 24px var(--accent-soft)',
@@ -128,7 +128,7 @@ export function CustomCursor() {
         ref={ringRef}
         aria-hidden
         data-hover="0"
-        className="pointer-events-none fixed left-0 top-0 z-[90] size-8 rounded-full border opacity-0 transition-[width,height,border-color,opacity,backdrop-filter] duration-200 data-[hover='1']:size-12 data-[hover='1']:bg-[var(--accent-soft)]"
+        className="pointer-events-none fixed left-0 top-0 z-[120] size-8 rounded-full border opacity-0 transition-[width,height,border-color,opacity,backdrop-filter] duration-200 data-[hover='1']:size-12 data-[hover='1']:bg-[var(--accent-soft)]"
         style={{
           borderColor: 'var(--accent)',
           willChange: 'transform',

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Share_Tech_Mono } from 'next/font/google';
+import { DM_Sans, Fraunces, Share_Tech_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Header } from '@/components/nav/Header';
 import { Footer } from '@/components/nav/Footer';
@@ -14,6 +14,13 @@ const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   display: 'swap',
+});
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+  axes: ['opsz', 'SOFT'],
 });
 
 const shareTechMono = Share_Tech_Mono({
@@ -47,8 +54,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F7F4EE' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { media: '(prefers-color-scheme: light)', color: '#FAFAF7' },
+    { media: '(prefers-color-scheme: dark)', color: '#0F0F0E' },
   ],
 };
 
@@ -57,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${shareTechMono.variable}`}
+      className={`${dmSans.variable} ${fraunces.variable} ${shareTechMono.variable}`}
     >
       <body className="min-h-dvh bg-bg text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

@@ -41,6 +41,11 @@ export function Modal({ open, onClose, children, label }: Props) {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
+    // Pause Lenis so wheel events scroll the modal panel, not the page.
+    // Lenis runs on its own RAF loop so body.overflow:hidden alone isn't
+    // enough — its wheel handler still fires.
+    window.__lenis?.stop();
+
     // Focus the panel after enter animation kicks off.
     const t = setTimeout(() => {
       panelRef.current?.focus();
@@ -50,6 +55,7 @@ export function Modal({ open, onClose, children, label }: Props) {
       clearTimeout(t);
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = previousOverflow;
+      window.__lenis?.start();
       lastFocusedRef.current?.focus?.();
     };
   }, [open, onClose]);
@@ -81,7 +87,8 @@ export function Modal({ open, onClose, children, label }: Props) {
             aria-modal="true"
             aria-label={label}
             tabIndex={-1}
-            className="relative max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-t-2xl border border-line bg-bg-elevated shadow-2xl outline-none md:max-h-[90vh] md:rounded-2xl"
+            data-lenis-prevent
+            className="relative max-h-[92vh] w-full max-w-4xl overflow-y-auto overscroll-contain rounded-t-2xl border border-line bg-bg-elevated shadow-2xl outline-none md:max-h-[90vh] md:rounded-2xl"
             initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
             animate={prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
