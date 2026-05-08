@@ -19,6 +19,10 @@ tsconfig.tsbuildinfo
 .claude/settings.local.json
 .claude/worktrees
 
+# Source screenshots — only the optimized webp in public/projects/ is committed.
+# Run `npm run resize-screenshots` after dropping new sources here.
+screenshots/
+
 .idea
 .vscode/*
 !.vscode/extensions.json

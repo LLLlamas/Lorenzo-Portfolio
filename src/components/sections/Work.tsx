@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -74,6 +75,9 @@ function ProjectCard({
   project: Project;
   featured?: boolean;
 }) {
+  const hasCover = Boolean(project.cover);
+  const fit = project.coverFit ?? 'cover';
+
   const content = (
     <>
       <div
@@ -84,19 +88,32 @@ function ProjectCard({
           project.category === 'game' && 'from-accent-soft via-accent-secondary-soft to-bg',
         )}
       >
-        {/* Inner layer that takes the Ken Burns motion on featured cards.
-            Once real screenshots land, swap the gradient for an <img> here. */}
+        {/* Inner layer takes Ken Burns on featured cards. */}
         <div
           className={cn(
             'absolute inset-0',
-            featured && 'ken-burns motion-decorative',
+            featured && hasCover && fit === 'cover' && 'ken-burns motion-decorative',
           )}
         >
-          <div className="absolute inset-0 grid place-items-center">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
-              Screenshot pending
-            </span>
-          </div>
+          {hasCover ? (
+            <Image
+              src={project.cover!}
+              alt={`${project.title} screenshot`}
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className={cn(
+                fit === 'cover' && 'object-cover object-top',
+                fit === 'contain' && 'object-contain p-4',
+              )}
+              priority={featured}
+            />
+          ) : (
+            <div className="absolute inset-0 grid place-items-center">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+                Screenshot pending
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

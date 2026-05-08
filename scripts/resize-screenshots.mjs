@@ -1,0 +1,92 @@
+#!/usr/bin/env node
+/**
+ * Resize source screenshots into optimized WebP for project cards.
+ *
+ *   Usage: npm run resize-screenshots
+ *
+ * Drop new source images into ./screenshots/<filename>.PNG, add a row to
+ * MAPPINGS below mapping the filename to a project slug from
+ * src/content/projects.ts, then run this script.
+ *
+ * Source images are gitignored — only the optimized WebP in
+ * public/projects/ is committed.
+ */
+
+import sharp from 'sharp';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..');
+
+const SRC_DIR = path.join(ROOT, 'screenshots');
+const OUT_DIR = path.join(ROOT, 'public', 'projects');
+
+/** [sourceFilename, projectSlug] */
+const MAPPINGS = [
+  ['dogs-and-newsletter.PNG', 'dogs-and-llamas'],
+  ['cookbook_homescreen.PNG', 'llamas-cookbook'],
+  ['bite-defense-desktop.PNG', 'bite-defense'],
+  ['sleepy-llamas.PNG', 'sleepy-llamas'],
+  ['transit-app-singlepage.PNG', 'train-watcher'],
+];
+
+const MAX_WIDTH = 1600;
+const MAX_HEIGHT = 1200;
+const WEBP_QUALITY = 82;
+
+async function main() {
+  await fs.mkdir(OUT_DIR, { recursive: true });
+
+  const results = [];
+  for (const [filename, slug] of MAPPINGS) {
+    const inPath = path.join(SRC_DIR, filename);
+    const outPath = path.join(OUT_DIR, `${slug}.webp`);
+
+    try {
+      await fs.access(inPath);
+    } catch {
+      console.warn(`skip: ${filename} (not found)`);
+      continue;
+    }
+
+    const inSize = (await fs.stat(inPath)).size;
+
+    const meta = await sharp(inPath).metadata();
+    await sharp(inPath)
+      .resize(MAX_WIDTH, MAX_HEIGHT, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+      .webp({ quality: WEBP_QUALITY })
+      .toFile(outPath);
+
+    const outSize = (await fs.stat(outPath)).size;
+    const outMeta = await sharp(outPath).metadata();
+    results.push({
+      filename,
+      slug,
+      inSize,
+      outSize,
+      inDims: `${meta.width}×${meta.height}`,
+      outDims: `${outMeta.width}×${outMeta.height}`,
+    });
+  }
+
+  console.log('\nResults:\n');
+  for (const r of results) {
+    const inKb = (r.inSize / 1024).toFixed(0);
+    const outKb = (r.outSize / 1024).toFixed(0);
+    const ratio = ((r.outSize / r.inSize) * 100).toFixed(0);
+    console.log(
+      `  ${r.slug.padEnd(20)} ${r.inDims.padEnd(12)} → ${r.outDims.padEnd(12)}  ${inKb.padStart(5)}kb → ${outKb.padStart(5)}kb (${ratio}%)`,
+    );
+  }
+  console.log();
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

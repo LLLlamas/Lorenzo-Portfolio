@@ -69,7 +69,8 @@ src/
 | Hero headline / subhead | `src/content/copy.ts` → `copy.hero` |
 | About paragraphs / pull-quote | `src/content/copy.ts` → `copy.about` |
 | Capability cards | `src/content/copy.ts` → `copy.capabilities.items` |
-| A project card | `src/content/projects.ts` (one entry; cover at `public/projects/<slug>.png`). The "rest" grid auto-detects trailing gaps and renders a `WorkGapFiller` ("Could be yours.") to fill them — no math needed |
+| A project card | `src/content/projects.ts` (one entry). Cover lives at `public/projects/<slug>.webp`; omit the `cover` field for projects without a screenshot — card falls back to a category-tinted gradient. The "rest" grid auto-detects trailing gaps and renders a `WorkGapFiller` ("Could be yours.") to fill them |
+| Add / replace a project screenshot | Drop the source file into `screenshots/<anything>.PNG`, add a `[filename, slug]` row to `MAPPINGS` in `scripts/resize-screenshots.mjs`, then run `npm run resize-screenshots`. Outputs optimized webp to `public/projects/`. The `screenshots/` directory is gitignored — only the optimized webp is committed |
 | A price | `src/content/packages.ts` |
 | An FAQ | `src/content/faqs.ts` |
 | Contact email / Cal.com link | `src/content/copy.ts` → `copy.meta` |
@@ -82,6 +83,9 @@ src/
 - Lenis (smooth scroll) bypasses on touch devices and reduced-motion users — both via runtime checks in `SmoothScroll.tsx`
 - Easings live as CSS custom properties: `--ease-out-expo`, `--ease-out-back`, `--ease-in-out-circ`, `--ease-physical`
 - The `Stagger` primitive's `childAs` prop must be `"li"` when wrapping inside `<ul>`/`<ol>` to keep HTML valid (see `src/components/sections/FAQ.tsx`)
+- The `Stagger` primitive accepts a `childClassName: ReadonlyArray<string | undefined>` for per-child styling (e.g. variable col-spans on a trailing gap-filler). Function form is **not** supported because it can't cross the server→client component boundary in `output: 'export'` builds
+- Project covers: `coverFit: 'cover'` for landscape screenshots (default — fills the 16:10 card, crops as needed); `coverFit: 'contain'` for portrait / mobile screenshots (fits inside the card with padding so the whole screen is visible)
+- The hero `.split-word` mask has `padding-top: 0.18em` / `padding-bottom: 0.22em` (with negative margins to compensate) to prevent ascender/descender clipping during the word reveal animation
 - New motion primitive? Mirror the reduced-motion gate from `Reveal.tsx` and `Stagger.tsx`
 
 ## Theming

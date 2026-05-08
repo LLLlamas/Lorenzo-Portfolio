@@ -141,7 +141,7 @@ SwiftUI, App Store submission, post-launch support. Best for projects where mobi
 | **Rush delivery** | +35% |
 | **Design provided** (finalized Figma) | −15% |
 | **iOS instead of web** (within Studio) | +$1,500 (App Store + native overhead) |
-| **Maintenance retainer** | $750/mo, capped 8 hrs |
+| **Maintenance retainer** | $500/mo, capped 5 hrs |
 
 **Why these numbers (research-grounded, 2026 US market):**
 - Senior US solo full-stack rates: $100–$180/hr; landing-page-focused solos cluster at $100–$130/hr

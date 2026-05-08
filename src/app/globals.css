@@ -152,11 +152,18 @@ section[id] {
   will-change: transform;
 }
 
-/* SplitText word reveal helper — applied by SplitTextReveal primitive */
+/* SplitText word reveal helper — applied by SplitTextReveal primitive.
+   The mask needs vertical breathing room so descenders ('g', 'p', 'y')
+   and ascenders aren't clipped. Padding adds room; negative margin keeps
+   the visible layout unchanged. */
 .split-word {
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
+  padding-top: 0.18em;
+  padding-bottom: 0.22em;
+  margin-top: -0.18em;
+  margin-bottom: -0.22em;
 }
 .split-word > span {
   display: inline-block;

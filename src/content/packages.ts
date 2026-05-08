@@ -46,5 +46,5 @@ export const modifiers: Modifier[] = [
   { label: 'Rush delivery', adjustment: '+35%' },
   { label: 'Design provided (finalized Figma)', adjustment: '−15%' },
   { label: 'iOS instead of web (within Studio)', adjustment: '+$1,500' },
-  { label: 'Maintenance retainer', adjustment: '$750/mo · capped 8 hrs' },
+  { label: 'Maintenance retainer', adjustment: '$500/mo · capped 5 hrs' },
 ];
