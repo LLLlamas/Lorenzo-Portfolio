@@ -277,6 +277,23 @@ html[data-cursor="custom"] *::after {
   box-shadow: 0 14px 40px -22px var(--accent);
 }
 
+/* ─── Project-card sequential cascade on hover ───
+   Title bolds first, then tagline, then each tag chip lights up in accent
+   color. Top-to-bottom. Each step has its own transition-delay so the
+   single hover trigger plays out as a wave. */
+.cascade-step {
+  transition:
+    font-weight 180ms var(--ease-out-expo),
+    color 200ms var(--ease-out-expo),
+    border-color 200ms var(--ease-out-expo);
+}
+.group:hover .cascade-1 { font-weight: 800; }
+.group:hover .cascade-2 { font-weight: 600; color: var(--ink); }
+.group:hover .cascade-3 {
+  color: var(--accent);
+  border-color: var(--line-accent);
+}
+
 /* ─── Button "sweep" effect ───
    No double-ring outline. Instead a fluid color sweep slides in from the
    left on hover, ink/accent text inverts. Border stays singular. */

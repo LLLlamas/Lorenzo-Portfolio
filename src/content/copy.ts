@@ -28,8 +28,8 @@ export const copy = {
 
   work: {
     eyebrow: 'Work',
-    headline: 'Selected projects.',
-    subhead: 'Web, React, and iOS work grouped so the screenshots can breathe.',
+    headline: 'Tasks Brought To Life.',
+    subhead: 'Specializes in web and mobile iOS development.',
   },
 
   projectModal: {

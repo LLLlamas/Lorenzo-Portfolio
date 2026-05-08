@@ -128,9 +128,9 @@ export const projects: Project[] = [
   {
     slug: 'sleepy-llamas',
     title: 'SleepyLlamas',
-    tagline: 'A React sleep companion with a quiet bedtime interface.',
+    tagline: 'React based website with in-house calendar implementation.',
     description:
-      'A small React and JavaScript web app focused on calm, glanceable bedtime UX. Designed to be readable with one eye open in a dark room.',
+      'A small React and JavaScript web app focused on calm, glanceable bedtime UX with a custom-built calendar. Designed to be readable with one eye open in a dark room.',
     role: 'Solo developer',
     highlights: ['React UI with dark-friendly typography', 'No notifications, no nags'],
     stack: ['React', 'JavaScript', 'Web'],
@@ -163,25 +163,6 @@ export const projects: Project[] = [
     title: 'Flight Searcher',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['Next.js', 'TypeScript', 'API'],
-    year: 2024,
-    featured: false,
-    category: 'web',
-  },
-  {
-    slug: 'train-watcher',
-    title: 'Train Watcher',
-    tagline: 'A live transit board for NYC bus and subway routes.',
-    description:
-      'A responsive React web app showing live arrivals for NYC bus + subway routes — pick a starting and ending point, see real-time arrival predictions and service alerts. Works on desktop and mobile.',
-    role: 'Solo developer',
-    highlights: [
-      'Live MTA arrival predictions',
-      'Responsive — desktop and mobile from one codebase',
-      'Service alerts surfaced inline',
-    ],
-    stack: ['React', 'TypeScript', 'API', 'Web'],
-    cover: '/projects/train-watcher.webp',
-    coverFit: 'contain',
     year: 2024,
     featured: false,
     category: 'web',

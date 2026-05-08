@@ -67,7 +67,7 @@ export function SmoothScroll() {
         const el = document.querySelector(url.hash);
         if (!el) return;
         event.preventDefault();
-        lenis.scrollTo(el as HTMLElement, { offset: -64 });
+        lenis.scrollTo(el as HTMLElement, { offset: -80 });
       };
 
       document.addEventListener('click', handleAnchorClick);

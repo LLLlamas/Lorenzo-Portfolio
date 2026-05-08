@@ -12,6 +12,7 @@ import './globals.css';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-dm-sans',
   display: 'swap',
 });
@@ -73,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CustomCursor />
           <EntrySequence />
           <Header />
-          <main className="pt-16">{children}</main>
+          <main className="pt-20">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

@@ -10,7 +10,7 @@ export type PricingPackage = {
 export const packages: PricingPackage[] = [
   {
     name: 'Spark',
-    price: 'Starting at $1,200',
+    price: 'Average Project Cost $900',
     cadence: '~1–2 weeks',
     description: 'A landing page, single-purpose site, or small web tool.',
     popular: true,
@@ -25,7 +25,7 @@ export const packages: PricingPackage[] = [
   },
   {
     name: 'Studio',
-    price: 'Starting at $4,500',
+    price: 'Average Project Cost $2,700',
     cadence: '~3–5 weeks',
     description: 'A bigger site, web tool, or focused web app.',
     features: [
@@ -45,6 +45,6 @@ export type Modifier = { label: string; adjustment: string };
 export const modifiers: Modifier[] = [
   { label: 'Rush delivery', adjustment: '+35%' },
   { label: 'Design provided (finalized Figma)', adjustment: '−15%' },
-  { label: 'iOS instead of web (within Studio)', adjustment: '+$1,500' },
-  { label: 'Maintenance retainer', adjustment: '$500/mo · capped 5 hrs' },
+  { label: 'iOS instead of web (within Studio)', adjustment: '+$600' },
+  { label: 'Maintenance retainer', adjustment: '$300/mo · capped 5 hrs' },
 ];

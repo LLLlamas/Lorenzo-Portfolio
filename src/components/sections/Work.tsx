@@ -166,13 +166,19 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
             <div className="min-w-0">
               <h3
                 className={cn(
-                  'font-display text-lg font-semibold tracking-tight text-ink',
+                  'cascade-step cascade-1 font-display text-lg font-semibold tracking-tight text-ink',
                   featured && 'md:text-xl',
                 )}
+                style={{ transitionDelay: '0ms' }}
               >
                 {project.title}
               </h3>
-              <p className="mt-1 text-sm text-ink-soft">{project.tagline}</p>
+              <p
+                className="cascade-step cascade-2 mt-1 text-sm text-ink-soft"
+                style={{ transitionDelay: '90ms' }}
+              >
+                {project.tagline}
+              </p>
             </div>
             <ArrowUpRight
               aria-hidden
@@ -181,8 +187,14 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
           </div>
 
           <div className="mt-4 flex flex-wrap gap-1.5">
-            {project.stack.slice(0, featured ? 5 : 3).map((tag) => (
-              <Tag key={tag}>{tag}</Tag>
+            {project.stack.slice(0, featured ? 5 : 3).map((tag, i) => (
+              <Tag
+                key={tag}
+                className="cascade-step cascade-3"
+                style={{ transitionDelay: `${180 + i * 50}ms` }}
+              >
+                {tag}
+              </Tag>
             ))}
           </div>
         </div>
