@@ -23,13 +23,26 @@ const ROOT = path.resolve(__dirname, '..');
 const SRC_DIR = path.join(ROOT, 'screenshots');
 const OUT_DIR = path.join(ROOT, 'public', 'projects');
 
-/** [sourceFilename, projectSlug] */
+/**
+ * [sourceFilename, outputName]
+ *
+ * Output name conventions:
+ *  - `<slug>` → primary cover (referenced as `cover` in projects.ts)
+ *  - `<slug>-1`, `<slug>-2`, ... → additional shots for the modal `gallery`
+ */
 const MAPPINGS = [
   ['dogs-and-newsletter.PNG', 'dogs-and-llamas'],
+
   ['cookbook_homescreen.PNG', 'llamas-cookbook'],
+  ['cookbook_timer.PNG', 'llamas-cookbook-1'],
+
   ['bite-defense-desktop.PNG', 'bite-defense'],
+  ['bitedefense_layout.PNG', 'bite-defense-1'],
+  ['bitedefense_tut.PNG', 'bite-defense-2'],
+
   ['sleepy-llamas.PNG', 'sleepy-llamas'],
-  ['transit-app-singlepage.PNG', 'train-watcher'],
+
+  ['train-watcher.PNG', 'train-watcher'],
 ];
 
 const MAX_WIDTH = 1600;
