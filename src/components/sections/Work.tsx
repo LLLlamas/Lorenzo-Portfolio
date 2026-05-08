@@ -7,7 +7,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Stagger } from '@/components/motion/Stagger';
 import { copy } from '@/content/copy';
 import { projects, type Project } from '@/content/projects';
-import { cn } from '@/lib/utils';
+import { cn, withBasePath } from '@/lib/utils';
 
 const COLS = 3;
 
@@ -97,7 +97,7 @@ function ProjectCard({
         >
           {hasCover ? (
             <Image
-              src={project.cover!}
+              src={withBasePath(project.cover!)}
               alt={`${project.title} screenshot`}
               fill
               sizes="(min-width: 768px) 33vw, 100vw"
