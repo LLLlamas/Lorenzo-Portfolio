@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CustomCursor />
           <EntrySequence />
           <Header />
-          <main className="pt-20">{children}</main>
+          <main className="pt-24">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

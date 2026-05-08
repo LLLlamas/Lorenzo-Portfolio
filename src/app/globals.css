@@ -163,7 +163,7 @@ body {
 }
 
 section[id] {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 6rem;
 }
 
 /* Hide native cursor on desktop when custom cursor is active */
@@ -275,6 +275,155 @@ html[data-cursor="custom"] *::after {
 .card-glow:hover {
   border-color: var(--line-accent);
   box-shadow: 0 14px 40px -22px var(--accent);
+}
+
+/* ─── True CSS 3D nav primitives ───
+   The Header uses two 3D shapes: a 6-face rectangular cube per nav link,
+   and a 2-face hex prism for the brand. Both use perspective + preserve-3d
+   on a parent, with face divs positioned via translateZ + rotate. A small
+   always-on rotateX/rotateY tilt keeps the depth visible at rest; hover
+   adds 180° on Y so the cube flips to its back face. */
+
+.nav-cube {
+  --cube-w: 7.5rem;
+  --cube-h: 3rem;
+  --cube-d: 16px;
+  display: inline-block;
+  width: var(--cube-w);
+  height: var(--cube-h);
+  perspective: 800px;
+  perspective-origin: 50% 50%;
+}
+.nav-cube__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-12deg) rotateY(-15deg);
+  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-cube:hover .nav-cube__inner,
+.nav-cube:focus-visible .nav-cube__inner {
+  transform: rotateX(-12deg) rotateY(165deg);
+}
+.nav-cube__face {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  transition: border-color 350ms var(--ease-out-expo), color 350ms var(--ease-out-expo);
+}
+.nav-cube:hover .nav-cube__face {
+  border-color: var(--line-accent);
+}
+.nav-cube__face--front,
+.nav-cube__face--back {
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
+.nav-cube__face--front {
+  transform: translateZ(calc(var(--cube-d) / 2));
+}
+.nav-cube__face--back {
+  transform: translateZ(calc(var(--cube-d) / -2)) rotateY(180deg);
+  border-color: var(--line-accent);
+  color: var(--accent);
+}
+.nav-cube__face--top,
+.nav-cube__face--bottom {
+  width: 100%;
+  height: var(--cube-d);
+  left: 0;
+  background: var(--bg-elevated);
+}
+.nav-cube__face--top {
+  top: 0;
+  transform: rotateX(-90deg);
+  transform-origin: top;
+}
+.nav-cube__face--bottom {
+  bottom: 0;
+  transform: rotateX(90deg);
+  transform-origin: bottom;
+}
+.nav-cube__face--left,
+.nav-cube__face--right {
+  width: var(--cube-d);
+  height: 100%;
+  top: 0;
+  background: var(--bg-elevated);
+}
+.nav-cube__face--left {
+  left: 0;
+  transform: rotateY(90deg);
+  transform-origin: left;
+}
+.nav-cube__face--right {
+  right: 0;
+  transform: rotateY(-90deg);
+  transform-origin: right;
+}
+
+/* Brand hex prism — 2 hex faces (SVG outline) with depth between them.
+   No wrapping side faces (true hex prism sides require 6 rotated rects per
+   edge — too much DOM); the front/back separation through perspective is
+   enough to read as 3D when it spins. */
+.brand-hex {
+  --hex-w: 13rem;
+  --hex-h: 4rem;
+  --hex-d: 18px;
+  display: inline-block;
+  width: var(--hex-w);
+  height: var(--hex-h);
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+}
+.brand-hex__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-10deg) rotateY(-14deg);
+  transition: transform 750ms cubic-bezier(0.16, 1, 0.3, 1), color 500ms;
+  color: var(--line);
+}
+.brand-hex:hover .brand-hex__inner,
+.brand-hex:focus-visible .brand-hex__inner {
+  transform: rotateX(-10deg) rotateY(166deg);
+  color: var(--accent);
+}
+.brand-hex__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-hex__face--front {
+  transform: translateZ(calc(var(--hex-d) / 2));
+}
+.brand-hex__face--back {
+  transform: translateZ(calc(var(--hex-d) / -2)) rotateY(180deg);
+}
+.brand-hex__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.brand-hex__label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  white-space: nowrap;
 }
 
 /* ─── Project-card sequential cascade on hover ───

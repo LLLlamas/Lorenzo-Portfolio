@@ -6,63 +6,20 @@ import { ThemeToggle } from './ThemeToggle';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { id: 'work', href: '/#work', label: 'Work' },
-  { id: 'capabilities', href: '/#capabilities', label: 'Capabilities' },
-  { id: 'packages', href: '/#packages', label: 'Packages' },
-  { id: 'faq', href: '/#faq', label: 'FAQ' },
+  { href: '/#work', label: 'Work' },
+  { href: '/#capabilities', label: 'Capabilities' },
+  { href: '/#packages', label: 'Packages' },
+  { href: '/#faq', label: 'FAQ' },
 ];
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // Active section: pick whichever nav-linked section currently straddles
-  // the "reading line" (≈33% from the top of the viewport). More accurate
-  // than IntersectionObserver thresholds for variable-height sections.
-  useEffect(() => {
-    let raf = 0;
-    let pending = false;
-
-    const compute = () => {
-      pending = false;
-      const sections = navLinks
-        .map((l) => document.getElementById(l.id))
-        .filter((el): el is HTMLElement => !!el);
-      if (sections.length === 0) return;
-
-      const line = window.innerHeight * 0.33;
-      let current: string | null = null;
-      for (const sec of sections) {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top <= line && rect.bottom > line) {
-          current = sec.id;
-          break;
-        }
-      }
-      setActive(current);
-    };
-
-    const onScroll = () => {
-      if (pending) return;
-      pending = true;
-      raf = requestAnimationFrame(compute);
-    };
-
-    compute();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
   }, []);
 
   return (
@@ -74,17 +31,12 @@ export function Header() {
           : 'border-b border-transparent bg-transparent',
       )}
     >
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-6">
-        <BrandHex />
+      <div className="mx-auto flex h-24 max-w-6xl items-center justify-between gap-6 px-6">
+        <BrandHexPrism />
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav className="hidden items-center gap-3 md:flex">
           {navLinks.map((link) => (
-            <NavBox
-              key={link.id}
-              href={link.href}
-              label={link.label}
-              active={active === link.id}
-            />
+            <NavCube key={link.href} href={link.href} label={link.label} />
           ))}
         </nav>
 
@@ -104,87 +56,84 @@ export function Header() {
 }
 
 /**
- * Brand mark — bigger name in a hexagonal frame that rotates on hover.
- * SVG hex outline rotates while the text stays static for legibility.
+ * 6-face CSS 3D cube. Front + back show the label; top/bottom/left/right
+ * are thin "depth" strips. A persistent rotateX(-12) rotateY(-15) keeps
+ * the depth visible at rest. Hover rolls rotateY by +180 so the cube
+ * flips card-style to its back face (accent-bordered + accent text).
  */
-function BrandHex() {
+function NavCube({ href, label }: { href: string; label: string }) {
   return (
-    <Link
-      href="/"
-      aria-label="Lorenzo Llamas — Home"
-      className="group relative inline-flex h-12 items-center px-5 font-display text-base font-semibold tracking-tight text-ink transition-colors hover:text-accent md:text-[17px]"
-    >
-      <svg
-        aria-hidden
-        viewBox="0 0 200 100"
-        preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full text-line transition-[transform,color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[60deg] group-hover:text-accent"
-      >
-        <polygon
-          points="25,2 175,2 198,50 175,98 25,98 2,50"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <span className="relative">Lorenzo&nbsp;Llamas</span>
+    <Link href={href} className="nav-cube" data-cursor-hover>
+      <div className="nav-cube__inner">
+        <div className="nav-cube__face nav-cube__face--front">
+          <span>{label}</span>
+        </div>
+        <div className="nav-cube__face nav-cube__face--back">
+          <span>{label}</span>
+        </div>
+        <div className="nav-cube__face nav-cube__face--top" />
+        <div className="nav-cube__face nav-cube__face--bottom" />
+        <div className="nav-cube__face nav-cube__face--left" />
+        <div className="nav-cube__face nav-cube__face--right" />
+      </div>
     </Link>
   );
 }
 
 /**
- * Nav link rendered as a rotating square box. The SVG outline rotates on
- * hover; the label stays put. Active state lights the border in accent.
+ * 2-face hex prism. Each face is an SVG outline of a flat-top horizontal
+ * hexagon, with the brand label centered in front of it. The two faces
+ * sit at ±depth/2 along Z. Same hover flip as NavCube — rotateY +180.
  */
-function NavBox({
-  href,
-  label,
-  active,
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-}) {
+function BrandHexPrism() {
+  const hexPoints = '35,5 165,5 195,50 165,95 35,95 5,50';
+
   return (
     <Link
-      href={href}
-      className={cn(
-        'group relative inline-flex h-10 items-center justify-center px-4 text-sm transition-colors',
-        active ? 'text-ink' : 'text-ink-soft hover:text-ink',
-      )}
-      data-cursor-hover
+      href="/"
+      aria-label="Lorenzo Llamas — Home"
+      className="brand-hex"
     >
-      <svg
-        aria-hidden
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        className={cn(
-          'absolute inset-0 h-full w-full transition-[transform,color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[45deg]',
-          active ? 'text-accent' : 'text-line group-hover:text-accent',
-        )}
-      >
-        <rect
-          x="2"
-          y="2"
-          width="96"
-          height="96"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <span className="relative">{label}</span>
-      {/* Active pixel — small accent dot under the active link */}
-      <span
-        aria-hidden
-        className={cn(
-          'absolute left-1/2 top-full size-1 -translate-x-1/2 -translate-y-1 bg-accent transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
-          active ? 'scale-100 opacity-100' : 'scale-50 opacity-0',
-        )}
-        style={{ boxShadow: active ? '0 0 8px var(--accent)' : 'none' }}
-      />
+      <div className="brand-hex__inner">
+        <div className="brand-hex__face brand-hex__face--front">
+          <svg
+            aria-hidden
+            className="brand-hex__svg"
+            viewBox="0 0 200 100"
+            preserveAspectRatio="none"
+          >
+            <polygon
+              points={hexPoints}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+          <span className="brand-hex__label text-base md:text-[17px]">
+            Lorenzo&nbsp;Llamas
+          </span>
+        </div>
+        <div className="brand-hex__face brand-hex__face--back">
+          <svg
+            aria-hidden
+            className="brand-hex__svg"
+            viewBox="0 0 200 100"
+            preserveAspectRatio="none"
+          >
+            <polygon
+              points={hexPoints}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+          <span className="brand-hex__label text-base text-accent md:text-[17px]">
+            Lorenzo&nbsp;Llamas
+          </span>
+        </div>
+      </div>
     </Link>
   );
 }
