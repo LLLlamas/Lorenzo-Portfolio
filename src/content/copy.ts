@@ -32,6 +32,13 @@ export const copy = {
     subhead: 'Eight things I have shipped. Featured three on top.',
   },
 
+  workGapFiller: {
+    eyebrow: 'Available',
+    headline: 'Could be yours.',
+    body: 'Landing page, web tool, or focused web app — Spark or Studio.',
+    cta: { label: 'Start a project', href: '/contact' },
+  },
+
   capabilities: {
     eyebrow: 'Capabilities',
     headline: 'What I build.',

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion, type Variants } from 'motion/react';
-import { Children, type ReactNode } from 'react';
+import { Children, Fragment, type ReactNode } from 'react';
 
 type Tag = 'div' | 'ul' | 'ol' | 'section' | 'dl';
 type ChildTag = 'div' | 'li' | 'span' | 'article';
@@ -12,6 +12,13 @@ type Props = {
   /** Element used to wrap each child. Default 'div'. Use 'li' inside ul/ol. */
   childAs?: ChildTag;
   className?: string;
+  /**
+   * Per-child className indexed by child position. Useful for variable
+   * col-spans on specific children (e.g. a gap-filler placeholder at the
+   * end of a grid). Serializable so it can cross the server-component →
+   * client-component boundary.
+   */
+  childClassName?: ReadonlyArray<string | undefined>;
   /** Stagger step in seconds between children. Default 0.08. */
   step?: number;
   /** Initial delay before the first child enters. Default 0. */
@@ -46,6 +53,7 @@ export function Stagger({
   as = 'div',
   childAs = 'div',
   className,
+  childClassName,
   step = 0.08,
   delay = 0,
   y = 18,
@@ -58,7 +66,22 @@ export function Stagger({
 
   if (prefersReduced) {
     const Tag = as as 'div';
-    return <Tag className={className}>{children}</Tag>;
+    return (
+      <Tag className={className}>
+        {childClassName
+          ? Children.map(children, (child, i) => {
+              const cls = childClassName[i];
+              return cls ? (
+                <div key={i} className={cls}>
+                  {child}
+                </div>
+              ) : (
+                <Fragment key={i}>{child}</Fragment>
+              );
+            })
+          : children}
+      </Tag>
+    );
   }
 
   return (
@@ -70,7 +93,12 @@ export function Stagger({
       variants={containerVariants(step, delay)}
     >
       {Children.map(children, (child, i) => (
-        <ChildMotionTag key={i} custom={{ y }} variants={childVariants}>
+        <ChildMotionTag
+          key={i}
+          className={childClassName?.[i]}
+          custom={{ y }}
+          variants={childVariants}
+        >
           {child}
         </ChildMotionTag>
       ))}

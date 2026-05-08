@@ -69,7 +69,7 @@ src/
 | Hero headline / subhead | `src/content/copy.ts` → `copy.hero` |
 | About paragraphs / pull-quote | `src/content/copy.ts` → `copy.about` |
 | Capability cards | `src/content/copy.ts` → `copy.capabilities.items` |
-| A project card | `src/content/projects.ts` (one entry; cover at `public/projects/<slug>.png`) |
+| A project card | `src/content/projects.ts` (one entry; cover at `public/projects/<slug>.png`). The "rest" grid auto-detects trailing gaps and renders a `WorkGapFiller` ("Could be yours.") to fill them — no math needed |
 | A price | `src/content/packages.ts` |
 | An FAQ | `src/content/faqs.ts` |
 | Contact email / Cal.com link | `src/content/copy.ts` → `copy.meta` |
