@@ -1,0 +1,85 @@
+export const copy = {
+  meta: {
+    name: 'Lorenzo Llamas',
+    role: 'Solo developer',
+    email: 'hello@lorenzollamas.com',
+    calendar: '',
+    siteUrl: 'https://lllamas.github.io/Lorenzo-Portfolio',
+  },
+
+  hero: {
+    eyebrow: 'Lorenzo Llamas — Solo developer',
+    headline: 'Websites, web apps, and MVPs — built fast, built right.',
+    subhead:
+      'Solo senior developer. Landing pages and web apps first; native iOS when the project calls for it.',
+    primaryCta: { label: 'See work', href: '/#work' },
+    secondaryCta: { label: 'Start a project', href: '/contact' },
+  },
+
+  about: {
+    eyebrow: 'About',
+    paragraphs: [
+      "I'm Lorenzo Llamas. I build websites, landing pages, and web apps that solve real problems for real people — and iOS apps when the project calls for one.",
+      "Before going solo, I worked across financial systems, real estate technology, and frontend product teams, with UX research underneath all of it. That's why what I ship tends to feel obvious instead of clever.",
+      'I move fast when the scope is clear. I bring the design — or build to yours.',
+    ],
+    pullQuote: 'Software is just an answer to a question someone actually had.',
+  },
+
+  work: {
+    eyebrow: 'Work',
+    headline: 'Selected projects.',
+    subhead: 'Eight things I have shipped. Featured three on top.',
+  },
+
+  capabilities: {
+    eyebrow: 'Capabilities',
+    headline: 'What I build.',
+    subhead: 'Three modes. The first two are where most projects land.',
+    items: [
+      {
+        title: 'Landing Pages & Websites',
+        kicker: 'Primary',
+        tagline: 'Marketing sites, product launches, portfolios, brand sites.',
+        body: 'Fast, polished, performant. Built with motion that converts, not motion that distracts. Your design or mine.',
+      },
+      {
+        title: 'Web Apps & MVPs',
+        kicker: 'Primary',
+        tagline: 'Auth, data, real logic — no fluff.',
+        body: 'Single-purpose tools, internal dashboards, founder MVPs. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.',
+      },
+      {
+        title: 'iOS Apps',
+        kicker: 'Secondary',
+        tagline: 'Native iOS when the project calls for it.',
+        body: 'SwiftUI, App Store submission, post-launch support. Best for projects where mobile-native really matters (camera, location, notifications, on-device performance).',
+      },
+    ],
+  },
+
+  packages: {
+    eyebrow: 'Packages',
+    headline: 'Two tiers. Honest scope.',
+    subhead: 'Public starting prices. Full quote on a call — filters serious leads, leaves scoping room.',
+  },
+
+  faq: {
+    eyebrow: 'FAQ',
+    headline: 'Honest answers.',
+  },
+
+  contactCta: {
+    eyebrow: 'Start a project',
+    headline: 'Got something in mind?',
+    subhead:
+      "The first call is free. Bring an idea, a wireframe, or a finished spec — we'll figure out scope together.",
+    cta: { label: 'Start a project', href: '/contact' },
+  },
+
+  contact: {
+    headline: 'Let’s build something.',
+    subhead: 'Email me, book 20 minutes, or send a short note. I reply within one working day.',
+    formNote: 'A few sentences is plenty. I reply within one working day.',
+  },
+} as const;

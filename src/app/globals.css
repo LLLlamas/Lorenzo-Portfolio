@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-quiet: var(--ink-quiet);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-on: var(--accent-on);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-secondary-soft: var(--accent-secondary-soft);
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 320ms;
+  --duration-slow: 650ms;
+  --duration-cinematic: 1100ms;
+}
+
+/* ─── Light mode neutrals (shared across palettes) ─── */
+:root {
+  --bg: #FAFAF7;
+  --bg-elevated: #FFFFFF;
+  --ink: #141414;
+  --ink-soft: #5A5A5A;
+  --ink-quiet: #9A9A95;
+  --line: #E8E6E0;
+
+  /* Default primary accent: Ink Purple (recommended) */
+  --accent: #3D2E5C;
+  --accent-soft: #ECE7F2;
+  --accent-on: #FFFFFF;
+
+  /* Secondary accent: Deep Navy (used sparingly) */
+  --accent-secondary: #1B2A4E;
+  --accent-secondary-soft: #E5EAF3;
+}
+
+/* ─── Dark mode neutrals (shared) ─── */
+.dark {
+  --bg: #0F0F0E;
+  --bg-elevated: #18181A;
+  --ink: #F5F4EE;
+  --ink-soft: #B5B4AE;
+  --ink-quiet: #6E6E68;
+  --line: #2A2A28;
+
+  /* Ink Purple (dark) */
+  --accent: #A697C8;
+  --accent-soft: #2A2240;
+  --accent-on: #0F0F0E;
+
+  /* Deep Navy (dark) */
+  --accent-secondary: #6B85C0;
+  --accent-secondary-soft: #1F2A45;
+}
+
+/* ─── Palette opt-in: data-palette="navy" makes Deep Navy primary ─── */
+/*    Use during Phase 0 review to A/B both palettes side-by-side.   */
+:root[data-palette="navy"] {
+  --accent: #1B2A4E;
+  --accent-soft: #E5EAF3;
+  --accent-on: #FFFFFF;
+  --accent-secondary: #3D2E5C;
+  --accent-secondary-soft: #ECE7F2;
+}
+
+.dark[data-palette="navy"] {
+  --accent: #6B85C0;
+  --accent-soft: #1F2A45;
+  --accent-on: #0F0F0E;
+  --accent-secondary: #A697C8;
+  --accent-secondary-soft: #2A2240;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
+}
