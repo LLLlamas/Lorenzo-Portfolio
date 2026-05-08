@@ -3,10 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: var(--font-dm-sans), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
@@ -14,6 +14,7 @@
   --color-ink-soft: var(--ink-soft);
   --color-ink-quiet: var(--ink-quiet);
   --color-line: var(--line);
+  --color-line-accent: var(--line-accent);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-on: var(--accent-on);
@@ -33,62 +34,73 @@
   --duration-base: 320ms;
   --duration-slow: 650ms;
   --duration-cinematic: 1100ms;
+  --duration-phase: 600ms;
 }
 
-/* ─── Light mode neutrals (shared across palettes) ─── */
+/* ─── Light mode — "The Presence" (PS1 Phase 1) ─── */
 :root {
-  --bg: #FAFAF7;
-  --bg-elevated: #FFFFFF;
-  --ink: #141414;
-  --ink-soft: #5A5A5A;
-  --ink-quiet: #9A9A95;
-  --line: #E8E6E0;
+  --bg: #F7F4EE;
+  --bg-elevated: #EDEAE3;
+  --ink: #1A1610;
+  --ink-soft: #5A5040;
+  --ink-quiet: #9A8E78;
+  --line: rgba(26, 22, 16, 0.08);
+  --line-accent: rgba(200, 134, 10, 0.30);
 
-  /* Default primary accent: Ink Purple (recommended) */
-  --accent: #3D2E5C;
-  --accent-soft: #ECE7F2;
-  --accent-on: #FFFFFF;
+  --accent: #C8860A;
+  --accent-soft: rgba(200, 134, 10, 0.12);
+  --accent-on: #F7F4EE;
 
-  /* Secondary accent: Deep Navy (used sparingly) */
-  --accent-secondary: #1B2A4E;
-  --accent-secondary-soft: #E5EAF3;
+  /* Geometry / decorative tones (light) */
+  --geo-face: #DDD8CE;
+  --geo-edge: #C8860A;
+  --geo-opacity: 0.6;
+
+  /* Secondary — kept identical to primary; old palette removed */
+  --accent-secondary: #C8860A;
+  --accent-secondary-soft: rgba(200, 134, 10, 0.12);
+
+  color-scheme: light;
 }
 
-/* ─── Dark mode neutrals (shared) ─── */
+/* ─── Dark mode — "The Void" (PS1 Phase 2, default) ─── */
 .dark {
-  --bg: #0F0F0E;
-  --bg-elevated: #18181A;
-  --ink: #F5F4EE;
-  --ink-soft: #B5B4AE;
-  --ink-quiet: #6E6E68;
-  --line: #2A2A28;
+  --bg: #000000;
+  --bg-elevated: #020201;
+  --ink: rgba(255, 255, 255, 0.92);
+  --ink-soft: rgba(255, 255, 255, 0.60);
+  --ink-quiet: rgba(255, 255, 255, 0.30);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-accent: rgba(240, 192, 64, 0.22);
 
-  /* Ink Purple (dark) */
-  --accent: #A697C8;
-  --accent-soft: #2A2240;
-  --accent-on: #0F0F0E;
+  --accent: #F0C040;
+  --accent-soft: rgba(240, 192, 64, 0.15);
+  --accent-on: #000000;
 
-  /* Deep Navy (dark) */
-  --accent-secondary: #6B85C0;
-  --accent-secondary-soft: #1F2A45;
+  --geo-face: #0D0D0B;
+  --geo-edge: #F0C040;
+  --geo-opacity: 1;
+
+  --accent-secondary: #F0C040;
+  --accent-secondary-soft: rgba(240, 192, 64, 0.15);
+
+  color-scheme: dark;
 }
 
-/* ─── Palette opt-in: data-palette="navy" makes Deep Navy primary ─── */
-/*    Use during Phase 0 review to A/B both palettes side-by-side.   */
-:root[data-palette="navy"] {
-  --accent: #1B2A4E;
-  --accent-soft: #E5EAF3;
-  --accent-on: #FFFFFF;
-  --accent-secondary: #3D2E5C;
-  --accent-secondary-soft: #ECE7F2;
-}
-
-.dark[data-palette="navy"] {
-  --accent: #6B85C0;
-  --accent-soft: #1F2A45;
-  --accent-on: #0F0F0E;
-  --accent-secondary: #A697C8;
-  --accent-secondary-soft: #2A2240;
+/* ─── 600ms phase transition between modes ─── */
+/* Applied to virtually everything so dark↔light feels like the PS1 phase
+   switch. Excludes transforms (lets motion components keep their easing)
+   and opacity (keeps reveals snappy). */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--duration-phase) var(--ease-out-expo),
+    color var(--duration-phase) var(--ease-out-expo),
+    border-color var(--duration-phase) var(--ease-out-expo),
+    fill var(--duration-phase) var(--ease-out-expo),
+    stroke var(--duration-phase) var(--ease-out-expo),
+    box-shadow var(--duration-phase) var(--ease-out-expo);
 }
 
 /* ─── Reduced-motion gate (single source of truth) ─── */
@@ -117,10 +129,10 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
+  font-feature-settings: "ss01" on;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color var(--duration-slow) var(--ease-physical);
 }
 
 ::selection {
@@ -130,6 +142,16 @@ body {
 
 section[id] {
   scroll-margin-top: 5rem;
+}
+
+/* Hide native cursor on desktop when custom cursor is active */
+html[data-cursor="custom"] {
+  cursor: none;
+}
+html[data-cursor="custom"] *,
+html[data-cursor="custom"] *::before,
+html[data-cursor="custom"] *::after {
+  cursor: none !important;
 }
 
 /* ─── Cinematic CSS layer ─── */
@@ -199,4 +221,115 @@ section[id] {
 .hairline-draw {
   transform-origin: left center;
   animation: hairline-draw 800ms var(--ease-out-expo) both;
+}
+
+/* ─── PS1-coded additions ─── */
+
+/* Radial glow used by hero and entry sequence */
+.radial-glow {
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--accent-soft) 0%,
+    transparent 60%
+  );
+}
+
+/* Pixel-blur character entry — reduces from blur(8px)+opacity(0) to clean */
+@keyframes pixel-resolve {
+  0%   { filter: blur(10px); opacity: 0; transform: translateY(4px); }
+  60%  { filter: blur(2px);  opacity: 1; transform: translateY(0); }
+  100% { filter: blur(0);    opacity: 1; transform: translateY(0); }
+}
+
+/* Scan line drawing across screen */
+@keyframes scan-line-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+.scan-line-sweep {
+  animation: scan-line-sweep 1400ms var(--ease-out-expo) both;
+}
+
+/* CRT phosphor glow on the accent text — tiny, present on hover */
+.crt-text-glow {
+  text-shadow: 0 0 1px var(--accent-soft), 0 0 12px var(--accent-soft);
+}
+
+/* "LOADING" blink cadence — slower than a cursor blink so it feels mechanical */
+@keyframes loading-blink {
+  0%, 60%  { opacity: 1; }
+  61%, 99% { opacity: 0.25; }
+  100%     { opacity: 1; }
+}
+.loading-blink {
+  animation: loading-blink 1.6s steps(1, end) infinite;
+}
+
+/* Cursor breathing — only used by the dot SVG underlay */
+@keyframes cursor-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.18); opacity: 1; }
+}
+.cursor-breathe {
+  animation: cursor-breathe 2.2s var(--ease-in-out-circ) infinite;
+}
+
+/* Section scan-line — draws once when section enters viewport */
+@keyframes section-scan {
+  from { transform: scaleX(0); opacity: 0; }
+  20%  { opacity: 1; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+.section-scan {
+  transform-origin: left center;
+  animation: section-scan 900ms var(--ease-out-expo) both;
+}
+
+/* Project card golden border ring on hover */
+.card-glow {
+  box-shadow: 0 0 0 1px transparent;
+  transition:
+    box-shadow var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo),
+    background-color var(--duration-phase) var(--ease-out-expo),
+    border-color var(--duration-phase) var(--ease-out-expo);
+}
+.card-glow:hover {
+  box-shadow:
+    0 0 0 1px var(--line-accent),
+    0 8px 30px -12px var(--accent-soft);
+}
+
+/* Button activate glow — primary CTA */
+.btn-glow {
+  position: relative;
+  isolation: isolate;
+  transition:
+    box-shadow var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo),
+    background-color var(--duration-phase) var(--ease-out-expo),
+    color var(--duration-phase) var(--ease-out-expo);
+}
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms var(--ease-out-expo), transform 200ms var(--ease-out-expo);
+  pointer-events: none;
+  z-index: -1;
+}
+.btn-glow:hover {
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 8px 32px -10px var(--accent);
+}
+.btn-glow:hover::after {
+  opacity: 0.6;
+  transform: scale(1.04);
 }

@@ -19,7 +19,7 @@ type Props = {
 };
 
 const variants: Variants = {
-  hidden: (custom: { y: number }) => ({ opacity: 0, y: custom.y, filter: 'blur(4px)' }),
+  hidden: (custom: { y: number }) => ({ opacity: 0, y: custom.y, filter: 'blur(8px)' }),
   visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
 };
 
@@ -48,9 +48,9 @@ export function Reveal({
       whileInView="visible"
       viewport={{ once, margin: rootMargin }}
       transition={{
-        duration: 0.7,
+        duration: 0.9,
         delay,
-        ease: [0.22, 1, 0.36, 1],
+        ease: [0.16, 1, 0.3, 1],
       }}
       variants={variants}
     >

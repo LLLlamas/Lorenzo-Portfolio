@@ -11,7 +11,7 @@ export function Card({ children, className, as: As = 'div' }: Props) {
   return (
     <As
       className={cn(
-        'rounded-[var(--radius-card)] border border-line bg-bg-elevated',
+        'card-glow rounded-[var(--radius-card)] border border-line bg-bg-elevated',
         className,
       )}
     >

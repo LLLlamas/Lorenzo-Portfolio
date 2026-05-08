@@ -1,41 +1,100 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: '/#work', label: 'Work' },
-  { href: '/#capabilities', label: 'Capabilities' },
-  { href: '/#packages', label: 'Packages' },
-  { href: '/#faq', label: 'FAQ' },
+  { id: 'work', href: '/#work', label: 'Work' },
+  { id: 'capabilities', href: '/#capabilities', label: 'Capabilities' },
+  { id: 'packages', href: '/#packages', label: 'Packages' },
+  { id: 'faq', href: '/#faq', label: 'FAQ' },
 ];
 
 export function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Track which section is currently in view to drive the pixel indicator.
+  useEffect(() => {
+    const sections = navLinks
+      .map((l) => document.getElementById(l.id))
+      .filter((el): el is HTMLElement => !!el);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top of the viewport that's intersecting.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActive(visible[0].target.id);
+      },
+      { rootMargin: '-30% 0px -55% 0px', threshold: 0 },
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-md supports-[backdrop-filter]:bg-bg/60">
+    <header
+      className={cn(
+        'fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        scrolled
+          ? 'border-b border-line bg-bg/80 backdrop-blur-md supports-[backdrop-filter]:bg-bg/65'
+          : 'border-b border-transparent bg-transparent',
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
         <Link
           href="/"
-          className="font-display text-sm font-semibold tracking-tight text-ink"
+          className="font-display text-sm tracking-[0.06em] text-ink transition-colors hover:text-accent"
           aria-label="Lorenzo Llamas — Home"
         >
-          Lorenzo&nbsp;Llamas
+          LORENZO&nbsp;LLAMAS
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-ink-soft transition-colors hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => {
+            const isActive = active === link.id;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'group relative rounded-full px-3 py-1.5 text-sm transition-colors',
+                  isActive
+                    ? 'text-ink'
+                    : 'text-ink-soft hover:text-ink',
+                )}
+              >
+                {link.label}
+                {/* Pixel indicator — small accent square under active link */}
+                <span
+                  aria-hidden
+                  className={cn(
+                    'absolute left-1/2 top-full size-1 -translate-x-1/2 -translate-y-1 bg-accent transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+                    isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-50',
+                  )}
+                  style={{ boxShadow: isActive ? '0 0 8px var(--accent)' : 'none' }}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className="hidden rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg transition-opacity hover:opacity-90 md:inline-flex"
+            className="btn-glow hidden rounded-full border border-accent bg-transparent px-4 py-2 font-mono text-xs uppercase tracking-[0.16em] text-accent md:inline-flex"
           >
             Start a project
           </Link>

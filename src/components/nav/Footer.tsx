@@ -4,21 +4,41 @@ import { copy } from '@/content/copy';
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-10 text-sm text-ink-soft md:flex-row md:items-center">
-        <p>
-          © {year} {copy.meta.name}. Built solo.
-        </p>
-        <div className="flex items-center gap-5">
-          <Link href="/contact" className="transition-colors hover:text-ink">
-            Contact
-          </Link>
-          <a
-            href={`mailto:${copy.meta.email}`}
-            className="transition-colors hover:text-ink"
-          >
+    <footer className="relative border-t border-line">
+      {/* Hairline accent — the closing scan line */}
+      <span
+        aria-hidden
+        className="absolute left-0 right-0 top-0 mx-auto h-px max-w-6xl bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+      />
+
+      <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-12 pt-20 md:pt-28">
+        <a
+          href={`mailto:${copy.meta.email}`}
+          className="group block font-display text-3xl leading-tight tracking-[0.02em] text-ink transition-colors hover:text-accent md:text-5xl lg:text-6xl"
+        >
+          <span className="opacity-60">&gt;</span>{' '}
+          <span className="underline decoration-line decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-accent">
             {copy.meta.email}
-          </a>
+          </span>
+        </a>
+
+        <div className="flex flex-col items-start justify-between gap-4 border-t border-line pt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet md:flex-row md:items-center">
+          <p>
+            © {year} {copy.meta.name}. Built solo.
+          </p>
+          <div className="flex items-center gap-6">
+            <Link href="/contact" className="transition-colors hover:text-accent">
+              Contact
+            </Link>
+            <a
+              href={copy.meta.siteUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="transition-colors hover:text-accent"
+            >
+              v1
+            </a>
+          </div>
         </div>
       </div>
     </footer>

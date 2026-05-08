@@ -40,11 +40,16 @@ const containerVariants = (step: number, delay: number): Variants => ({
 });
 
 const childVariants: Variants = {
-  hidden: (custom: { y: number }) => ({ opacity: 0, y: custom.y }),
+  hidden: (custom: { y: number }) => ({
+    opacity: 0,
+    y: custom.y,
+    filter: 'blur(6px)',
+  }),
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    filter: 'blur(0px)',
+    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
   },
 };
 

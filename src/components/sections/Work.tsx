@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
@@ -109,7 +109,7 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
     <Card
       as="article"
       className={cn(
-        'group relative p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-md',
+        'group relative p-0 transition-transform duration-300 hover:-translate-y-1.5',
       )}
     >
       <button
@@ -234,41 +234,50 @@ function PhoneCoverPreview({
 }
 
 /**
- * Gap-filler card — turns awkward trailing space in the rest grid into a
- * "Could be yours" CTA. Auto-spans 1 or 2 columns via the Stagger's
- * childClassName prop based on Work.gapCount.
+ * "LOADING" placeholder — turns awkward trailing space into a PS1-style
+ * coming-soon slot. Dashed accent border, blinking accent text, hover
+ * resolves into a CTA.
  */
 function WorkGapFiller({ wide }: { wide: boolean }) {
   return (
     <Link
       href={copy.workGapFiller.cta.href}
       className={cn(
-        'group flex h-full rounded-[var(--radius-card)] border border-dashed border-line bg-bg/40 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:bg-accent-soft/40 md:p-6',
-        wide ? 'flex-col md:flex-row md:items-center md:gap-8' : 'flex-col',
+        'group relative flex h-full overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent bg-bg/40 p-6 transition-transform duration-300 hover:-translate-y-1.5 md:p-8',
+        wide ? 'flex-col md:flex-row md:items-center md:gap-10' : 'flex-col items-center justify-center text-center',
       )}
     >
-      <div className={cn('flex flex-col', wide && 'md:flex-1')}>
-        <div className="grid size-10 place-items-center rounded-full bg-accent-soft text-accent transition-transform duration-300 group-hover:scale-110">
-          <Sparkles className="size-5" aria-hidden />
-        </div>
-        <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
-          {copy.workGapFiller.eyebrow}
-        </p>
-        <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
+      {/* Aspect spacer so the LOADING block matches a real card cover */}
+      <div className={cn('flex flex-col items-start gap-3', wide ? 'md:flex-1' : 'items-center')}>
+        <span
+          className="loading-blink font-mono text-[11px] uppercase tracking-[0.32em] text-accent"
+          aria-hidden
+        >
+          LOADING
+        </span>
+        <p className="font-display text-2xl tracking-[0.04em] text-ink md:text-3xl">
           {copy.workGapFiller.headline}
-        </h3>
-        <p className="mt-1 text-sm text-ink-soft">{copy.workGapFiller.body}</p>
+        </p>
+        <p className={cn('text-sm text-ink-soft', wide ? 'max-w-md' : 'max-w-xs')}>
+          {copy.workGapFiller.body}
+        </p>
       </div>
 
       <span
         className={cn(
-          'mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent',
-          wide && 'md:mt-0 md:shrink-0',
+          'inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-accent transition-transform duration-200 group-hover:translate-x-0.5',
+          wide ? 'mt-0 md:shrink-0' : 'mt-5',
         )}
       >
         {copy.workGapFiller.cta.label}
-        <ArrowUpRight className="size-3.5 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <ArrowUpRight className="size-3.5" />
       </span>
+
+      {/* Decorative scan line that draws across on hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-6 top-1/2 h-px origin-left scale-x-0 bg-accent/40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+      />
     </Link>
   );
 }
