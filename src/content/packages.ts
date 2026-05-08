@@ -10,11 +10,12 @@ export type PricingPackage = {
 export const packages: PricingPackage[] = [
   {
     name: 'Spark',
-    price: 'Starting at $2,500',
+    price: 'Starting at $2,000',
     cadence: '~1–2 weeks',
-    description: 'A landing page or single-purpose site.',
+    description: 'A landing page, single-purpose site, or small web tool.',
+    popular: true,
     features: [
-      'Marketing site, landing page, or simple web tool (~3–5 sections/screens)',
+      'Landing page, marketing site, or focused web tool (~3–5 sections/screens)',
       'Your design or mine',
       '1 round of revisions',
       'Deployed (Vercel / Cloudflare / GitHub Pages)',
@@ -24,12 +25,11 @@ export const packages: PricingPackage[] = [
   },
   {
     name: 'Studio',
-    price: 'Starting at $7,500',
+    price: 'Starting at $6,500',
     cadence: '~3–5 weeks',
-    description: 'A real web app or MVP.',
-    popular: true,
+    description: 'A bigger site, web tool, or focused web app.',
     features: [
-      'Web app or MVP with backend, auth, and meaningful state',
+      'Multi-page site, web tool, or focused web app with backend, auth, and meaningful state',
       'Or a multi-page marketing site with CMS',
       'Or an iOS app (Spark-equivalent scope)',
       "UX conversation + wireframes if you don't bring designs",

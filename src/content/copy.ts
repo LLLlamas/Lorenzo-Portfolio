@@ -9,9 +9,9 @@ export const copy = {
 
   hero: {
     eyebrow: 'Lorenzo Llamas — Solo developer',
-    headline: 'Websites, web apps, and MVPs — built fast, built right.',
+    headline: 'Landing pages, websites, and small web tools — shipped fast.',
     subhead:
-      'Solo senior developer. Landing pages and web apps first; native iOS when the project calls for it.',
+      'Solo senior developer. Landing pages and single-purpose tools first; bigger web apps and iOS when the project calls for it.',
     primaryCta: { label: 'See work', href: '/#work' },
     secondaryCta: { label: 'Start a project', href: '/contact' },
   },
@@ -19,7 +19,7 @@ export const copy = {
   about: {
     eyebrow: 'About',
     paragraphs: [
-      "I'm Lorenzo Llamas. I build websites, landing pages, and web apps that solve real problems for real people — and iOS apps when the project calls for one.",
+      "I'm Lorenzo Llamas. I build landing pages, websites, and single-purpose web tools that solve real problems for real people — and bigger web apps or iOS when the project calls for one.",
       "Before going solo, I worked across financial systems, real estate technology, and frontend product teams, with UX research underneath all of it. That's why what I ship tends to feel obvious instead of clever.",
       'I move fast when the scope is clear. I bring the design — or build to yours.',
     ],
@@ -44,10 +44,10 @@ export const copy = {
         body: 'Fast, polished, performant. Built with motion that converts, not motion that distracts. Your design or mine.',
       },
       {
-        title: 'Web Apps & MVPs',
+        title: 'Single-Purpose Web Tools',
         kicker: 'Primary',
-        tagline: 'Auth, data, real logic — no fluff.',
-        body: 'Single-purpose tools, internal dashboards, founder MVPs. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.',
+        tagline: 'Calculators, dashboards, internal tools, focused web apps.',
+        body: 'One thing, done well — not a sprawling MVP. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.',
       },
       {
         title: 'iOS Apps',

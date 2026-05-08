@@ -100,9 +100,9 @@ Three cards, in this exact order:
 *Marketing sites, product launches, portfolios, brand sites.*
 Fast, polished, performant. Built with motion that converts, not motion that distracts. Your design or mine.
 
-### 2. Web Apps & MVPs *(primary)*
-*Auth, data, real logic — no fluff.*
-Single-purpose tools, internal dashboards, founder MVPs. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.
+### 2. Single-Purpose Web Tools *(primary)*
+*Calculators, dashboards, internal tools, focused web apps.*
+One thing, done well — not a sprawling MVP. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.
 
 ### 3. iOS Apps *(secondary)*
 *Native iOS when the project calls for it.*
@@ -114,20 +114,20 @@ SwiftUI, App Store submission, post-launch support. Best for projects where mobi
 
 **Web-first, solo senior tier. US 2026 rates ($100–$150/hr basis).**
 
-### Tier 1 — Spark
-**Starting at $2,500**
-*A landing page or single-purpose site. ~1–2 weeks.*
-- Marketing site, landing page, or simple web tool (~3–5 sections/screens)
+### Tier 1 — Spark *(most projects land here)*
+**Starting at $2,000**
+*A landing page, single-purpose site, or small web tool. ~1–2 weeks.*
+- Landing page, marketing site, or focused web tool (~3–5 sections/screens)
 - Your design **or** mine
 - 1 round of revisions
 - Deployed (Vercel / Cloudflare / GitHub Pages)
 - Analytics + basic SEO baked in
 - 14-day post-launch bug-fix window
 
-### Tier 2 — Studio *(most projects land here)*
-**Starting at $7,500**
-*A real web app or MVP. ~3–5 weeks.*
-- Web app or MVP with backend, auth, and meaningful state
+### Tier 2 — Studio
+**Starting at $6,500**
+*A bigger site, web tool, or focused web app. ~3–5 weeks.*
+- Multi-page site, web tool, or focused web app with backend, auth, and meaningful state
 - **Or** a multi-page marketing site with CMS
 - **Or** an iOS app (Spark-equivalent scope)
 - UX conversation + wireframes if you don't bring designs
@@ -145,9 +145,9 @@ SwiftUI, App Store submission, post-launch support. Best for projects where mobi
 
 **Why these numbers (research-grounded, 2026 US market):**
 - Senior US solo full-stack rates: $100–$180/hr; landing-page-focused solos cluster at $100–$130/hr
-- Spark = ~20–30 hrs (sweet spot for a polished landing page)
-- Studio = ~50–80 hrs (sweet spot for a simple MVP or multi-page site)
-- Small business sites cluster $3K–$8K with a freelancer in 2026 — Spark sits at the credible low end
+- Spark = ~20–30 hrs (sweet spot for a polished landing page or focused tool); $2,000 = ~$80–100/hr
+- Studio = ~50–80 hrs (sweet spot for a multi-page site or focused web app); $6,500 = ~$90–130/hr
+- Small business sites cluster $3K–$8K with a freelancer in 2026 — Spark sits below the floor as a deliberate landing-page anchor
 - Web MVPs cluster $15K–$40K — Studio sits well below that as the "starting at" anchor; quotes scale up on call
 - iOS surcharge reflects the real native-overhead delta from research ($20K–$50K mobile-vs-web premium, scaled down for solo simple-MVP scope)
 
@@ -657,13 +657,13 @@ Phase 1 can ship with placeholder gradients where screenshots are missing.
 - **Repo name:** `Lorenzo-Portfolio`
 - **Name:** Lorenzo Llamas
 - **Pages:** Landing + `/contact` (two pages, no case studies)
-- **Capability priority:** 1. Landing pages & websites · 2. Web apps & MVPs · 3. iOS apps
+- **Capability priority:** 1. Landing pages & websites · 2. Single-purpose web tools · 3. iOS apps
 - **Theme:** Both light & dark
 - **Accent palettes:** Deep Navy + Ink Purple (mock both, recommend Ink Purple primary + Navy secondary)
 - **Feeling:** Capable & Inventive
 - **Featured 3:** Dogs & Llamas, Llamas Cookbook, Bite Defense
 - **Pricing:** "Starting at $X" public, full quote on call
-- **Tiers:** Spark $2,500 / Studio $7,500
+- **Tiers:** Spark $2,000 *(most projects land here)* / Studio $6,500
 - **Modifiers:** +35% rush, −15% design provided, +$1,500 iOS surcharge in Studio
 - **Contact:** mock email (placeholder until real one provided)
 
