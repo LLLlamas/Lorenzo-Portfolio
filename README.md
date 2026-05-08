@@ -37,7 +37,7 @@ document.documentElement.dataset.palette = 'navy';
 
 Pushing to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) which builds and publishes `./out` to GitHub Pages.
 
-Live URL after first successful deploy: `https://lllamas.github.io/Lorenzo-Portfolio/`.
+Live URL: <https://llllamas.github.io/Lorenzo-Portfolio/>
 
 When a custom domain is added (Phase 4):
 1. Drop the domain into `public/CNAME`

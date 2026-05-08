@@ -4,7 +4,7 @@ export const copy = {
     role: 'Solo developer',
     email: 'hello@lorenzollamas.com',
     calendar: '',
-    siteUrl: 'https://lllamas.github.io/Lorenzo-Portfolio',
+    siteUrl: 'https://llllamas.github.io/Lorenzo-Portfolio',
   },
 
   hero: {
