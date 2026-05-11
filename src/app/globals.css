@@ -304,24 +304,23 @@ section[id] {
   opacity: 1;
 }
 
-/* Text gets a thin outline when inside the cursor glow radius.
-   Width stays constant (1px) so layout never shifts — only the color
-   transitions between transparent (resting) and --glow-stroke (active).
-   --glow-stroke is white in light mode, accent in dark mode. */
+/* Text glow-outline when inside the cursor radius.
+   Uses filter: drop-shadow instead of -webkit-text-stroke — drop-shadow traces
+   the exact glyph alpha channel so there are no stroke-intersection artifacts on
+   large or bold glyphs. Transitions from transparent shadow (off) to colored (on).
+   --glow-stroke: white in light mode, accent in dark mode. */
 [data-glow] {
-  -webkit-text-stroke-width: 1px;
-  text-stroke-width: 1px;
-  transition:
-    -webkit-text-stroke-color 200ms ease,
-    text-stroke-color 200ms ease;
+  transition: filter 200ms ease;
 }
 [data-glow="1"] {
-  -webkit-text-stroke-color: var(--glow-stroke);
-  text-stroke-color: var(--glow-stroke);
+  filter:
+    drop-shadow(0 0 1px var(--glow-stroke))
+    drop-shadow(0 0 2px color-mix(in srgb, var(--glow-stroke) 55%, transparent));
 }
 [data-glow="0"] {
-  -webkit-text-stroke-color: transparent;
-  text-stroke-color: transparent;
+  filter:
+    drop-shadow(0 0 1px transparent)
+    drop-shadow(0 0 2px transparent);
 }
 
 /* ─── True CSS 3D nav primitives ───
