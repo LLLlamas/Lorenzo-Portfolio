@@ -62,6 +62,9 @@
   --geo-edge: #3D2E5C;
   --geo-opacity: 0.55;
 
+  /* Cursor-glow text outline — white so it reads against the dark-tinted aura */
+  --glow-stroke: rgba(255, 255, 255, 0.82);
+
   color-scheme: light;
 }
 
@@ -88,6 +91,9 @@
   --geo-face: #1A1426;
   --geo-edge: #A697C8;
   --geo-opacity: 0.95;
+
+  /* Cursor-glow text outline — accent color on light text */
+  --glow-stroke: var(--accent);
 
   color-scheme: dark;
 }
@@ -298,18 +304,24 @@ section[id] {
   opacity: 1;
 }
 
-/* Text gets a thin accent outline when inside the cursor glow radius.
-   data-glow is toggled by CursorGlow.tsx via closest-point proximity check. */
+/* Text gets a thin outline when inside the cursor glow radius.
+   Width stays constant (1px) so layout never shifts — only the color
+   transitions between transparent (resting) and --glow-stroke (active).
+   --glow-stroke is white in light mode, accent in dark mode. */
 [data-glow] {
-  transition: -webkit-text-stroke-color 180ms ease, text-stroke-color 180ms ease;
+  -webkit-text-stroke-width: 1px;
+  text-stroke-width: 1px;
+  transition:
+    -webkit-text-stroke-color 200ms ease,
+    text-stroke-color 200ms ease;
 }
 [data-glow="1"] {
-  -webkit-text-stroke: 0.5px var(--accent);
-  text-stroke: 0.5px var(--accent);
+  -webkit-text-stroke-color: var(--glow-stroke);
+  text-stroke-color: var(--glow-stroke);
 }
 [data-glow="0"] {
-  -webkit-text-stroke: 0.5px transparent;
-  text-stroke: 0.5px transparent;
+  -webkit-text-stroke-color: transparent;
+  text-stroke-color: transparent;
 }
 
 /* ─── True CSS 3D nav primitives ───
