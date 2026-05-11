@@ -25,6 +25,7 @@ export function Packages() {
           {packages.map((pkg) => (
             <RippleTap key={pkg.name} className="rounded-[var(--radius-card)]">
             <Card
+              shine
               className={cn(
                 'group relative p-7 transition-all duration-300 md:p-8',
                 pkg.popular &&

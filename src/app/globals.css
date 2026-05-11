@@ -167,15 +167,6 @@ section[id] {
   scroll-margin-top: 6rem;
 }
 
-/* Hide native cursor on desktop when custom cursor is active */
-html[data-cursor="custom"] {
-  cursor: none;
-}
-html[data-cursor="custom"] *,
-html[data-cursor="custom"] *::before,
-html[data-cursor="custom"] *::after {
-  cursor: none !important;
-}
 
 /* ─── Cinematic CSS layer ─── */
 
@@ -276,6 +267,35 @@ html[data-cursor="custom"] *::after {
 .card-glow:hover {
   border-color: var(--line-accent);
   box-shadow: 0 14px 40px -22px var(--accent);
+}
+
+/* Shiny haptic glow — accent light source follows cursor via --shine-x / --shine-y */
+.card-shine {
+  position: relative;
+}
+.card-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    radial-gradient(
+      80px circle at var(--shine-x, -200%) var(--shine-y, -200%),
+      color-mix(in srgb, white 18%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      420px circle at var(--shine-x, -200%) var(--shine-y, -200%),
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      transparent 60%
+    );
+  transition: opacity 350ms ease;
+}
+.card-shine:hover::after {
+  opacity: 1;
 }
 
 /* ─── True CSS 3D nav primitives ───
