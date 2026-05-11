@@ -92,13 +92,26 @@ export function CursorGlow() {
     let visible = false;
 
     const seen = new WeakSet<Text>();
-
-    const containers = Array.from(
-      document.querySelectorAll<HTMLElement>(TEXT_SELECTOR),
-    ).filter((node) => parseFloat(getComputedStyle(node).fontSize) >= MIN_FONT_PX);
-
     const wordSpans: HTMLSpanElement[] = [];
-    for (const c of containers) wordSpans.push(...wrapWords(c, seen));
+
+    function scanAndWrap() {
+      const containers = Array.from(
+        document.querySelectorAll<HTMLElement>(TEXT_SELECTOR),
+      ).filter((node) => parseFloat(getComputedStyle(node).fontSize) >= MIN_FONT_PX);
+      for (const c of containers) wordSpans.push(...wrapWords(c, seen));
+    }
+
+    // Initial pass
+    scanAndWrap();
+
+    // Re-scan whenever the DOM changes (route navigations, modals opening,
+    // accordions expanding, etc.). Debounced so rapid mutations only cost one scan.
+    let debounceId = 0;
+    const observer = new MutationObserver(() => {
+      clearTimeout(debounceId);
+      debounceId = window.setTimeout(scanAndWrap, 120);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     const onMove = (e: MouseEvent) => {
       cx = e.clientX;
@@ -119,6 +132,8 @@ export function CursorGlow() {
     window.addEventListener('mousemove', onMove);
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(debounceId);
+      observer.disconnect();
       window.removeEventListener('mousemove', onMove);
       wordSpans.forEach((s) => { s.dataset.glow = '0'; });
     };
@@ -130,7 +145,7 @@ export function CursorGlow() {
     <div
       ref={layerRef}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[5] opacity-0 transition-opacity duration-700"
+      className="pointer-events-none fixed left-0 top-0 z-[110] opacity-0 transition-opacity duration-700"
       style={{
         width: SIZE,
         height: SIZE,
