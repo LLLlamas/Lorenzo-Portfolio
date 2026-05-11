@@ -9,7 +9,7 @@ const HALF = SIZE / 2;
 const GLOW_R2 = 80 * 80;   // GLOW_RADIUS² — avoids sqrt in hot path
 
 const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, a:not(.btn-sweep)';
-const MIN_FONT_PX = 13;
+const MIN_FONT_PX = 11;
 
 /**
  * Split every text node inside `container` into individual word <span>s.

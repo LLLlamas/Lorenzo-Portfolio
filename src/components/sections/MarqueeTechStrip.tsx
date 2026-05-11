@@ -1,38 +1,27 @@
-import { Fragment } from 'react';
-
 const ITEMS = [
-  'React',
+  'React & React Native',
   'Next.js',
-  'TypeScript',
+  'JavaScript / TypeScript',
   'SwiftUI',
-  'Supabase',
-  'Vercel',
-  'Tailwind CSS',
-  'GSAP',
-  'Three.js',
-  'SpriteKit',
-  'PostgreSQL',
-  'Figma',
+  'UX / UI',
 ];
-
-const LOOP = [...ITEMS, ...ITEMS];
 
 export function MarqueeTechStrip() {
   return (
-    <div
-      aria-hidden
-      className="relative overflow-hidden border-y border-line py-4"
-    >
-      <div className="marquee-track motion-decorative flex w-max items-center">
-        {LOOP.map((item, i) => (
-          <Fragment key={`${item}-${i}`}>
-            <span className="px-6 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.14em] text-ink-quiet">
-              {item}
-            </span>
-            <span className="text-line">✦</span>
-          </Fragment>
+    <div className="border-y border-line px-6 py-5">
+      <ul
+        aria-label="Core technologies"
+        className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-10 gap-y-3"
+      >
+        {ITEMS.map((item) => (
+          <li
+            key={item}
+            className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.16em] text-ink-quiet"
+          >
+            {item}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
