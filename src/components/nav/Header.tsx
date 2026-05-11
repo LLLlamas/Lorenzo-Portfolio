@@ -17,7 +17,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -26,10 +26,10 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'fixed inset-x-0 top-0 z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
         scrolled
-          ? 'border-b border-line bg-bg/80 backdrop-blur-md supports-[backdrop-filter]:bg-bg/65'
-          : 'border-b border-transparent bg-transparent',
+          ? 'border-b border-line/10 bg-bg/95 backdrop-blur-xl'
+          : 'border-b border-transparent bg-bg/60 backdrop-blur-md',
       )}
     >
       <div className="mx-auto flex h-24 max-w-6xl items-center justify-between gap-6 px-6">

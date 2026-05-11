@@ -69,6 +69,18 @@ export function Capabilities() {
                 <p className="mt-2 text-sm font-medium text-ink-soft">{item.tagline}</p>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">{item.body}</p>
 
+                {/* Mobile: pills always visible inside their card */}
+                <div className="mt-4 flex flex-wrap gap-1.5 md:hidden" aria-hidden>
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-accent"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
                 {/* Hairline that draws across on hover */}
                 <span
                   aria-hidden
@@ -83,7 +95,7 @@ export function Capabilities() {
             reveals the corresponding column's pills with a small staggered
             blur-resolve. Min-height keeps the layout from jumping. */}
         <div
-          className="mt-6 grid min-h-[5rem] gap-6 md:min-h-[3.5rem] md:grid-cols-3"
+          className="mt-6 hidden md:grid md:min-h-[3.5rem] md:gap-6 md:grid-cols-3"
           aria-hidden
         >
           {copy.capabilities.items.map((item, i) => (

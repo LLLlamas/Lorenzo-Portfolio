@@ -28,6 +28,7 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
   --ease-physical: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 150ms;
@@ -516,4 +517,59 @@ html[data-cursor="custom"] *::after {
 .btn-sweep:hover::before,
 .btn-sweep:focus-visible::before {
   transform: translateX(0);
+}
+
+/* ─── Mobile spring tap feedback ───
+   Touch-only :active compress with overshoot release. Wrapped in
+   (hover: none) so desktop hover states are untouched, and in
+   (prefers-reduced-motion: no-preference) so reduced-motion users
+   get no scale jump. Tap-highlight nuke is global (touch only). */
+@media (hover: none) and (pointer: coarse) {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .project-card,
+    .btn-sweep,
+    .nav-cube,
+    .nav-cube__inner {
+      transition: transform 320ms var(--ease-spring);
+    }
+    .project-card:active,
+    .btn-sweep:active,
+    .nav-cube:active .nav-cube__inner {
+      transform: scale(0.96);
+    }
+  }
+}
+
+/* ─── Ripple tap effect ─── */
+@keyframes ripple-expand {
+  from { transform: scale(0); opacity: 1; }
+  to   { transform: scale(1); opacity: 0; }
+}
+.ripple-expand {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  transform: scale(0);
+  animation: ripple-expand 500ms ease-out forwards;
+}
+
+/* ─── Mobile carousel — Work section ───
+   Desktop layout in JSX still uses md:grid; these utilities only bite
+   below the md breakpoint where the flex/snap layout is active. */
+.work-carousel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.work-carousel::-webkit-scrollbar {
+  display: none;
+}
+.work-snap-item {
+  scroll-snap-align: start;
 }

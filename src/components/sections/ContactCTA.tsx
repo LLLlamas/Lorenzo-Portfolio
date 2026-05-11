@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/motion/Reveal';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
 
 export function ContactCTA() {
@@ -19,16 +20,20 @@ export function ContactCTA() {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <Button href={copy.contactCta.cta.href} variant="accent" size="lg">
-            {copy.contactCta.cta.label}
-          </Button>
-          <Button
-            href={`mailto:${copy.meta.email}`}
-            variant="ghost"
-            size="lg"
-          >
-            {copy.meta.email}
-          </Button>
+          <RippleTap className="rounded-full">
+            <Button href={copy.contactCta.cta.href} variant="accent" size="lg">
+              {copy.contactCta.cta.label}
+            </Button>
+          </RippleTap>
+          <RippleTap className="rounded-full">
+            <Button
+              href={`mailto:${copy.meta.email}`}
+              variant="ghost"
+              size="lg"
+            >
+              {copy.meta.email}
+            </Button>
+          </RippleTap>
         </div>
       </Reveal>
     </section>

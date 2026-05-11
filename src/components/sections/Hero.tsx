@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
 
 const FloatingGeometry = dynamic(
@@ -114,13 +115,15 @@ export function Hero() {
                 },
               }}
             >
-              <Button
-                href={cta.href}
-                variant={i === 0 ? 'accent' : 'ghost'}
-                size="lg"
-              >
-                {cta.label}
-              </Button>
+              <RippleTap className="rounded-full">
+                <Button
+                  href={cta.href}
+                  variant={i === 0 ? 'accent' : 'ghost'}
+                  size="lg"
+                >
+                  {cta.label}
+                </Button>
+              </RippleTap>
             </motion.div>
           ))}
         </motion.div>

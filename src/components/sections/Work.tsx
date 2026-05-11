@@ -9,13 +9,18 @@ import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Stagger } from '@/components/motion/Stagger';
+import { GyroTilt } from '@/components/motion/GyroTilt';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { ProjectModal } from '@/components/sections/ProjectModal';
 import { copy } from '@/content/copy';
 import { projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 
 const COLS = 3;
-const FEATURED_SPAN_CLASS = 'md:col-span-2';
+const CAROUSEL_ITEM_CLASS =
+  'work-snap-item w-[80vw] max-w-[360px] shrink-0 md:w-auto md:max-w-none md:shrink';
+const FEATURED_SPAN_CLASS = `${CAROUSEL_ITEM_CLASS} md:col-span-2`;
+const REST_ITEM_CLASS = CAROUSEL_ITEM_CLASS;
 
 const SPAN_CLASS: Record<1 | 2, string> = {
   1: 'md:col-span-1',
@@ -33,8 +38,13 @@ export function Work() {
   const showGapFiller = gapCount === 1 || gapCount === 2;
 
   const restChildClassName: (string | undefined)[] = showGapFiller
-    ? [...rest.map(() => undefined), SPAN_CLASS[gapCount as 1 | 2]]
-    : [];
+    ? [
+        ...rest.map(() => REST_ITEM_CLASS),
+        cn('hidden md:block', SPAN_CLASS[gapCount as 1 | 2]),
+      ]
+    : rest.map(() => REST_ITEM_CLASS);
+
+  const totalProjects = featured.length + rest.length;
 
   return (
     <>
@@ -47,7 +57,7 @@ export function Work() {
           />
 
           <Stagger
-            className="grid gap-6 md:grid-cols-4"
+            className="work-carousel -mx-6 flex gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:gap-6 md:overflow-visible md:px-0 md:pb-0 md:grid-cols-4"
             step={0.08}
             childClassName={featuredChildClassName}
           >
@@ -63,7 +73,7 @@ export function Work() {
 
           {rest.length > 0 ? (
             <Stagger
-              className="mt-6 grid gap-6 md:grid-cols-3"
+              className="work-carousel mt-6 -mx-6 flex gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:gap-6 md:overflow-visible md:px-0 md:pb-0 md:grid-cols-3"
               step={0.06}
               delay={0.1}
               childClassName={restChildClassName}
@@ -77,6 +87,18 @@ export function Work() {
               ))}
               {showGapFiller ? <WorkGapFiller key="gap" wide={gapCount === 2} /> : null}
             </Stagger>
+          ) : null}
+
+          {/* Mobile-only swipe dots — purely decorative cue that the carousel scrolls. */}
+          {totalProjects > 1 ? (
+            <div
+              aria-hidden
+              className="mt-4 flex items-center justify-center gap-1.5 md:hidden"
+            >
+              {Array.from({ length: totalProjects }).map((_, i) => (
+                <span key={i} className="size-1.5 rounded-full bg-line" />
+              ))}
+            </div>
           ) : null}
         </div>
       </section>
@@ -106,12 +128,14 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
   }
 
   return (
-    <Card
-      as="article"
-      className={cn(
-        'group relative p-0 transition-transform duration-300 hover:-translate-y-1.5',
-      )}
-    >
+    <RippleTap className="rounded-[var(--radius-card)]">
+      <GyroTilt>
+        <Card
+          as="article"
+          className={cn(
+            'project-card group relative p-0 transition-transform duration-300 hover:-translate-y-1.5',
+          )}
+        >
       <button
         type="button"
         onClick={() => onSelect(project)}
@@ -199,7 +223,9 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
           </div>
         </div>
       </button>
-    </Card>
+        </Card>
+      </GyroTilt>
+    </RippleTap>
   );
 }
 
