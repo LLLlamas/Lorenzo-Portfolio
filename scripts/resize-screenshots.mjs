@@ -33,15 +33,21 @@ const BRAND_DIR = path.join(ROOT, 'public', 'brand');
  */
 const MAPPINGS = [
   ['dogs-and-newsletter.PNG', 'dogs-and-llamas'],
+  ['dogs-and-llamas.PNG',     'dogs-and-llamas-1'],
+  ['dogs-and-llamas-reviews.PNG',  'dogs-and-llamas-2'],
+  ['dogs-and-llamas-calendar.PNG', 'dogs-and-llamas-3'],
 
   ['cookbook_homescreen.PNG', 'llamas-cookbook'],
   ['cookbook_timer.PNG', 'llamas-cookbook-1'],
 
-  ['bite-defense-desktop.PNG', 'bite-defense'],
+  ['bite-defense-desktop.PNG',   'bite-defense'],
+  ['bite-defense-desktop-2.PNG', 'bite-defense-web-1'],
   ['bitedefense_layout.PNG', 'bite-defense-1'],
-  ['bitedefense_tut.PNG', 'bite-defense-2'],
+  ['bitedefense_tut.PNG',    'bite-defense-2'],
 
-  ['sleepy-llamas.PNG', 'sleepy-llamas'],
+  ['sleepy-llamas.PNG',          'sleepy-llamas'],
+  ['sleepy-llamas-landing.PNG',  'sleepy-llamas-1'],
+  ['sleepy-llamas-packages.PNG', 'sleepy-llamas-2'],
 
   ['train-watcher.PNG', 'train-watcher'],
 ];

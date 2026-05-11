@@ -58,6 +58,11 @@ export const projects: Project[] = [
     stack: ['React', 'JavaScript', 'Web'],
     cover: '/projects/dogs-and-llamas.webp',
     coverFit: 'contain',
+    gallery: [
+      { src: '/projects/dogs-and-llamas-1.webp', caption: 'Homepage' },
+      { src: '/projects/dogs-and-llamas-2.webp', caption: 'Reviews' },
+      { src: '/projects/dogs-and-llamas-3.webp', caption: 'Calendar' },
+    ],
     year: 2025,
     featured: true,
     category: 'web',
@@ -77,6 +82,9 @@ export const projects: Project[] = [
     stack: ['React', 'JavaScript', 'Canvas', 'Web'],
     cover: '/projects/bite-defense.webp',
     coverFit: 'contain',
+    gallery: [
+      { src: '/projects/bite-defense-web-1.webp', caption: 'Gameplay' },
+    ],
     year: 2025,
     featured: true,
     category: 'game',
@@ -136,6 +144,10 @@ export const projects: Project[] = [
     stack: ['React', 'JavaScript', 'Web'],
     cover: '/projects/sleepy-llamas.webp',
     coverFit: 'cover',
+    gallery: [
+      { src: '/projects/sleepy-llamas-1.webp', caption: 'Landing page' },
+      { src: '/projects/sleepy-llamas-2.webp', caption: 'Packages' },
+    ],
     year: 2024,
     featured: false,
     category: 'web',
