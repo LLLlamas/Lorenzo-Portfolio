@@ -61,9 +61,11 @@ export function Capabilities() {
                   <Icon className="size-5" aria-hidden />
                 </div>
 
-                <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
-                  {item.kicker}
-                </p>
+                {item.kicker ? (
+                  <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
+                    {item.kicker}
+                  </p>
+                ) : null}
 
                 <h3 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">
                   {item.title}

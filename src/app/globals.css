@@ -62,8 +62,9 @@
   --geo-edge: #3D2E5C;
   --geo-opacity: 0.55;
 
-  /* Cursor-glow text outline — white so it reads against the dark-tinted aura */
-  --glow-stroke: rgba(255, 255, 255, 0.82);
+  /* Cursor-glow — always light lavender so the orb + outline look the same in both modes */
+  --glow-stroke: #A697C8;
+  --glow-orb-color: #A697C8;
 
   color-scheme: light;
 }
@@ -92,8 +93,8 @@
   --geo-edge: #A697C8;
   --geo-opacity: 0.95;
 
-  /* Cursor-glow text outline — accent color on light text */
-  --glow-stroke: var(--accent);
+  --glow-stroke: #A697C8;
+  --glow-orb-color: #A697C8;
 
   color-scheme: dark;
 }
@@ -305,21 +306,13 @@ section[id] {
 }
 
 /* Text + image glow-outline when inside the cursor radius.
-   Uses filter: drop-shadow — traces exact glyph/alpha channel, no intersection
-   artifacts. Light mode: three-pass white halo for legibility against the dark
-   cursor aura. Dark mode: two-pass subtle accent glow. */
+   Uses filter: drop-shadow — traces exact glyph/alpha channel, no artifacts.
+   --glow-stroke is always the light lavender (#A697C8) so the effect is
+   identical in light and dark mode. */
 [data-glow] {
   transition: filter 200ms ease;
 }
-/* Light mode — strong white halo punches through the dark-tinted cursor aura */
-:root [data-glow="1"] {
-  filter:
-    drop-shadow(0 0 1px var(--glow-stroke))
-    drop-shadow(0 0 2.5px var(--glow-stroke))
-    drop-shadow(0 0 5px color-mix(in srgb, var(--glow-stroke) 50%, transparent));
-}
-/* Dark mode — accent glow, subtler */
-.dark [data-glow="1"] {
+[data-glow="1"] {
   filter:
     drop-shadow(0 0 1px var(--glow-stroke))
     drop-shadow(0 0 2px color-mix(in srgb, var(--glow-stroke) 55%, transparent));

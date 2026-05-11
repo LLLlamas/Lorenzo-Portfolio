@@ -159,8 +159,8 @@ export function CursorGlow() {
         height: SIZE,
         willChange: 'transform',
         background:
-          'radial-gradient(18px circle at 50% 50%, color-mix(in srgb, white 20%, transparent), transparent 100%), ' +
-          'radial-gradient(80px circle at 50% 50%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 100%)',
+          'radial-gradient(18px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 30%, transparent), transparent 100%), ' +
+          'radial-gradient(80px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 24%, transparent), transparent 100%)',
       }}
     />
   );
