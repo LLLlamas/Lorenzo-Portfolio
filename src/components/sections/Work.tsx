@@ -66,6 +66,7 @@ export function Work() {
                 key={project.slug}
                 project={project}
                 featured
+                isSelected={openProject?.slug === project.slug}
                 onSelect={setOpenProject}
               />
             ))}
@@ -82,6 +83,7 @@ export function Work() {
                 <ProjectCard
                   key={project.slug}
                   project={project}
+                  isSelected={openProject?.slug === project.slug}
                   onSelect={setOpenProject}
                 />
               ))}
@@ -114,10 +116,11 @@ export function Work() {
 type ProjectCardProps = {
   project: Project;
   featured?: boolean;
+  isSelected?: boolean;
   onSelect: (project: Project) => void;
 };
 
-function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) {
+function ProjectCard({ project, featured = false, isSelected = false, onSelect }: ProjectCardProps) {
   const hasCover = Boolean(project.cover);
   const fit = project.coverFit ?? 'cover';
   const isPhone = isPhoneProject(project);
@@ -133,7 +136,8 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
         <Card
           as="article"
           className={cn(
-            'project-card group relative p-0 transition-transform duration-300 hover:-translate-y-1.5',
+            'project-card group relative p-0 transition-all duration-300 hover:-translate-y-1.5',
+            isSelected && 'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',
           )}
         >
       <button
@@ -190,7 +194,7 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
             <div className="min-w-0">
               <h3
                 className={cn(
-                  'cascade-step cascade-1 font-display text-lg font-semibold tracking-tight text-ink',
+                  'cascade-step cascade-1 font-display text-lg font-extrabold tracking-tight text-ink',
                   featured && 'md:text-xl',
                 )}
                 style={{ transitionDelay: '0ms' }}
@@ -198,7 +202,7 @@ function ProjectCard({ project, featured = false, onSelect }: ProjectCardProps) 
                 {project.title}
               </h3>
               <p
-                className="cascade-step cascade-2 mt-1 text-sm text-ink-soft"
+                className="cascade-step cascade-2 mt-1 text-sm font-semibold text-ink-soft"
                 style={{ transitionDelay: '90ms' }}
               >
                 {project.tagline}

@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { Globe, Layers, Smartphone } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
+import { cn } from '@/lib/utils';
 
 const icons = [Globe, Layers, Smartphone];
 
 export function Capabilities() {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
 
   return (
     <section
@@ -36,13 +38,11 @@ export function Capabilities() {
           {copy.capabilities.items.map((item, i) => {
             const Icon = icons[i];
             return (
+              <RippleTap key={item.title} className="rounded-[var(--radius-card)]">
               <motion.article
-                key={item.title}
-                onHoverStart={() => setHovered(i)}
-                onHoverEnd={() => setHovered((current) => (current === i ? null : current))}
-                onFocus={() => setHovered(i)}
-                onBlur={() => setHovered((current) => (current === i ? null : current))}
+                onClick={() => setSelected(selected === i ? null : i)}
                 tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelected(selected === i ? null : i); } }}
                 variants={{
                   hidden: { opacity: 0, y: 18, filter: 'blur(6px)' },
                   visible: {
@@ -52,7 +52,10 @@ export function Capabilities() {
                     transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
-                className="card-glow group relative h-full overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none transition-transform duration-300 hover:-translate-y-1.5 focus-visible:ring-2 focus-visible:ring-accent"
+                className={cn(
+                  'card-glow group relative h-full cursor-pointer overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none transition-all duration-300 hover:-translate-y-1.5 focus-visible:ring-2 focus-visible:ring-accent',
+                  selected === i && 'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',
+                )}
               >
                 <div className="grid size-10 place-items-center rounded-full bg-accent-soft text-accent transition-transform duration-300 group-hover:scale-110">
                   <Icon className="size-5" aria-hidden />
@@ -87,11 +90,12 @@ export function Capabilities() {
                   className="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
                 />
               </motion.article>
+              </RippleTap>
             );
           })}
         </motion.div>
 
-        {/* Tech pills row — mirrors the card columns above. Hovering a card
+        {/* Tech pills row — mirrors the card columns above. Clicking a card
             reveals the corresponding column's pills with a small staggered
             blur-resolve. Min-height keeps the layout from jumping. */}
         <div
@@ -104,7 +108,7 @@ export function Capabilities() {
               className="flex flex-wrap items-start gap-1.5"
             >
               <AnimatePresence>
-                {hovered === i
+                {selected === i
                   ? item.tags.map((tag, j) => (
                       <motion.span
                         key={tag}

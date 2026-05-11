@@ -1,9 +1,12 @@
+'use client';
+
 import { Check } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Button } from '@/components/ui/Button';
 import { Stagger } from '@/components/motion/Stagger';
 import { Reveal } from '@/components/motion/Reveal';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
 import { packages, modifiers } from '@/content/packages';
 import { cn } from '@/lib/utils';
@@ -20,8 +23,8 @@ export function Packages() {
 
         <Stagger className="grid gap-6 md:grid-cols-2" step={0.12}>
           {packages.map((pkg) => (
+            <RippleTap key={pkg.name} className="rounded-[var(--radius-card)]">
             <Card
-              key={pkg.name}
               className={cn(
                 'group relative p-7 transition-all duration-300 md:p-8',
                 pkg.popular &&
@@ -85,6 +88,7 @@ export function Packages() {
                 </Button>
               </div>
             </Card>
+            </RippleTap>
           ))}
         </Stagger>
 
