@@ -56,7 +56,7 @@ function wrapWords(container: HTMLElement, seen: WeakSet<Text>): HTMLSpanElement
   return spans;
 }
 
-function refreshOutlines(cx: number, cy: number, spans: HTMLSpanElement[]) {
+function refreshOutlines(cx: number, cy: number, spans: HTMLElement[]) {
   // Read all rects first (single layout flush), then write
   const rects = spans.map((s) => s.getBoundingClientRect());
   for (let i = 0; i < spans.length; i++) {
@@ -92,13 +92,21 @@ export function CursorGlow() {
     let visible = false;
 
     const seen = new WeakSet<Text>();
-    const wordSpans: HTMLSpanElement[] = [];
+    const wordSpans: HTMLElement[] = [];
 
     function scanAndWrap() {
       const containers = Array.from(
         document.querySelectorAll<HTMLElement>(TEXT_SELECTOR),
       ).filter((node) => parseFloat(getComputedStyle(node).fontSize) >= MIN_FONT_PX);
       for (const c of containers) wordSpans.push(...wrapWords(c, seen));
+
+      // Pick up explicitly-marked glow targets (e.g. logo image)
+      document.querySelectorAll<HTMLElement>('[data-glow-target]').forEach((el) => {
+        if (!wordSpans.includes(el)) {
+          if (!el.dataset.glow) el.dataset.glow = '0';
+          wordSpans.push(el);
+        }
+      });
     }
 
     // Initial pass

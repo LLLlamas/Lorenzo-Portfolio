@@ -104,6 +104,7 @@ function BrandHexPrism() {
             height={512}
             priority
             className="size-full object-contain"
+            data-glow-target=""
           />
         </div>
         <div className="brand-hex__face brand-hex__face--back">

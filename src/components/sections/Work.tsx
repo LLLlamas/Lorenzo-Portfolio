@@ -185,7 +185,7 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
             )
           ) : (
             <div className="absolute inset-0 grid place-items-center">
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
                 Screenshot pending
               </span>
             </div>
@@ -296,7 +296,7 @@ function WorkGapFiller({ wide }: { wide: boolean }) {
     >
       <div className={cn('flex flex-col items-start gap-3', wide ? 'md:flex-1' : 'items-center')}>
         <span
-          className="loading-blink font-mono text-[10px] uppercase tracking-[0.18em] text-accent"
+          className="loading-blink text-[10px] uppercase tracking-[0.18em] text-accent"
           aria-hidden
         >
           {copy.workGapFiller.eyebrow}

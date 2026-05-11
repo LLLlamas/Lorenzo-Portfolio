@@ -16,7 +16,7 @@ export function MarqueeTechStrip() {
         {ITEMS.map((item) => (
           <li
             key={item}
-            className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.16em] text-ink-quiet"
+            className="whitespace-nowrap text-xs font-bold uppercase tracking-[0.16em] text-ink-quiet"
           >
             {item}
           </li>

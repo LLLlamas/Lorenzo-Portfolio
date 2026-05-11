@@ -45,7 +45,7 @@ export function ProjectModal({ project, onClose }: Props) {
 
             <header className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
               <div className="min-w-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
                   {project.year}
                 </p>
                 <h2 className="mt-2 text-pretty font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
@@ -89,7 +89,7 @@ export function ProjectModal({ project, onClose }: Props) {
                       key={highlight}
                       className="rounded-xl border border-line bg-bg/60 p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
                     >
-                      <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+                      <span className="text-[10px] uppercase tracking-[0.16em] text-accent">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <p className="mt-3 text-sm leading-relaxed text-ink-soft">
@@ -163,7 +163,7 @@ function ProjectCover({ project }: { project: Project }) {
         )
       ) : (
         <div className="absolute inset-0 grid place-items-center">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
             Screenshot pending
           </span>
         </div>
@@ -225,7 +225,7 @@ function ProjectFacts({ project }: { project: Project }) {
       ) : null}
 
       <FactBlock label={modalCopy.year}>
-        <p className="font-mono text-sm text-ink">{project.year}</p>
+        <p className="text-sm text-ink">{project.year}</p>
       </FactBlock>
     </dl>
   );
@@ -253,7 +253,7 @@ function SectionRule({ label }: { label: string }) {
 
 function DetailLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
       {children}
     </span>
   );
@@ -300,7 +300,7 @@ function GalleryItem({
         )}
       </div>
       {image.caption ? (
-        <figcaption className="text-center font-mono text-[10px] uppercase tracking-[0.12em] text-ink-quiet">
+        <figcaption className="text-center text-[11px] font-bold uppercase tracking-[0.12em] text-ink-quiet">
           {image.caption}
         </figcaption>
       ) : null}

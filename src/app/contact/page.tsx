@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <section className="px-6 py-24 md:py-32">
       <div className="mx-auto max-w-4xl">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
           Contact
         </p>
         <h1 className="mt-3 font-display text-balance text-5xl font-semibold tracking-tight md:text-6xl">
@@ -29,7 +29,7 @@ export default function ContactPage() {
               <div className="grid size-9 place-items-center rounded-full bg-accent-soft text-accent">
                 <Mail className="size-4" aria-hidden />
               </div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
                 Email
               </p>
             </div>
@@ -47,7 +47,7 @@ export default function ContactPage() {
               <div className="grid size-9 place-items-center rounded-full bg-accent-soft text-accent">
                 <Calendar className="size-4" aria-hidden />
               </div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-quiet">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
                 Book a call
               </p>
             </div>
@@ -76,7 +76,7 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-16">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
             Quick FAQ
           </p>
           <ul className="mt-4 divide-y divide-line border-y border-line">
@@ -98,7 +98,7 @@ export default function ContactPage() {
 function ContactForm() {
   return (
     <Card as="section" className="p-6 md:p-8">
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
         Or send a short note
       </p>
       <p className="mt-1 text-sm text-ink-soft">{copy.contact.formNote}</p>
@@ -160,7 +160,7 @@ function Field({
 
   return (
     <label className="block">
-      <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-quiet">
+      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-ink-quiet">
         {label}
       </span>
       {as === 'textarea' ? (

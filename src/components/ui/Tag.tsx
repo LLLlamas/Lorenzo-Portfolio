@@ -14,7 +14,7 @@ export function Tag({
     <span
       style={style}
       className={cn(
-        'inline-flex items-center rounded-[var(--radius-pill)] border border-line bg-bg px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft',
+        'inline-flex items-center rounded-[var(--radius-pill)] border border-line bg-bg px-2.5 py-0.5 text-[10px] uppercase tracking-[0.08em] text-ink-soft',
         className,
       )}
     >

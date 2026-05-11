@@ -32,7 +32,7 @@ export function Packages() {
               )}
             >
               {pkg.popular ? (
-                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent-on">
+                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-accent-on">
                   Most projects land here
                 </span>
               ) : null}
@@ -44,7 +44,7 @@ export function Packages() {
                 >
                   {pkg.name}
                 </h3>
-                <span className="font-mono text-xs uppercase tracking-[0.12em] text-ink-quiet">
+                <span className="text-xs font-bold uppercase tracking-[0.12em] text-ink-quiet">
                   {pkg.cadence}
                 </span>
               </div>
@@ -93,7 +93,7 @@ export function Packages() {
         </Stagger>
 
         <Reveal as="div" className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
             Modifiers
           </p>
           <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm md:grid-cols-2">
@@ -103,7 +103,7 @@ export function Packages() {
                 className="flex items-center justify-between gap-4 border-b border-line pb-3 last:border-b-0 md:last:border-b last:[&:nth-last-child(-n+1)]:border-b-0"
               >
                 <dt className="text-ink">{mod.label}</dt>
-                <dd className="font-mono text-xs text-ink-soft">{mod.adjustment}</dd>
+                <dd className="text-xs text-ink-soft">{mod.adjustment}</dd>
               </div>
             ))}
           </dl>

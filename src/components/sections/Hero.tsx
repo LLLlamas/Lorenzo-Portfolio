@@ -60,7 +60,7 @@ export function Hero() {
 
       <div className="mx-auto max-w-5xl">
         <motion.p
-          className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-quiet"
+          className="mb-6 text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet"
           initial={prefersReduced ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
