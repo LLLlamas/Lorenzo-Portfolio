@@ -72,17 +72,30 @@ export function Capabilities() {
                 <p className="mt-2 text-sm font-medium text-ink-soft">{item.tagline}</p>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">{item.body}</p>
 
-                {/* Mobile: pills always visible inside their card */}
-                <div className="mt-4 flex flex-wrap gap-1.5 md:hidden" aria-hidden>
-                  {item.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-accent"
+                {/* Mobile: pills revealed inside the card on click */}
+                <AnimatePresence>
+                  {selected === i ? (
+                    <motion.div
+                      key="mobile-pills"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto', transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+                      exit={{ opacity: 0, height: 0, transition: { duration: 0.18 } }}
+                      className="mt-4 flex flex-wrap gap-1.5 md:hidden"
+                      aria-hidden
                     >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                      {item.tags.map((tag, j) => (
+                        <motion.span
+                          key={tag}
+                          initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
+                          animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.3, delay: j * 0.04, ease: [0.16, 1, 0.3, 1] } }}
+                          className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-accent"
+                        >
+                          {tag}
+                        </motion.span>
+                      ))}
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
 
                 {/* Hairline that draws across on hover */}
                 <span

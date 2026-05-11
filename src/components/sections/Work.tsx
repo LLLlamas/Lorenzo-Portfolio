@@ -193,7 +193,7 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
         </div>
 
         {/* Body */}
-        <div className={cn('p-5', featured && 'md:p-6')}>
+        <div className={cn('p-6', featured && 'md:p-7')}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h3
