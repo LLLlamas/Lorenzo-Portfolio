@@ -5,6 +5,7 @@ import { Header } from '@/components/nav/Header';
 import { Footer } from '@/components/nav/Footer';
 import { ScrollProgress } from '@/components/motion/ScrollProgress';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
+import { CursorGlow } from '@/components/motion/CursorGlow';
 import { EntrySequence } from '@/components/motion/EntrySequence';
 import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
 import { copy } from '@/content/copy';
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SmoothScroll />
           <ScrollProgress />
+          <CursorGlow />
           <EntrySequence />
           <ScrollScaleMount />
           <Header />

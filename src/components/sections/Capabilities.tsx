@@ -102,6 +102,19 @@ export function Capabilities() {
                   aria-hidden
                   className="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
                 />
+                {/* Down-arrow hint centered on the hairline — signals "click to reveal pills" */}
+                <span
+                  aria-hidden
+                  className={cn(
+                    'absolute bottom-[14px] left-1/2 -translate-x-1/2 size-0 opacity-0 transition-[opacity,transform] duration-200 delay-150 -translate-y-1',
+                    selected !== i && 'group-hover:opacity-100 group-hover:translate-y-0',
+                  )}
+                  style={{
+                    borderLeft: '4px solid transparent',
+                    borderRight: '4px solid transparent',
+                    borderTop: '5px solid var(--accent)',
+                  }}
+                />
               </motion.article>
               </RippleTap>
             );

@@ -139,7 +139,6 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
       <GyroTilt>
         <Card
           as="article"
-          shine
           className={cn(
             'project-card group relative p-0 transition-all duration-300 hover:-translate-y-1.5',
             isSelected && 'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',

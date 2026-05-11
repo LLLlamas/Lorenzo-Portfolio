@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/motion/Reveal';
 import { RippleTap } from '@/components/motion/RippleTap';
-import { MagneticWrap } from '@/components/motion/MagneticWrap';
 import { copy } from '@/content/copy';
 
 export function ContactCTA() {
@@ -23,24 +22,20 @@ export function ContactCTA() {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <MagneticWrap>
-            <RippleTap className="rounded-full">
-              <Button href={copy.contactCta.cta.href} variant="accent" size="lg">
-                {copy.contactCta.cta.label}
-              </Button>
-            </RippleTap>
-          </MagneticWrap>
-          <MagneticWrap>
-            <RippleTap className="rounded-full">
-              <Button
-                href={`mailto:${copy.meta.email}`}
-                variant="ghost"
-                size="lg"
-              >
-                {copy.meta.email}
-              </Button>
-            </RippleTap>
-          </MagneticWrap>
+          <RippleTap className="rounded-full">
+            <Button href={copy.contactCta.cta.href} variant="accent" size="lg">
+              {copy.contactCta.cta.label}
+            </Button>
+          </RippleTap>
+          <RippleTap className="rounded-full">
+            <Button
+              href={`mailto:${copy.meta.email}`}
+              variant="ghost"
+              size="lg"
+            >
+              {copy.meta.email}
+            </Button>
+          </RippleTap>
         </div>
       </Reveal>
     </section>

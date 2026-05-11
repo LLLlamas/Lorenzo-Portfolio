@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { RippleTap } from '@/components/motion/RippleTap';
-import { MagneticWrap } from '@/components/motion/MagneticWrap';
 import { copy } from '@/content/copy';
 
 const FloatingGeometry = dynamic(
@@ -116,17 +115,15 @@ export function Hero() {
                 },
               }}
             >
-              <MagneticWrap>
-                <RippleTap className="rounded-full">
-                  <Button
-                    href={cta.href}
-                    variant={i === 0 ? 'accent' : 'ghost'}
-                    size="lg"
-                  >
-                    {cta.label}
-                  </Button>
-                </RippleTap>
-              </MagneticWrap>
+              <RippleTap className="rounded-full">
+                <Button
+                  href={cta.href}
+                  variant={i === 0 ? 'accent' : 'ghost'}
+                  size="lg"
+                >
+                  {cta.label}
+                </Button>
+              </RippleTap>
             </motion.div>
           ))}
         </motion.div>
