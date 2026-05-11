@@ -7,6 +7,7 @@ import { ScrollProgress } from '@/components/motion/ScrollProgress';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { CustomCursor } from '@/components/motion/CustomCursor';
 import { EntrySequence } from '@/components/motion/EntrySequence';
+import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
 import { copy } from '@/content/copy';
 import './globals.css';
 
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ScrollProgress />
           <CustomCursor />
           <EntrySequence />
+          <ScrollScaleMount />
           <Header />
           <main className="pt-24">{children}</main>
           <Footer />

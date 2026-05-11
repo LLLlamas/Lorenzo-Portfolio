@@ -31,7 +31,7 @@ Two-page solo-freelance portfolio for **Lorenzo Llamas**.
 
 ## Routes
 
-- `/` — landing (Hero · About · Work · Capabilities · Packages · FAQ · ContactCTA)
+- `/` — landing (Hero · MarqueeTechStrip · About · Work · Capabilities · Packages · FAQ · ContactCTA)
 - `/contact` — email · calendar · short form · mini-FAQ
 - `/_not-found` — 404
 
@@ -40,17 +40,17 @@ Two-page solo-freelance portfolio for **Lorenzo Llamas**.
 ```
 src/
 ├── app/
-│   ├── layout.tsx           ← root: fonts, ThemeProvider (dark default), SmoothScroll, ScrollProgress, CustomCursor, EntrySequence, Header, Footer
+│   ├── layout.tsx           ← root: fonts, ThemeProvider (dark default), SmoothScroll, ScrollProgress, CustomCursor, EntrySequence, ScrollScaleMount, Header, Footer
 │   ├── page.tsx             ← composes the 7 landing sections
 │   ├── contact/page.tsx     ← contact form + cards + mini-FAQ
-│   ├── globals.css          ← Tailwind v4 @theme + tokens + cinematic CSS layer + reduced-motion gate
+│   ├── globals.css          ← Tailwind v4 @theme + tokens + cinematic CSS layer + reduced-motion gate + body::after film-grain overlay (SVG noise, z-9999, pointer-events: none, killed under reduced-motion)
 │   └── not-found.tsx
 ├── components/
-│   ├── sections/            ← Hero, About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal
+│   ├── sections/            ← Hero, About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal, MarqueeTechStrip
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
-│   │                          CustomCursor, ScanLine, Modal
+│   │                          CustomCursor, ScanLine, Modal, ScrollScaleMount, MagneticWrap
 │   ├── nav/                 ← Header (3D hex-prism brand + 3D cube nav links), Footer (large mailto), ThemeToggle (tetrahedron icon)
 │   └── theme/               ← ThemeProvider (next-themes wrapper)
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH for all copy/data ***
@@ -113,6 +113,9 @@ src/
 | `NavCube` (in `Header.tsx`) | True 3D cube nav link. 6 face divs (front/back/top/bottom/left/right) on a `transform-style: preserve-3d` parent. Sits FLAT at rest (`rotateY(0)`) — the 3D-ness reveals during the hover spin to `rotateY(180deg)`, ending on the accent-bordered back face. All faces use `backface-visibility: hidden` so only the camera-facing side renders (prevents the back-face label from bleeding through the front) |
 | `BrandHexPrism` (in `Header.tsx`) | 2-face flip card holding the chef-llama logo (`public/brand/llama-logo.webp`). Both faces render the same image — on hover the parent rotates `rotateY(180deg)` and the back face's combined rotation lands back at +Z, so the logo isn't mirrored when seen. Function name is historical (used to be a hex prism with text); the SVG hex outline was dropped when the logo replaced "Lorenzo Llamas" text. Square 4.5rem × 4.5rem container |
 | `RotationSpeedSlider` (in `motion/`) | Custom-styled discrete bar (range input, 0–4 in 0.5 steps, default 1) that adjusts the floating tetrahedron's rotation speed. Communicates with `FloatingGeometry` via the global `window.__geoSpeed` (read each RAF tick, multiplied into rotation deltas). No labels or numeric readout — just the bar. Hidden on touch + reduced-motion. Mounted in `Hero.tsx` just below the geometry on desktop |
+| `ScrollScaleMount` | Null-render fallback for the `.scroll-scale` "Lusion grid" effect. Modern Chromium uses native `animation-timeline: view()` (CSS in `globals.css`) — this component detects support and returns early there. On Safari/Firefox, it runs a passive scroll listener that lerps each `.scroll-scale` element's scale from 0.88 → 1.0 as it enters the viewport (formula: `t = clamp(1 - r.top / (vh * 0.62), 0, 1); scale = 0.88 + 0.12 * t`). Gated on reduced-motion. Mounted in `layout.tsx` |
+| `MagneticWrap` | Wrap a button/link to make it follow the cursor on `mousemove` with spring-back on leave. Default strength 0.25. Inline-block wrapper that translates via inline `style.transform`. Desktop-only — bails on `(hover: none)` and reduced-motion (returns plain wrapper). Used on Hero CTAs and ContactCTA buttons |
+| `MarqueeTechStrip` (in `sections/`) | Horizontal scrolling strip of tech-stack names (React, Next.js, TypeScript, etc.) separating Hero from About. Server component, pure CSS `@keyframes marquee` animation tagged `motion-decorative` so reduced-motion kills it. Items are hardcoded in the component (not in copy.ts) |
 
 ## Theming
 
@@ -138,6 +141,8 @@ src/
 | `nav-cube` / `nav-cube__inner` / `nav-cube__face` (`--front` / `--back` / `--top` / `--bottom` / `--left` / `--right`) | CSS classes that build the 3D cube. Sized via `--cube-w` / `--cube-h` / `--cube-d` custom properties on the root |
 | `brand-hex` / `brand-hex__inner` / `brand-hex__face` (`--front` / `--back`) | CSS classes for the brand mark's 2-face flip card. Sized via `--hex-w` / `--hex-h` / `--hex-d` custom properties on the root (currently 4.5rem square × 18px depth) |
 | `speed-slider` | Custom range input styling (track + thumb, both `::-webkit-` and `::-moz-` selectors). Used by `RotationSpeedSlider`. Track reads `--line`, thumb reads `--accent` |
+| `scroll-scale` / `scroll-scale--featured` | "Lusion grid" enter scale (0.88 → 1.0) driven by native `animation-timeline: view()` on Chromium and the `ScrollScaleMount` rAF fallback on Safari/Firefox. `--featured` shortens the range so big cards finish settling earlier. Applied to project cards in `Work.tsx` |
+| `marquee-track` | Continuous infinite-loop translateX(0 → -50%) over 32s. Used by `MarqueeTechStrip`. Tagged `motion-decorative` so reduced-motion kills it |
 
 ## Build & deploy
 

@@ -5,11 +5,13 @@ import { Capabilities } from '@/components/sections/Capabilities';
 import { Packages } from '@/components/sections/Packages';
 import { FAQ } from '@/components/sections/FAQ';
 import { ContactCTA } from '@/components/sections/ContactCTA';
+import { MarqueeTechStrip } from '@/components/sections/MarqueeTechStrip';
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <MarqueeTechStrip />
       <About />
       <Work />
       <Capabilities />

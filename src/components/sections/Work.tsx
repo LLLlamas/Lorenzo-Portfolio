@@ -131,6 +131,10 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
   }
 
   return (
+    <div
+      className={featured ? 'scroll-scale scroll-scale--featured' : 'scroll-scale'}
+      style={{ transformOrigin: 'center bottom' }}
+    >
     <RippleTap className="rounded-[var(--radius-card)]">
       <GyroTilt>
         <Card
@@ -230,6 +234,7 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
         </Card>
       </GyroTilt>
     </RippleTap>
+    </div>
   );
 }
 
