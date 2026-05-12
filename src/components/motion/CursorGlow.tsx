@@ -8,7 +8,7 @@ const SIZE = 120;
 const HALF = SIZE / 2;
 const GLOW_R2 = 60 * 60;
 
-const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, dt, dd, figcaption, label, a:not(.btn-sweep)';
+const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, dt, dd, figcaption, label, a:not(.btn-sweep), .aura-pop';
 const MIN_FONT_PX = 11;
 
 /**
