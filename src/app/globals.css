@@ -327,11 +327,10 @@ section[id] {
 }
 
 /* Text + image glow-outline when inside the cursor radius.
-   Light mode: mid-purple (#7B6BAE) — visible against the near-white bg without
-   the harsh dark-halo artifact that full-opacity #3D2E5C caused.
-   Dark mode: two lavender passes is enough since #A697C8 contrasts well on dark. */
+   Light mode: white outline + text-shadow bold trick (no layout shift).
+   Dark mode: lavender passes — #A697C8 contrasts well on dark bg. */
 [data-glow] {
-  transition: filter 200ms ease;
+  transition: filter 200ms ease, text-shadow 200ms ease;
 }
 :root [data-glow="1"] {
   filter:
@@ -339,16 +338,23 @@ section[id] {
     drop-shadow(0 0 1px white)
     drop-shadow(0 0 2px white)
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
+  /* simulate heavier weight without changing character width (no layout reflow) */
+  text-shadow:
+    0 0 0px currentColor,
+    0 0 0.5px currentColor,
+    0 0 1px currentColor;
 }
 .dark [data-glow="1"] {
   filter:
     drop-shadow(0 0 1px var(--glow-stroke))
     drop-shadow(0 0 2px color-mix(in srgb, var(--glow-stroke) 55%, transparent));
+  text-shadow: none;
 }
 [data-glow="0"] {
   filter:
     drop-shadow(0 0 1px transparent)
     drop-shadow(0 0 2px transparent);
+  text-shadow: none;
 }
 /* Suppress glow + stretch on label-select items while the dark pill hover is active —
    the inverted background is the highlight; outline and transform would clash. */
