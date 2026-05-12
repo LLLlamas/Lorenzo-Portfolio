@@ -29,7 +29,7 @@ export function SectionHeader({
     >
       <ScanLine className="mb-4 max-w-[6rem]" />
       {eyebrow ? (
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
+        <p className="aura-pop text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
           <span className="label-select">{eyebrow}</span>
         </p>
       ) : null}

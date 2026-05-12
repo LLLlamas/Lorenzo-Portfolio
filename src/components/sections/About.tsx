@@ -7,7 +7,7 @@ export function About() {
     <section id="about" className="relative px-6 py-24 md:py-32">
       <div className="mx-auto max-w-6xl">
         <Reveal as="div" className="mb-10">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="aura-pop text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
             <span className="label-select">{copy.about.eyebrow}</span>
           </p>
         </Reveal>

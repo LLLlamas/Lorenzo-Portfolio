@@ -383,17 +383,15 @@ section[id] {
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
 }
 
-/* Tech / capability pills fill with accent when a word enters the cursor aura */
+/* Pills grow + get a strong border when inside the cursor aura */
 .pill-tag {
   transition:
-    background-color 180ms var(--ease-out-expo),
-    color 180ms var(--ease-out-expo),
-    border-color 180ms var(--ease-out-expo);
+    border-color 180ms var(--ease-out-expo),
+    scale 180ms var(--ease-out-expo);
 }
 .pill-tag:has([data-glow="1"]) {
-  background-color: var(--accent);
-  color: var(--accent-on);
-  border-color: var(--accent);
+  border-color: var(--ink);
+  scale: 1.08;
 }
 
 /* ─── True CSS 3D nav primitives ───
