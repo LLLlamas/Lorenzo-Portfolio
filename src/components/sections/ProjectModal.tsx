@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { Modal } from '@/components/motion/Modal';
 import { RippleTap } from '@/components/motion/RippleTap';
@@ -10,6 +10,7 @@ import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { copy } from '@/content/copy';
 import type { GalleryImage, Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
+import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 type Props = {
   project: Project | null;
@@ -275,14 +276,35 @@ function GalleryItem({
 }) {
   const isPhone = image.device === 'phone';
   const alt = image.caption ?? `${title} view ${index + 2}`;
+  const prefersReduced = usePrefersReducedMotion();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReduced || isPhone || !cardRef.current || !imgWrapRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const dx = (e.clientX - rect.left) / rect.width - 0.5;
+    const dy = (e.clientY - rect.top) / rect.height - 0.5;
+    imgWrapRef.current.style.transition = 'none';
+    imgWrapRef.current.style.transform = `translate3d(${dx * 12}px, ${dy * 10}px, 0) scale(1.06)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!imgWrapRef.current) return;
+    imgWrapRef.current.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    imgWrapRef.current.style.transform = 'translate3d(0, 0, 0) scale(1)';
+  };
 
   return (
     <figure className="space-y-2">
       <div
+        ref={cardRef}
         className={cn(
           'relative overflow-hidden rounded-xl border border-line bg-bg-elevated shadow-[0_18px_44px_-32px_rgba(0,0,0,0.5)]',
           isPhone ? 'aspect-[9/16] p-2' : 'aspect-[16/10]',
         )}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
       >
         {isPhone ? (
           <PhoneFrame>
@@ -295,13 +317,19 @@ function GalleryItem({
             />
           </PhoneFrame>
         ) : (
-          <Image
-            src={withBasePath(image.src)}
-            alt={alt}
-            fill
-            sizes="(min-width: 768px) 280px, 50vw"
-            className="object-cover object-top"
-          />
+          <div
+            ref={imgWrapRef}
+            className="absolute inset-0"
+            style={{ willChange: 'transform' }}
+          >
+            <Image
+              src={withBasePath(image.src)}
+              alt={alt}
+              fill
+              sizes="(min-width: 768px) 280px, 50vw"
+              className="object-cover object-top"
+            />
+          </div>
         )}
       </div>
       {image.caption ? (

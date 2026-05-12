@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { RippleTap } from '@/components/motion/RippleTap';
+import { CradlePair } from '@/components/motion/CradlePair';
 import { copy } from '@/content/copy';
-import { cn } from '@/lib/utils';
 
 const FloatingGeometry = dynamic(
   () =>
@@ -86,48 +86,35 @@ export function Hero() {
           {copy.hero.subhead}
         </motion.p>
 
-        <motion.div
-          className="cradle-pair mt-10 flex flex-wrap gap-3"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: { staggerChildren: 0.08, delayChildren: 1.05 },
-            },
-          }}
-        >
-          {[copy.hero.primaryCta, copy.hero.secondaryCta].map((cta, i) => (
+        <CradlePair
+          className="mt-10"
+          left={
             <motion.div
-              key={cta.href}
-              variants={{
-                hidden: prefersReduced
-                  ? { opacity: 1, scale: 1, y: 0 }
-                  : { opacity: 0, scale: 0.96, y: 8 },
-                visible: {
-                  opacity: 1,
-                  scale: 1,
-                  y: 0,
-                  transition: {
-                    type: 'spring',
-                    stiffness: 220,
-                    damping: 24,
-                  },
-                },
-              }}
+              initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 24, delay: 1.05 }}
             >
-              <RippleTap className={cn('rounded-full', i === 0 ? 'cradle-left' : 'cradle-right')}>
-                <Button
-                  href={cta.href}
-                  variant={i === 0 ? 'accent' : 'ghost'}
-                  size="lg"
-                >
-                  {cta.label}
+              <RippleTap className="rounded-full">
+                <Button href={copy.hero.primaryCta.href} variant="accent" size="lg">
+                  {copy.hero.primaryCta.label}
                 </Button>
               </RippleTap>
             </motion.div>
-          ))}
-        </motion.div>
+          }
+          right={
+            <motion.div
+              initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 24, delay: 1.13 }}
+            >
+              <RippleTap className="rounded-full">
+                <Button href={copy.hero.secondaryCta.href} variant="ghost" size="lg">
+                  {copy.hero.secondaryCta.label}
+                </Button>
+              </RippleTap>
+            </motion.div>
+          }
+        />
       </div>
     </section>
   );
