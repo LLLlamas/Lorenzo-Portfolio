@@ -66,7 +66,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          {copy.hero.eyebrow}
+          <span className="label-select">{copy.hero.eyebrow}</span>
         </motion.p>
 
         <SplitTextReveal

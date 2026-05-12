@@ -63,7 +63,7 @@ export function Capabilities() {
 
                 {item.kicker ? (
                   <p className="aura-pop mt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
-                    {item.kicker}
+                    <span className="label-select">{item.kicker}</span>
                   </p>
                 ) : null}
 

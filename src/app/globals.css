@@ -194,6 +194,16 @@ section[id] {
     color: var(--bg);
   }
 }
+/* Cursor-aura proximity: same dark-pill as :hover, triggered by data-glow */
+.label-select:has([data-glow="1"]) {
+  background-color: var(--ink);
+  color: var(--bg);
+}
+.label-select:has([data-glow="1"]) [data-glow] {
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
 
 
 /* ─── Cinematic CSS layer ─── */

@@ -49,7 +49,7 @@ export function ProjectModal({ project, onClose }: Props) {
             <header className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
               <div className="min-w-0">
                 <p className="aura-pop text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
-                  {project.year}
+                  <span className="label-select">{project.year}</span>
                 </p>
                 <h2 className="mt-2 text-pretty font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
                   {project.title}
@@ -258,7 +258,7 @@ function SectionRule({ label }: { label: string }) {
 
 function DetailLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="aura-pop text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
+    <span className="aura-pop label-select text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
       {children}
     </span>
   );
