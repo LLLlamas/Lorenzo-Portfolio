@@ -22,7 +22,6 @@ export function FloatingGeometry({ className }: { className?: string }) {
   useEffect(() => {
     if (prefersReduced || !mounted) return;
     if (typeof window === 'undefined') return;
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
     if (!containerRef.current) return;
 
     let cancelled = false;
