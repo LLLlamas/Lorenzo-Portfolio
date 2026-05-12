@@ -7,6 +7,7 @@ import { ScrollProgress } from '@/components/motion/ScrollProgress';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { CursorGlow } from '@/components/motion/CursorGlow';
 import { EntrySequence } from '@/components/motion/EntrySequence';
+import { GlobalRippleTap } from '@/components/motion/GlobalRippleTap';
 import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
 import { copy } from '@/content/copy';
 import './globals.css';
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ScrollProgress />
           <CursorGlow />
           <EntrySequence />
+          <GlobalRippleTap />
           <ScrollScaleMount />
           <Header />
           <main className="pt-24">{children}</main>
