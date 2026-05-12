@@ -40,7 +40,7 @@ export function Hero() {
           overflow-hidden clip on shorter hero stacks. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute right-[-4%] top-12 -z-10 hidden size-[420px] md:block lg:size-[520px]"
+        className="pointer-events-none absolute right-[-4%] top-12 -z-10 size-[260px] md:size-[420px] lg:size-[520px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
