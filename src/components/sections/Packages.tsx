@@ -23,7 +23,13 @@ export function Packages() {
 
         <Stagger className="grid gap-6 md:grid-cols-2" step={0.12}>
           {packages.map((pkg) => (
-            <RippleTap key={pkg.name} className="rounded-[var(--radius-card)]">
+            <div key={pkg.name} className="relative pt-3">
+              {pkg.popular ? (
+                <span className="soft-pulse motion-decorative absolute left-7 top-0 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-accent-on">
+                  Most projects land here
+                </span>
+              ) : null}
+            <RippleTap className="rounded-[var(--radius-card)]">
             <Card
               className={cn(
                 'group relative p-7 transition-all duration-300 md:p-8',
@@ -31,11 +37,6 @@ export function Packages() {
                   'border-accent/40 shadow-[0_0_0_1px_var(--accent-soft)] ring-1 ring-accent/20',
               )}
             >
-              {pkg.popular ? (
-                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-accent-on">
-                  Most projects land here
-                </span>
-              ) : null}
 
               <div className="flex items-baseline justify-between gap-4">
                 <h3
@@ -89,6 +90,7 @@ export function Packages() {
               </div>
             </Card>
             </RippleTap>
+            </div>
           ))}
         </Stagger>
 

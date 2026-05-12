@@ -108,8 +108,8 @@ export function Capabilities() {
                 <span
                   aria-hidden
                   className={cn(
-                    'absolute bottom-[14px] left-1/2 -translate-x-1/2 size-0 opacity-0 transition-[opacity,transform] duration-200 delay-150 -translate-y-1',
-                    selected !== i && 'group-hover:opacity-100 group-hover:translate-y-0',
+                    'absolute bottom-[14px] left-1/2 -translate-x-1/2 size-0 transition-[opacity] duration-200',
+                    selected === i ? 'opacity-0' : 'opacity-50 group-hover:opacity-100',
                   )}
                   style={{
                     borderLeft: '4px solid transparent',

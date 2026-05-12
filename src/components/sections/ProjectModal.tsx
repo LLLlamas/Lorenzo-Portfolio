@@ -4,6 +4,7 @@ import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { Modal } from '@/components/motion/Modal';
+import { RippleTap } from '@/components/motion/RippleTap';
 import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { copy } from '@/content/copy';
@@ -27,14 +28,16 @@ export function ProjectModal({ project, onClose }: Props) {
               Lives outside <article> because article has overflow-hidden,
               which would clip sticky behavior relative to the panel. */}
           <div className="sticky top-0 z-20 h-0">
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="pointer-events-auto absolute right-3 top-3 grid size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink md:right-4 md:top-4"
-            >
-              <X className="size-4" />
-            </button>
+            <RippleTap className="pointer-events-auto absolute right-3 top-3 rounded-full md:right-4 md:top-4">
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close"
+                className="grid size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink"
+              >
+                <X className="size-4" />
+              </button>
+            </RippleTap>
           </div>
 
           <article className="overflow-hidden">
@@ -57,15 +60,17 @@ export function ProjectModal({ project, onClose }: Props) {
               </div>
 
               {project.link ? (
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-5 text-sm font-medium text-accent-on transition-opacity hover:opacity-90"
-                >
-                  {modalCopy.visitLive}
-                  <ArrowUpRight className="ml-1.5 size-4" />
-                </a>
+                <RippleTap className="rounded-full">
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-5 text-sm font-medium text-accent-on transition-opacity hover:opacity-90"
+                  >
+                    {modalCopy.visitLive}
+                    <ArrowUpRight className="ml-1.5 size-4" />
+                  </a>
+                </RippleTap>
               ) : null}
             </header>
 
