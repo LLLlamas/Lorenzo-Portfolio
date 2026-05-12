@@ -62,9 +62,7 @@
   --geo-edge: #3D2E5C;
   --geo-opacity: 0.55;
 
-  /* Cursor-glow orb stays light lavender; stroke uses the dark accent so it's
-     visible against the light background (dark purple outline on white bg) */
-  --glow-stroke: var(--accent);
+  --glow-stroke: #A697C8;
   --glow-orb-color: #A697C8;
 
   color-scheme: light;
@@ -308,13 +306,20 @@ section[id] {
 }
 
 /* Text + image glow-outline when inside the cursor radius.
-   Uses filter: drop-shadow — traces exact glyph/alpha channel, no artifacts.
-   --glow-stroke is always the light lavender (#A697C8) so the effect is
-   identical in light and dark mode. */
+   Light mode: four stacked lavender passes — additive opacity builds a visible
+   purple halo on the white background without any dark artifact.
+   Dark mode: two passes is enough since lavender contrasts well on dark bg. */
 [data-glow] {
   transition: filter 200ms ease;
 }
-[data-glow="1"] {
+:root [data-glow="1"] {
+  filter:
+    drop-shadow(0 0 1px #A697C8)
+    drop-shadow(0 0 2px #A697C8)
+    drop-shadow(0 0 4px color-mix(in srgb, #A697C8 70%, transparent))
+    drop-shadow(0 0 7px color-mix(in srgb, #A697C8 40%, transparent));
+}
+.dark [data-glow="1"] {
   filter:
     drop-shadow(0 0 1px var(--glow-stroke))
     drop-shadow(0 0 2px color-mix(in srgb, var(--glow-stroke) 55%, transparent));
