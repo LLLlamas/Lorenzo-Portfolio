@@ -11,7 +11,7 @@ export const packages: PricingPackage[] = [
   {
     name: 'Spark',
     price: 'Average Project Cost $900',
-    cadence: '~1–2 weeks',
+    cadence: '5–12 days',
     description: 'A landing page, single-purpose site, or small web tool.',
     popular: true,
     features: [
@@ -26,7 +26,7 @@ export const packages: PricingPackage[] = [
   {
     name: 'Studio',
     price: 'Average Project Cost $2,700',
-    cadence: '~3–5 weeks',
+    cadence: '2–3 weeks',
     description: 'A bigger site, web tool, or focused web app.',
     features: [
       'Multi-page site, web tool, or focused web app with backend, auth, and meaningful state',

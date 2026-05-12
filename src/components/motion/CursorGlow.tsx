@@ -109,6 +109,8 @@ export function CursorGlow() {
       });
     }
 
+    document.documentElement.dataset.cursor = 'custom';
+
     // Initial pass
     scanAndWrap();
 
@@ -144,6 +146,7 @@ export function CursorGlow() {
       observer.disconnect();
       window.removeEventListener('mousemove', onMove);
       wordSpans.forEach((s) => { s.dataset.glow = '0'; });
+      delete document.documentElement.dataset.cursor;
     };
   }, [enabled]);
 
@@ -158,9 +161,10 @@ export function CursorGlow() {
         width: SIZE,
         height: SIZE,
         willChange: 'transform',
+        borderRadius: '50%',
         background:
-          'radial-gradient(18px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 30%, transparent), transparent 100%), ' +
-          'radial-gradient(80px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 24%, transparent), transparent 100%)',
+          'radial-gradient(15px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 35%, transparent), transparent 100%), ' +
+          'radial-gradient(60px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 28%, transparent), transparent 100%)',
       }}
     />
   );

@@ -6,7 +6,7 @@ type Variant = 'primary' | 'ghost' | 'accent';
 type Size = 'md' | 'lg';
 
 const base =
-  'btn-sweep btn-pendulum group inline-flex items-center justify-center rounded-full border font-medium tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50';
+  'btn-sweep group inline-flex items-center justify-center rounded-full border font-medium tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50';
 
 const variants: Record<Variant, string> = {
   // Primary: ink fill → sweeps to accent on hover, text inverts to accent-on

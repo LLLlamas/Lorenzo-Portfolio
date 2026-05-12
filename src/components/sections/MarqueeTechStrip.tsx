@@ -18,7 +18,7 @@ export function MarqueeTechStrip() {
             key={item}
             className="whitespace-nowrap text-sm font-bold uppercase tracking-[0.16em] text-ink-quiet"
           >
-            {item}
+            <span className="label-select">{item}</span>
           </li>
         ))}
       </ul>

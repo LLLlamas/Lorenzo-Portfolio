@@ -120,6 +120,7 @@ export function Hero() {
                   href={cta.href}
                   variant={i === 0 ? 'accent' : 'ghost'}
                   size="lg"
+                  className="btn-pendulum"
                 >
                   {cta.label}
                 </Button>

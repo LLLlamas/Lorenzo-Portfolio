@@ -8,7 +8,7 @@ export function About() {
       <div className="mx-auto max-w-6xl">
         <Reveal as="div" className="mb-10">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
-            {copy.about.eyebrow}
+            <span className="label-select">{copy.about.eyebrow}</span>
           </p>
         </Reveal>
 

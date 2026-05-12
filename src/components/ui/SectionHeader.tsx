@@ -30,7 +30,7 @@ export function SectionHeader({
       <ScanLine className="mb-4 max-w-[6rem]" />
       {eyebrow ? (
         <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
-          {eyebrow}
+          <span className="label-select">{eyebrow}</span>
         </p>
       ) : null}
       <h2 className="font-display text-balance text-3xl font-semibold tracking-tight md:text-5xl">

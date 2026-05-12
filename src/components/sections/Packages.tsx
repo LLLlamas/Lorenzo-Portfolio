@@ -32,7 +32,7 @@ export function Packages() {
               )}
             >
               {pkg.popular ? (
-                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-accent-on">
+                <span className="soft-pulse motion-decorative absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-accent-on">
                   Most projects land here
                 </span>
               ) : null}
@@ -81,7 +81,7 @@ export function Packages() {
                 <Button
                   href="/contact"
                   variant={pkg.popular ? 'accent' : 'primary'}
-                  className="cascade-step cascade-1 w-full"
+                  className="cascade-step cascade-1 soft-pulse motion-decorative w-full"
                   style={{ transitionDelay: `${240 + pkg.features.length * 40}ms` }}
                 >
                   Start a {pkg.name} project
@@ -94,7 +94,7 @@ export function Packages() {
 
         <Reveal as="div" className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
-            Modifiers
+            <span className="label-select">Modifiers</span>
           </p>
           <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm md:grid-cols-2">
             {modifiers.map((mod) => (
