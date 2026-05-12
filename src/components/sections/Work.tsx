@@ -16,35 +16,13 @@ import { copy } from '@/content/copy';
 import { projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 
-const COLS = 3;
-const CAROUSEL_ITEM_CLASS =
-  'work-snap-item w-[80vw] max-w-[360px] shrink-0 md:w-auto md:max-w-none md:shrink';
-const FEATURED_SPAN_CLASS = `${CAROUSEL_ITEM_CLASS} md:col-span-2`;
-const REST_ITEM_CLASS = CAROUSEL_ITEM_CLASS;
-
-const SPAN_CLASS: Record<1 | 2, string> = {
-  1: 'md:col-span-1',
-  2: 'md:col-span-2',
-};
-
 export function Work() {
   const [openProject, setOpenProject] = useState<Project | null>(null);
 
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
-  const featuredChildClassName = featured.map(() => FEATURED_SPAN_CLASS);
 
-  const gapCount = rest.length > 0 ? (COLS - (rest.length % COLS)) % COLS : 0;
-  const showGapFiller = gapCount === 1 || gapCount === 2;
-
-  const restChildClassName: (string | undefined)[] = showGapFiller
-    ? [
-        ...rest.map(() => REST_ITEM_CLASS),
-        cn('hidden md:block', SPAN_CLASS[gapCount as 1 | 2]),
-      ]
-    : rest.map(() => REST_ITEM_CLASS);
-
-  const totalProjects = featured.length + rest.length;
+  const showGapFiller = rest.length % 2 === 1;
 
   return (
     <>
@@ -57,9 +35,8 @@ export function Work() {
           />
 
           <Stagger
-            className="work-carousel -mx-6 flex gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:gap-6 md:overflow-visible md:px-0 md:pb-0 md:grid-cols-4"
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8"
             step={0.08}
-            childClassName={featuredChildClassName}
           >
             {featured.map((project) => (
               <ProjectCard
@@ -74,10 +51,9 @@ export function Work() {
 
           {rest.length > 0 ? (
             <Stagger
-              className="work-carousel mt-6 -mx-6 flex gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:gap-6 md:overflow-visible md:px-0 md:pb-0 md:grid-cols-3"
+              className="mt-6 grid grid-cols-1 gap-6 md:mt-8 md:grid-cols-2 md:gap-8"
               step={0.06}
               delay={0.1}
-              childClassName={restChildClassName}
             >
               {rest.map((project) => (
                 <ProjectCard
@@ -87,20 +63,8 @@ export function Work() {
                   onSelect={setOpenProject}
                 />
               ))}
-              {showGapFiller ? <WorkGapFiller key="gap" wide={gapCount === 2} /> : null}
+              {showGapFiller ? <WorkGapFiller key="gap" /> : null}
             </Stagger>
-          ) : null}
-
-          {/* Mobile-only swipe dots — purely decorative cue that the carousel scrolls. */}
-          {totalProjects > 1 ? (
-            <div
-              aria-hidden
-              className="mt-4 flex items-center justify-center gap-1.5 md:hidden"
-            >
-              {Array.from({ length: totalProjects }).map((_, i) => (
-                <span key={i} className="size-1.5 rounded-full bg-line" />
-              ))}
-            </div>
           ) : null}
         </div>
       </section>
@@ -285,16 +249,13 @@ function PhoneCoverPreview({
  * coming-soon slot. Dashed accent border, blinking accent text, hover
  * resolves into a CTA.
  */
-function WorkGapFiller({ wide }: { wide: boolean }) {
+function WorkGapFiller() {
   return (
     <Link
       href={copy.workGapFiller.cta.href}
-      className={cn(
-        'group relative flex h-full overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent bg-bg/40 p-6 transition-transform duration-300 hover:-translate-y-1.5 md:p-8',
-        wide ? 'flex-col md:flex-row md:items-center md:gap-10' : 'flex-col items-center justify-center text-center',
-      )}
+      className="group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent bg-bg/40 p-6 text-center transition-transform duration-300 hover:-translate-y-1.5 md:p-8"
     >
-      <div className={cn('flex flex-col items-start gap-3', wide ? 'md:flex-1' : 'items-center')}>
+      <div className="flex flex-col items-center gap-3">
         <span
           className="loading-blink text-[10px] uppercase tracking-[0.18em] text-accent"
           aria-hidden
@@ -304,17 +265,10 @@ function WorkGapFiller({ wide }: { wide: boolean }) {
         <p className="font-display text-xl font-semibold tracking-tight text-ink md:text-2xl">
           {copy.workGapFiller.headline}
         </p>
-        <p className={cn('text-sm text-ink-soft', wide ? 'max-w-md' : 'max-w-xs')}>
-          {copy.workGapFiller.body}
-        </p>
+        <p className="max-w-xs text-sm text-ink-soft">{copy.workGapFiller.body}</p>
       </div>
 
-      <span
-        className={cn(
-          'inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-transform duration-200 group-hover:translate-x-0.5',
-          wide ? 'mt-0 md:shrink-0' : 'mt-5',
-        )}
-      >
+      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-transform duration-200 group-hover:translate-x-0.5">
         {copy.workGapFiller.cta.label}
         <ArrowUpRight className="size-3.5" />
       </span>
