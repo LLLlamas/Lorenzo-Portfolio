@@ -660,17 +660,17 @@ body::after {
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     @keyframes card-enter {
-      from { transform: scale(0.88); }
-      to   { transform: scale(1); }
+      from { transform: translateY(36px) scale(0.82); }
+      to   { transform: translateY(0) scale(1); }
     }
     .scroll-scale {
       animation: card-enter linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 38%;
+      animation-range: entry 0% cover 50%;
       transform-origin: center bottom;
     }
     .scroll-scale--featured {
-      animation-range: entry 0% cover 28%;
+      animation-range: entry 0% cover 40%;
     }
   }
 }
@@ -685,19 +685,3 @@ body::after {
   will-change: transform;
 }
 
-/* ─── Mobile carousel — Work section ───
-   Desktop layout in JSX still uses md:grid; these utilities only bite
-   below the md breakpoint where the flex/snap layout is active. */
-.work-carousel {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-}
-.work-carousel::-webkit-scrollbar {
-  display: none;
-}
-.work-snap-item {
-  scroll-snap-align: start;
-}

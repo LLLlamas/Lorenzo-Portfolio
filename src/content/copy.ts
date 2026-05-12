@@ -55,18 +55,21 @@ export const copy = {
     subhead: 'Three modes. The first two are where most projects land.',
     items: [
       {
+        kicker: 'Mode 01 — Web',
         title: 'Landing Pages & Websites',
         tagline: 'Marketing sites, product launches, portfolios, brand sites.',
         body: 'Fast, polished, performant. Built with motion that converts, not motion that distracts. Your design or mine.',
         tags: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion', 'GSAP', 'Vercel'],
       },
       {
+        kicker: 'Mode 02 — Web',
         title: 'Single-Purpose Web Tools',
         tagline: 'Calculators, dashboards, internal tools, focused web apps.',
         body: 'One thing, done well — not a sprawling MVP. Built on Next.js + a managed backend (Supabase / Neon / Convex) so you own it and it scales.',
         tags: ['Next.js', 'Supabase', 'Convex', 'Postgres', 'Auth', 'Stripe'],
       },
       {
+        kicker: 'Mode 03 — Mobile',
         title: 'iOS Apps',
         tagline: 'Native iOS when the project calls for it.',
         body: 'SwiftUI, App Store submission, post-launch support. Best for projects where mobile-native really matters (camera, location, notifications, on-device performance).',
