@@ -31,9 +31,12 @@ export function ScrollScaleMount() {
       const elements = document.querySelectorAll<HTMLElement>('.scroll-scale');
       elements.forEach((el) => {
         const r = el.getBoundingClientRect();
-        const t = Math.min(Math.max(1 - r.top / (vh * 0.62), 0), 1);
-        const scale = 0.88 + 0.12 * t;
-        el.style.transform = `scale(${scale.toFixed(4)})`;
+        const featured = el.classList.contains('scroll-scale--featured');
+        const range = featured ? 0.6 : 0.72;
+        const t = Math.min(Math.max(1 - r.top / (vh * range), 0), 1);
+        const scale = 0.82 + 0.18 * t;
+        const ty = 36 * (1 - t);
+        el.style.transform = `translate3d(0, ${ty.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
       });
     };
 
