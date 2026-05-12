@@ -7,6 +7,7 @@ import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
+import { cn } from '@/lib/utils';
 
 const FloatingGeometry = dynamic(
   () =>
@@ -86,7 +87,7 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="mt-10 flex flex-wrap gap-3"
+          className="cradle-pair mt-10 flex flex-wrap gap-3"
           initial="hidden"
           animate="visible"
           variants={{
@@ -115,12 +116,11 @@ export function Hero() {
                 },
               }}
             >
-              <RippleTap className="rounded-full">
+              <RippleTap className={cn('rounded-full', i === 0 ? 'cradle-left' : 'cradle-right')}>
                 <Button
                   href={cta.href}
                   variant={i === 0 ? 'accent' : 'ghost'}
                   size="lg"
-                  className="btn-pendulum"
                 >
                   {cta.label}
                 </Button>

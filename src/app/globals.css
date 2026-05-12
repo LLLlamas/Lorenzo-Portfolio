@@ -349,13 +349,23 @@ section[id] {
     drop-shadow(0 0 1px transparent)
     drop-shadow(0 0 2px transparent);
 }
-/* Suppress glow on label-select items while the dark pill hover is active —
-   the inverted background is the highlight; the outline would clash. */
+/* Suppress glow + stretch on label-select items while the dark pill hover is active —
+   the inverted background is the highlight; outline and transform would clash. */
 @media (hover: hover) {
   .label-select:hover [data-glow] {
     filter: none !important;
+    transform: none !important;
     transition: none !important;
   }
+}
+
+/* Tech strip items: word-spans enlarge when inside the cursor aura */
+.tech-strip-item [data-glow] {
+  display: inline-block;
+  transition: filter 200ms ease, transform 200ms ease;
+}
+.tech-strip-item [data-glow="1"] {
+  transform: scale(1.1);
 }
 
 /* ─── True CSS 3D nav primitives ───
@@ -620,6 +630,61 @@ section[id] {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .btn-pendulum:hover {
     animation: pendulum-swing 700ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  }
+}
+
+/* ─── Newton's cradle CTA pair ───
+   Left button swings toward right on hover, right gets knocked away — vice-versa.
+   Uses CSS :has() (Chrome 105+, Safari 15.4+, Firefox 121+).
+   transform-origin matches btn-pendulum: pivot 20px above the element. */
+@keyframes cradle-send-right {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(9deg); }
+  38%  { transform: rotate(0deg); }
+  50%  { transform: rotate(-2.5deg); }
+  65%  { transform: rotate(0.8deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes cradle-receive-right {
+  0%, 38% { transform: rotate(0deg); }
+  56%     { transform: rotate(9deg); }
+  70%     { transform: rotate(2.5deg); }
+  82%     { transform: rotate(0.8deg); }
+  100%    { transform: rotate(0deg); }
+}
+@keyframes cradle-send-left {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-9deg); }
+  38%  { transform: rotate(0deg); }
+  50%  { transform: rotate(2.5deg); }
+  65%  { transform: rotate(-0.8deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes cradle-receive-left {
+  0%, 38% { transform: rotate(0deg); }
+  56%     { transform: rotate(-9deg); }
+  70%     { transform: rotate(-2.5deg); }
+  82%     { transform: rotate(-0.8deg); }
+  100%    { transform: rotate(0deg); }
+}
+
+.cradle-left,
+.cradle-right {
+  transform-origin: 50% -20px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cradle-pair:has(.cradle-left:hover) .cradle-left {
+    animation: cradle-send-right 750ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  }
+  .cradle-pair:has(.cradle-left:hover) .cradle-right {
+    animation: cradle-receive-right 750ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  }
+  .cradle-pair:has(.cradle-right:hover) .cradle-right {
+    animation: cradle-send-left 750ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  }
+  .cradle-pair:has(.cradle-right:hover) .cradle-left {
+    animation: cradle-receive-left 750ms cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
   }
 }
 
