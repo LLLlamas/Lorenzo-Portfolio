@@ -258,8 +258,8 @@ function SectionRule({ label }: { label: string }) {
 
 function DetailLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="aura-pop label-select text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
-      {children}
+    <span className="aura-pop self-start text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
+      <span className="label-select">{children}</span>
     </span>
   );
 }

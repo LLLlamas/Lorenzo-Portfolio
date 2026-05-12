@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 const TOUCH_QUERY = '(hover: none) and (pointer: coarse)';
-const SIZE = 120;
+const SIZE = 100;
 const HALF = SIZE / 2;
-const GLOW_R2 = 60 * 60;
+const GLOW_R2 = 50 * 50;
 
 const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, dt, dd, figcaption, label, a:not(.btn-sweep), .aura-pop, .pill-tag, .label-select';
 const MIN_FONT_PX = 9;
@@ -163,8 +163,8 @@ export function CursorGlow() {
         willChange: 'transform',
         borderRadius: '50%',
         background:
-          'radial-gradient(15px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 35%, transparent), transparent 100%), ' +
-          'radial-gradient(60px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 28%, transparent), transparent 100%)',
+          'radial-gradient(12px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 35%, transparent), transparent 100%), ' +
+          'radial-gradient(50px circle at 50% 50%, color-mix(in srgb, var(--glow-orb-color) 28%, transparent), transparent 100%)',
       }}
     />
   );
