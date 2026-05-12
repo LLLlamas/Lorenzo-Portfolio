@@ -314,10 +314,8 @@ section[id] {
 }
 :root [data-glow="1"] {
   filter:
-    drop-shadow(0 0 1px #A697C8)
-    drop-shadow(0 0 2px #A697C8)
-    drop-shadow(0 0 4px color-mix(in srgb, #A697C8 70%, transparent))
-    drop-shadow(0 0 7px color-mix(in srgb, #A697C8 40%, transparent));
+    drop-shadow(0 0 2px white)
+    drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 .dark [data-glow="1"] {
   filter:
