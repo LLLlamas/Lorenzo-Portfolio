@@ -1,20 +1,19 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useTheme } from 'next-themes';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
+import { withBasePath } from '@/lib/utils';
 
 /**
  * Slowly drifting tetrahedron rendered with Three.js. Sits behind the hero
  * content, mode-aware (dark = visible black faces + golden edges, light =
- * cream faces + amber edges, dimmed). Skipped under reduced-motion + on
- * touch (where the perf cost isn't worth it for a decorative scene).
+ * cream faces + amber edges, dimmed). The llama logo is composited onto each
+ * face via a CanvasTexture — redrawn whenever the theme flips.
  *
  * Three is dynamic-imported so the chunk only loads on desktop motion users.
  */
 export function FloatingGeometry({ className }: { className?: string }) {
   const prefersReduced = usePrefersReducedMotion();
-  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -55,13 +54,60 @@ export function FloatingGeometry({ className }: { className?: string }) {
       const readVar = (name: string, fallback: string) =>
         styles.getPropertyValue(name).trim() || fallback;
 
-      const faceHex = readVar('--geo-face', '#0D0D0B');
+      // let so themeObserver can update and logoImg.onload picks up latest value
+      let faceHex = readVar('--geo-face', '#0D0D0B');
       const edgeHex = readVar('--geo-edge', '#F0C040');
       const opacity = parseFloat(readVar('--geo-opacity', '1')) || 1;
 
+      // ── Canvas texture: face color + llama logo composited per face ──
+      const CANVAS_SIZE = 512;
+      const faceCanvas = document.createElement('canvas');
+      faceCanvas.width = CANVAS_SIZE;
+      faceCanvas.height = CANVAS_SIZE;
+      const ctx = faceCanvas.getContext('2d')!;
+
+      const faceTexture = new THREE.CanvasTexture(faceCanvas);
+      faceTexture.minFilter = THREE.LinearFilter;
+
+      let logoLoaded = false;
+      let logoEl: HTMLImageElement | null = null;
+
+      const repaintCanvas = (face: string) => {
+        ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        ctx.fillStyle = face;
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        if (logoLoaded && logoEl) {
+          const m = CANVAS_SIZE * 0.16;
+          ctx.drawImage(logoEl, m, m, CANVAS_SIZE - m * 2, CANVAS_SIZE - m * 2);
+        }
+        faceTexture.needsUpdate = true;
+      };
+      repaintCanvas(faceHex);
+
+      const logoImg = new Image();
+      logoImg.crossOrigin = 'anonymous';
+      logoImg.onload = () => {
+        logoLoaded = true;
+        logoEl = logoImg;
+        repaintCanvas(faceHex);
+      };
+      logoImg.src = withBasePath('/brand/llama-logo.webp');
+
+      // ── Geometry with per-face UV mapping ──
+      // TetrahedronGeometry uses sphere-projection UVs by default; override so
+      // each triangular face maps the full canvas (logo centered on each face).
       const geom = new THREE.TetrahedronGeometry(2, 0);
+      const uvData = new Float32Array(geom.attributes.position.count * 2);
+      for (let i = 0; i < geom.attributes.position.count; i += 3) {
+        const b = i * 2;
+        uvData[b]     = 0;   uvData[b + 1] = 0;   // bottom-left
+        uvData[b + 2] = 1;   uvData[b + 3] = 0;   // bottom-right
+        uvData[b + 4] = 0.5; uvData[b + 5] = 1;   // top-center
+      }
+      geom.setAttribute('uv', new THREE.BufferAttribute(uvData, 2));
+
       const faceMat = new THREE.MeshBasicMaterial({
-        color: new THREE.Color(faceHex),
+        map: faceTexture,
         transparent: true,
         opacity,
         polygonOffset: true,
@@ -74,7 +120,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
       const edgeMat = new THREE.LineBasicMaterial({
         color: new THREE.Color(edgeHex),
         transparent: true,
-        opacity: opacity,
+        opacity,
       });
       const wire = new THREE.LineSegments(edges, edgeMat);
 
@@ -90,9 +136,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
       let visible = true;
 
       const observer = new IntersectionObserver(
-        ([entry]) => {
-          visible = entry.isIntersecting;
-        },
+        ([entry]) => { visible = entry.isIntersecting; },
         { threshold: 0 },
       );
       observer.observe(container);
@@ -110,7 +154,6 @@ export function FloatingGeometry({ className }: { className?: string }) {
         const dt = Math.min((now - prev) / 1000, 0.1);
         prev = now;
         if (visible) {
-          // window.__geoSpeed is set by RotationSpeedSlider (default 1, 0–4).
           const speed = window.__geoSpeed ?? 1;
           group.rotation.x += dt * 0.12 * speed;
           group.rotation.y += dt * 0.18 * speed;
@@ -121,14 +164,14 @@ export function FloatingGeometry({ className }: { className?: string }) {
       };
       raf = requestAnimationFrame(tick);
 
-      // Re-read CSS vars when theme flips (next-themes mutates html.class).
+      // Re-read CSS vars when theme flips; repaint canvas with new face color.
       const themeObserver = new MutationObserver(() => {
         const s = getComputedStyle(document.documentElement);
         const newFace = s.getPropertyValue('--geo-face').trim() || faceHex;
         const newEdge = s.getPropertyValue('--geo-edge').trim() || edgeHex;
-        const newOpacity =
-          parseFloat(s.getPropertyValue('--geo-opacity').trim()) || opacity;
-        faceMat.color.set(newFace);
+        const newOpacity = parseFloat(s.getPropertyValue('--geo-opacity').trim()) || opacity;
+        faceHex = newFace;
+        repaintCanvas(newFace);
         edgeMat.color.set(newEdge);
         faceMat.opacity = newOpacity;
         edgeMat.opacity = newOpacity;
@@ -148,6 +191,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
         edges.dispose();
         faceMat.dispose();
         edgeMat.dispose();
+        faceTexture.dispose();
         if (renderer.domElement.parentElement === container) {
           container.removeChild(renderer.domElement);
         }
@@ -158,8 +202,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
       cancelled = true;
       cleanup?.();
     };
-    // resolvedTheme intentionally NOT in deps — the MutationObserver
-    // handles theme changes without re-mounting the canvas.
+    // resolvedTheme intentionally NOT in deps — MutationObserver handles it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReduced, mounted]);
 
