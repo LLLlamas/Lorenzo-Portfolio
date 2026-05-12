@@ -360,21 +360,34 @@ section[id] {
   }
 }
 
-/* Tech strip items: word-spans enlarge when inside the cursor aura */
-.tech-strip-item [data-glow] {
+/* aura-pop: uppercase labels that enlarge + get white outline inside cursor aura */
+.aura-pop [data-glow] {
   display: inline-block;
   transition: filter 200ms ease, transform 200ms ease;
 }
-.tech-strip-item [data-glow="1"] {
+.aura-pop [data-glow="1"] {
   transform: scale(1.1);
 }
 /* Light mode only: thick white outline (visible against the lavender cursor orb) */
-:root:not(.dark) .tech-strip-item [data-glow="1"] {
+:root:not(.dark) .aura-pop [data-glow="1"] {
   filter:
     drop-shadow(0 0 0px white)
     drop-shadow(0 0 1px white)
     drop-shadow(0 0 2px white)
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
+}
+
+/* Tech / capability pills fill with accent when a word enters the cursor aura */
+.pill-tag {
+  transition:
+    background-color 180ms var(--ease-out-expo),
+    color 180ms var(--ease-out-expo),
+    border-color 180ms var(--ease-out-expo);
+}
+.pill-tag:has([data-glow="1"]) {
+  background-color: var(--accent);
+  color: var(--accent-on);
+  border-color: var(--accent);
 }
 
 /* ─── True CSS 3D nav primitives ───

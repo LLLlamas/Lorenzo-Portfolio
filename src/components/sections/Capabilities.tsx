@@ -62,7 +62,7 @@ export function Capabilities() {
                 </div>
 
                 {item.kicker ? (
-                  <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
+                  <p className="aura-pop mt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
                     {item.kicker}
                   </p>
                 ) : null}
@@ -90,7 +90,7 @@ export function Capabilities() {
                           key={tag}
                           initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
                           animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.3, delay: j * 0.04, ease: [0.16, 1, 0.3, 1] } }}
-                          className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
+                          className="pill-tag rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
                         >
                           {tag}
                         </motion.span>
@@ -157,7 +157,7 @@ export function Capabilities() {
                           filter: 'blur(2px)',
                           transition: { duration: 0.18 },
                         }}
-                        className="rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
+                        className="pill-tag rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
                       >
                         {tag}
                       </motion.span>
