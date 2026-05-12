@@ -154,7 +154,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
         prev = now;
         if (visible) {
           const speed = window.__geoSpeed ?? 1;
-          group.rotation.x += dt * 0.12 * speed;
+          group.rotation.x = Math.sin(now * 0.0004) * (20 * Math.PI / 180);
           group.rotation.y += dt * 0.18 * speed;
           group.position.y = Math.sin(now * 0.0006) * 0.15;
           renderer.render(scene, camera);
