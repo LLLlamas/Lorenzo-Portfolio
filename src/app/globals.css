@@ -62,8 +62,9 @@
   --geo-edge: #3D2E5C;
   --geo-opacity: 0.55;
 
-  /* Cursor-glow — always light lavender so the orb + outline look the same in both modes */
-  --glow-stroke: #A697C8;
+  /* Cursor-glow orb stays light lavender; stroke uses the dark accent so it's
+     visible against the light background (dark purple outline on white bg) */
+  --glow-stroke: var(--accent);
   --glow-orb-color: #A697C8;
 
   color-scheme: light;
@@ -153,6 +154,7 @@
 }
 
 html {
+  font-size: 17px;
   scroll-behavior: smooth;
 }
 

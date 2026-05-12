@@ -7,7 +7,7 @@ export function About() {
     <section id="about" className="relative px-6 py-24 md:py-32">
       <div className="mx-auto max-w-6xl">
         <Reveal as="div" className="mb-10">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
             {copy.about.eyebrow}
           </p>
         </Reveal>
@@ -79,7 +79,7 @@ function AboutPlaceholder() {
         >
           LL
         </span>
-        <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-quiet">
+        <span className="text-xs font-bold uppercase tracking-[0.32em] text-ink-quiet">
           Portrait — coming soon
         </span>
       </div>

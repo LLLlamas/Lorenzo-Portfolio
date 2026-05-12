@@ -9,7 +9,7 @@ export function ContactCTA() {
   return (
     <section id="contact-cta" className="px-6 py-24 md:py-32">
       <Reveal as="div" className="mx-auto max-w-4xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
+        <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
           {copy.contactCta.eyebrow}
         </p>
 

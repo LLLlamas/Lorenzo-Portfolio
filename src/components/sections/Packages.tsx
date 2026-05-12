@@ -44,7 +44,7 @@ export function Packages() {
                 >
                   {pkg.name}
                 </h3>
-                <span className="text-xs font-bold uppercase tracking-[0.12em] text-ink-quiet">
+                <span className="text-sm font-bold uppercase tracking-[0.12em] text-ink-quiet">
                   {pkg.cadence}
                 </span>
               </div>
@@ -93,7 +93,7 @@ export function Packages() {
         </Stagger>
 
         <Reveal as="div" className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
             Modifiers
           </p>
           <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm md:grid-cols-2">

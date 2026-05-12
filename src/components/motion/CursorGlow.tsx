@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 const TOUCH_QUERY = '(hover: none) and (pointer: coarse)';
-const SIZE = 160;          // orb diameter px — tight and precise
+const SIZE = 120;
 const HALF = SIZE / 2;
-const GLOW_R2 = 80 * 80;   // GLOW_RADIUS² — avoids sqrt in hot path
+const GLOW_R2 = 60 * 60;
 
-const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, a:not(.btn-sweep)';
+const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, dt, dd, figcaption, label, a:not(.btn-sweep)';
 const MIN_FONT_PX = 11;
 
 /**

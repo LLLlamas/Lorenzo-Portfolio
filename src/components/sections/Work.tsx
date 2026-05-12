@@ -185,7 +185,7 @@ function ProjectCard({ project, featured = false, isSelected = false, onSelect }
             )
           ) : (
             <div className="absolute inset-0 grid place-items-center">
-              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-quiet">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
                 Screenshot pending
               </span>
             </div>
