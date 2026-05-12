@@ -327,16 +327,17 @@ section[id] {
 }
 
 /* Text + image glow-outline when inside the cursor radius.
-   Light mode: four stacked lavender passes — additive opacity builds a visible
-   purple halo on the white background without any dark artifact.
-   Dark mode: two passes is enough since lavender contrasts well on dark bg. */
+   Light mode: mid-purple (#7B6BAE) — visible against the near-white bg without
+   the harsh dark-halo artifact that full-opacity #3D2E5C caused.
+   Dark mode: two lavender passes is enough since #A697C8 contrasts well on dark. */
 [data-glow] {
   transition: filter 200ms ease;
 }
 :root [data-glow="1"] {
   filter:
-    drop-shadow(0 0 2px white)
-    drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+    drop-shadow(0 0 1px #7B6BAE)
+    drop-shadow(0 0 3px rgba(123, 107, 174, 0.6))
+    drop-shadow(0 0 6px rgba(123, 107, 174, 0.3));
 }
 .dark [data-glow="1"] {
   filter:
@@ -347,6 +348,14 @@ section[id] {
   filter:
     drop-shadow(0 0 1px transparent)
     drop-shadow(0 0 2px transparent);
+}
+/* Suppress glow on label-select items while the dark pill hover is active —
+   the inverted background is the highlight; the outline would clash. */
+@media (hover: hover) {
+  .label-select:hover [data-glow] {
+    filter: none !important;
+    transition: none !important;
+  }
 }
 
 /* ─── True CSS 3D nav primitives ───
