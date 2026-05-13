@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 import { withBasePath } from '@/lib/utils';
 
+const TOUCH_QUERY = '(hover: none) and (pointer: coarse)';
+const ROTATION_SPEED = 0.18;
+const MAX_DPR = 1.5;
+
 /**
  * Slowly drifting tetrahedron rendered with Three.js. Sits behind the hero
  * content, mode-aware (dark = visible black faces + golden edges, light =
@@ -23,6 +27,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
     if (prefersReduced || !mounted) return;
     if (typeof window === 'undefined') return;
     if (!containerRef.current) return;
+    if (window.matchMedia(TOUCH_QUERY).matches) return;
 
     let cancelled = false;
     let cleanup: (() => void) | null = null;
@@ -44,7 +49,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
         antialias: true,
         powerPreference: 'low-power',
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_DPR));
       renderer.setSize(width, height);
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
@@ -86,6 +91,7 @@ export function FloatingGeometry({ className }: { className?: string }) {
       const logoImg = new Image();
       logoImg.crossOrigin = 'anonymous';
       logoImg.onload = () => {
+        if (cancelled) return;
         logoLoaded = true;
         logoEl = logoImg;
         repaintCanvas(faceHex);
@@ -131,37 +137,67 @@ export function FloatingGeometry({ className }: { className?: string }) {
       scene.add(group);
 
       let raf = 0;
+      let resizeRaf = 0;
       let prev = performance.now();
       let visible = true;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => { visible = entry.isIntersecting; },
-        { threshold: 0 },
-      );
-      observer.observe(container);
+      let running = false;
 
       const onResize = () => {
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        renderer.setSize(w, h);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
+        cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          const w = container.clientWidth;
+          const h = container.clientHeight;
+          if (!w || !h) return;
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_DPR));
+          renderer.setSize(w, h);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          if (visible && !document.hidden) renderer.render(scene, camera);
+        });
       };
       window.addEventListener('resize', onResize);
 
       const tick = (now: number) => {
+        if (!running) return;
         const dt = Math.min((now - prev) / 1000, 0.1);
         prev = now;
-        if (visible) {
-          const speed = window.__geoSpeed ?? 1;
-          group.rotation.x = Math.sin(now * 0.0004) * (20 * Math.PI / 180);
-          group.rotation.y += dt * 0.18 * speed;
-          group.position.y = Math.sin(now * 0.0006) * 0.15;
-          renderer.render(scene, camera);
-        }
+        group.rotation.x = Math.sin(now * 0.0004) * (20 * Math.PI / 180);
+        group.rotation.y += dt * ROTATION_SPEED;
+        group.position.y = Math.sin(now * 0.0006) * 0.15;
+        renderer.render(scene, camera);
         raf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(tick);
+
+      const startLoop = () => {
+        if (running || document.hidden) return;
+        running = true;
+        prev = performance.now();
+        raf = requestAnimationFrame(tick);
+      };
+
+      const stopLoop = () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        running = false;
+      };
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          visible = entry.isIntersecting;
+          if (visible) startLoop();
+          else stopLoop();
+        },
+        { threshold: 0 },
+      );
+      observer.observe(container);
+
+      const onVisibilityChange = () => {
+        if (document.hidden) stopLoop();
+        else if (visible) startLoop();
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+
+      startLoop();
 
       // Re-read CSS vars when theme flips; repaint canvas with new face color.
       const themeObserver = new MutationObserver(() => {
@@ -177,13 +213,15 @@ export function FloatingGeometry({ className }: { className?: string }) {
       });
       themeObserver.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ['class'],
+        attributeFilter: ['class', 'data-palette'],
       });
 
       cleanup = () => {
-        cancelAnimationFrame(raf);
+        stopLoop();
+        cancelAnimationFrame(resizeRaf);
         observer.disconnect();
         themeObserver.disconnect();
+        document.removeEventListener('visibilitychange', onVisibilityChange);
         window.removeEventListener('resize', onResize);
         renderer.dispose();
         geom.dispose();

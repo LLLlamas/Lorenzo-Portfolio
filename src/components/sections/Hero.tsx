@@ -5,7 +5,6 @@ import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
-import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
 import { cn } from '@/lib/utils';
@@ -148,26 +147,7 @@ export function Hero({ pendulumControl }: HeroProps) {
             </motion.div>
           ) : <span aria-hidden />}
 
-          <motion.div
-            className="hidden shrink-0 justify-end md:flex md:justify-self-end"
-            variants={{
-              hidden: prefersReduced
-                ? { opacity: 1, scale: 1, y: 0 }
-                : { opacity: 0, scale: 0.96, y: 8 },
-              visible: {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                transition: {
-                  type: 'spring',
-                  stiffness: 220,
-                  damping: 24,
-                },
-              },
-            }}
-          >
-            <RotationSpeedSlider />
-          </motion.div>
+          <span aria-hidden className="hidden md:block" />
         </motion.div>
       </div>
     </section>

@@ -22,13 +22,15 @@ export function ScrollScaleMount() {
       return;
     }
 
-    let raf = 0;
     let scheduled = false;
+    let raf = 0;
+    let vh = window.innerHeight;
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('.scroll-scale'));
+
+    if (elements.length === 0) return;
 
     const update = () => {
       scheduled = false;
-      const vh = window.innerHeight;
-      const elements = document.querySelectorAll<HTMLElement>('.scroll-scale');
       elements.forEach((el) => {
         const r = el.getBoundingClientRect();
         const featured = el.classList.contains('scroll-scale--featured');
@@ -46,14 +48,19 @@ export function ScrollScaleMount() {
       raf = requestAnimationFrame(update);
     };
 
+    const onResize = () => {
+      vh = window.innerHeight;
+      onScroll();
+    };
+
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
     };
   }, [prefersReduced]);
 

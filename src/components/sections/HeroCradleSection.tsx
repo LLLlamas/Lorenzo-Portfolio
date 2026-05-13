@@ -17,6 +17,13 @@ type CradleLine = {
   path: string;
 };
 
+function areLinesEqual(a: CradleLine[], b: CradleLine[]) {
+  if (a.length !== b.length) return false;
+  return a.every((line, index) => (
+    line.key === b[index]?.key && line.path === b[index]?.path
+  ));
+}
+
 function PendulumStrings({
   active,
   sourceRef,
@@ -38,6 +45,8 @@ function PendulumStrings({
 
     let measureRaf = 0;
     let loopRaf = 0;
+    let loopRunning = false;
+    let visible = true;
 
     const readLines = () => {
       const wrapperRect = wrapper.getBoundingClientRect();
@@ -57,7 +66,9 @@ function PendulumStrings({
         }];
       });
 
-      setLines(nextLines);
+      setLines((current) => (
+        areLinesEqual(current, nextLines) ? current : nextLines
+      ));
     };
 
     const measure = () => {
@@ -65,16 +76,26 @@ function PendulumStrings({
       measureRaf = requestAnimationFrame(readLines);
     };
 
+    const stopLoop = () => {
+      cancelAnimationFrame(loopRaf);
+      loopRaf = 0;
+      loopRunning = false;
+    };
+
     const tick = () => {
+      if (!loopRunning) return;
       readLines();
       loopRaf = requestAnimationFrame(tick);
     };
 
-    measure();
-
-    if (active) {
+    const startLoop = () => {
+      if (!active || !visible || loopRunning) return;
+      loopRunning = true;
       loopRaf = requestAnimationFrame(tick);
-    }
+    };
+
+    measure();
+    startLoop();
 
     const observer = new ResizeObserver(measure);
     observer.observe(wrapper);
@@ -83,12 +104,27 @@ function PendulumStrings({
       if (item) observer.observe(item);
     });
 
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) {
+          measure();
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0 },
+    );
+    intersectionObserver.observe(wrapper);
+
     window.addEventListener('resize', measure);
 
     return () => {
       cancelAnimationFrame(measureRaf);
-      cancelAnimationFrame(loopRaf);
+      stopLoop();
       observer.disconnect();
+      intersectionObserver.disconnect();
       window.removeEventListener('resize', measure);
     };
   }, [active, itemRefs, sourceRef, wrapperRef]);

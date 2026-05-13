@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -11,18 +12,31 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Stagger } from '@/components/motion/Stagger';
 import { GyroTilt } from '@/components/motion/GyroTilt';
 import { RippleTap } from '@/components/motion/RippleTap';
-import { ProjectModal } from '@/components/sections/ProjectModal';
 import { copy } from '@/content/copy';
 import { projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 
+const ProjectModal = dynamic(
+  () =>
+    import('@/components/sections/ProjectModal').then(
+      (module) => module.ProjectModal,
+    ),
+  { ssr: false },
+);
+
 export function Work() {
   const [openProject, setOpenProject] = useState<Project | null>(null);
+  const [hasLoadedModal, setHasLoadedModal] = useState(false);
 
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
 
   const showGapFiller = rest.length % 2 === 1;
+
+  const handleSelectProject = (project: Project) => {
+    setHasLoadedModal(true);
+    setOpenProject(project);
+  };
 
   return (
     <>
@@ -44,7 +58,7 @@ export function Work() {
                 project={project}
                 featured
                 isSelected={openProject?.slug === project.slug}
-                onSelect={setOpenProject}
+                onSelect={handleSelectProject}
               />
             ))}
           </Stagger>
@@ -60,7 +74,7 @@ export function Work() {
                   key={project.slug}
                   project={project}
                   isSelected={openProject?.slug === project.slug}
-                  onSelect={setOpenProject}
+                  onSelect={handleSelectProject}
                 />
               ))}
               {showGapFiller ? <WorkGapFiller key="gap" /> : null}
@@ -69,10 +83,12 @@ export function Work() {
         </div>
       </section>
 
-      <ProjectModal
-        project={openProject}
-        onClose={() => setOpenProject(null)}
-      />
+      {hasLoadedModal ? (
+        <ProjectModal
+          project={openProject}
+          onClose={() => setOpenProject(null)}
+        />
+      ) : null}
     </>
   );
 }

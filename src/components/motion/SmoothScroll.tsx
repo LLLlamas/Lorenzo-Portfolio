@@ -53,7 +53,24 @@ export function SmoothScroll() {
         lenis.raf(time);
         raf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(tick);
+
+      const startRaf = () => {
+        if (raf || document.hidden) return;
+        raf = requestAnimationFrame(tick);
+      };
+
+      const stopRaf = () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      };
+
+      const handleVisibilityChange = () => {
+        if (document.hidden) stopRaf();
+        else startRaf();
+      };
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      startRaf();
 
       // Hand programmatic anchor scroll over to Lenis so /#section links
       // glide instead of jumping.
@@ -74,6 +91,8 @@ export function SmoothScroll() {
 
       lenisRef.current = {
         destroy: () => {
+          stopRaf();
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
           document.removeEventListener('click', handleAnchorClick);
           lenis.destroy();
           delete window.__lenis;

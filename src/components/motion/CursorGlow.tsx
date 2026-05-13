@@ -11,6 +11,14 @@ const GLOW_R2 = 50 * 50;
 const TEXT_SELECTOR = 'h1, h2, h3, h4, p, li, dt, dd, figcaption, label, a:not(.btn-sweep), .aura-pop, .pill-tag, .label-select';
 const MIN_FONT_PX = 9;
 
+type MeasuredTarget = {
+  el: HTMLElement;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
+
 /**
  * Split every text node inside `container` into individual word <span>s.
  * Whitespace between words stays as plain text nodes so layout is unchanged.
@@ -56,16 +64,13 @@ function wrapWords(container: HTMLElement, seen: WeakSet<Text>): HTMLSpanElement
   return spans;
 }
 
-function refreshOutlines(cx: number, cy: number, spans: HTMLElement[]) {
-  // Read all rects first (single layout flush), then write
-  const rects = spans.map((s) => s.getBoundingClientRect());
-  for (let i = 0; i < spans.length; i++) {
-    const r = rects[i];
-    const dx = Math.max(r.left - cx, 0, cx - r.right);
-    const dy = Math.max(r.top - cy, 0, cy - r.bottom);
+function refreshOutlines(cx: number, cy: number, targets: MeasuredTarget[]) {
+  for (const target of targets) {
+    const dx = Math.max(target.left - cx, 0, cx - target.right);
+    const dy = Math.max(target.top - cy, 0, cy - target.bottom);
     const inGlow = dx * dx + dy * dy < GLOW_R2;
-    const cur = spans[i].dataset.glow === '1';
-    if (inGlow !== cur) spans[i].dataset.glow = inGlow ? '1' : '0';
+    const cur = target.el.dataset.glow === '1';
+    if (inGlow !== cur) target.el.dataset.glow = inGlow ? '1' : '0';
   }
 }
 
@@ -83,29 +88,63 @@ export function CursorGlow() {
 
   useEffect(() => {
     if (!enabled) return;
-    const el = layerRef.current;
-    if (!el) return;
+    if (!layerRef.current) return;
 
     let raf = 0;
     let cx = -HALF * 4;
     let cy = -HALF * 4;
     let visible = false;
+    let rectsDirty = true;
 
     const seen = new WeakSet<Text>();
-    const wordSpans: HTMLElement[] = [];
+    let glowTargets: HTMLElement[] = [];
+    let measuredTargets: MeasuredTarget[] = [];
 
     function scanAndWrap() {
       const containers = Array.from(
         document.querySelectorAll<HTMLElement>(TEXT_SELECTOR),
       ).filter((node) => parseFloat(getComputedStyle(node).fontSize) >= MIN_FONT_PX);
-      for (const c of containers) wordSpans.push(...wrapWords(c, seen));
+      for (const c of containers) wrapWords(c, seen);
+
+      const targetSet = new Set<HTMLElement>();
+      document.querySelectorAll<HTMLElement>('[data-glow]').forEach((target) => {
+        targetSet.add(target);
+      });
 
       // Pick up explicitly-marked glow targets (e.g. logo image)
       document.querySelectorAll<HTMLElement>('[data-glow-target]').forEach((el) => {
-        if (!wordSpans.includes(el)) {
-          if (!el.dataset.glow) el.dataset.glow = '0';
-          wordSpans.push(el);
-        }
+        if (!el.dataset.glow) el.dataset.glow = '0';
+        targetSet.add(el);
+      });
+
+      glowTargets = Array.from(targetSet);
+      rectsDirty = true;
+    }
+
+    function measureTargets() {
+      measuredTargets = glowTargets.map((target) => {
+        const r = target.getBoundingClientRect();
+        return {
+          el: target,
+          left: r.left,
+          right: r.right,
+          top: r.top,
+          bottom: r.bottom,
+        };
+      });
+      rectsDirty = false;
+    }
+
+    function scheduleUpdate() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const activeLayer = layerRef.current;
+        if (!activeLayer) return;
+        activeLayer.style.transform = `translate3d(${cx - HALF}px, ${cy - HALF}px, 0)`;
+        if (!visible) return;
+        if (rectsDirty) measureTargets();
+        refreshOutlines(cx, cy, measuredTargets);
       });
     }
 
@@ -128,24 +167,26 @@ export function CursorGlow() {
       cy = e.clientY;
       if (!visible) {
         visible = true;
-        el.style.opacity = '1';
+        layerRef.current?.style.setProperty('opacity', '1');
       }
-      refreshOutlines(cx, cy, wordSpans);
+      scheduleUpdate();
     };
 
-    const tick = () => {
-      el.style.transform = `translate3d(${cx - HALF}px, ${cy - HALF}px, 0)`;
-      raf = requestAnimationFrame(tick);
+    const onLayoutShift = () => {
+      rectsDirty = true;
     };
-    raf = requestAnimationFrame(tick);
 
     window.addEventListener('mousemove', onMove);
+    window.addEventListener('scroll', onLayoutShift, { passive: true });
+    window.addEventListener('resize', onLayoutShift, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(debounceId);
       observer.disconnect();
       window.removeEventListener('mousemove', onMove);
-      wordSpans.forEach((s) => { s.dataset.glow = '0'; });
+      window.removeEventListener('scroll', onLayoutShift);
+      window.removeEventListener('resize', onLayoutShift);
+      glowTargets.forEach((s) => { s.dataset.glow = '0'; });
       delete document.documentElement.dataset.cursor;
     };
   }, [enabled]);
