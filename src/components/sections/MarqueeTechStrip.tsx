@@ -1,10 +1,4 @@
-const ITEMS = [
-  'React & React Native',
-  'Next.js',
-  'JavaScript / TypeScript',
-  'SwiftUI',
-  'UX / UI',
-];
+import { techStackItems } from '@/content/tech-stack';
 
 export function MarqueeTechStrip() {
   return (
@@ -13,7 +7,7 @@ export function MarqueeTechStrip() {
         aria-label="Core technologies"
         className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-10 gap-y-3"
       >
-        {ITEMS.map((item) => (
+        {techStackItems.map((item) => (
           <li
             key={item}
             className="aura-pop whitespace-nowrap text-sm font-bold uppercase tracking-[0.16em] text-ink-quiet"

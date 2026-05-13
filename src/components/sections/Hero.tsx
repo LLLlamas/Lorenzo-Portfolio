@@ -1,13 +1,14 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RotationSpeedSlider } from '@/components/motion/RotationSpeedSlider';
 import { RippleTap } from '@/components/motion/RippleTap';
-import { CradlePair } from '@/components/motion/CradlePair';
 import { copy } from '@/content/copy';
+import { cn } from '@/lib/utils';
 
 const FloatingGeometry = dynamic(
   () =>
@@ -17,7 +18,11 @@ const FloatingGeometry = dynamic(
   { ssr: false },
 );
 
-export function Hero() {
+type HeroProps = {
+  pendulumControl?: ReactNode;
+};
+
+export function Hero({ pendulumControl }: HeroProps) {
   const prefersReduced = useReducedMotion();
 
   return (
@@ -48,18 +53,7 @@ export function Hero() {
         <FloatingGeometry className="h-full w-full" />
       </motion.div>
 
-      {/* Speed control for the floating tetrahedron. Sits just below the
-          geometry on the right; itself hidden on touch + reduced-motion. */}
-      <motion.div
-        className="absolute right-[6%] top-[480px] z-10 hidden md:block lg:top-[580px]"
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <RotationSpeedSlider />
-      </motion.div>
-
-      <div className="mx-auto max-w-5xl">
+      <div className="relative z-10 mx-auto max-w-5xl">
         <motion.p
           className="aura-pop mb-6 text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet"
           initial={prefersReduced ? false : { opacity: 0, y: 8 }}
@@ -86,35 +80,95 @@ export function Hero() {
           {copy.hero.subhead}
         </motion.p>
 
-        <CradlePair
-          className="mt-10"
-          left={
+        <motion.div
+          className="relative mt-10 flex flex-col gap-5 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.08, delayChildren: 1.05 },
+            },
+          }}
+        >
+          <div className="cradle-pair flex flex-wrap items-center gap-3 md:justify-self-start">
+            {[copy.hero.primaryCta, copy.hero.secondaryCta].map((cta, i) => (
+              <motion.div
+                key={cta.href}
+                variants={{
+                  hidden: prefersReduced
+                    ? { opacity: 1, scale: 1, y: 0 }
+                    : { opacity: 0, scale: 0.96, y: 8 },
+                  visible: {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    transition: {
+                      type: 'spring',
+                      stiffness: 220,
+                      damping: 24,
+                    },
+                  },
+                }}
+              >
+                <RippleTap className={cn('rounded-full', i === 0 ? 'cradle-left' : 'cradle-right')}>
+                  <Button
+                    href={cta.href}
+                    variant={i === 0 ? 'accent' : 'ghost'}
+                    size="lg"
+                  >
+                    {cta.label}
+                  </Button>
+                </RippleTap>
+              </motion.div>
+            ))}
+
+          </div>
+
+          {pendulumControl ? (
             <motion.div
-              initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 220, damping: 24, delay: 1.05 }}
+              className="order-first flex justify-center md:order-none md:justify-self-center"
+              variants={{
+                hidden: prefersReduced
+                  ? { opacity: 1, scale: 1, y: 0 }
+                  : { opacity: 0, scale: 0.96, y: 8 },
+                visible: {
+                  opacity: 1,
+                  scale: 1,
+                  y: 0,
+                  transition: {
+                    type: 'spring',
+                    stiffness: 220,
+                    damping: 24,
+                  },
+                },
+              }}
             >
-              <RippleTap className="rounded-full">
-                <Button href={copy.hero.primaryCta.href} variant="accent" size="lg">
-                  {copy.hero.primaryCta.label}
-                </Button>
-              </RippleTap>
+              {pendulumControl}
             </motion.div>
-          }
-          right={
-            <motion.div
-              initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 220, damping: 24, delay: 1.13 }}
-            >
-              <RippleTap className="rounded-full">
-                <Button href={copy.hero.secondaryCta.href} variant="ghost" size="lg">
-                  {copy.hero.secondaryCta.label}
-                </Button>
-              </RippleTap>
-            </motion.div>
-          }
-        />
+          ) : <span aria-hidden />}
+
+          <motion.div
+            className="hidden shrink-0 justify-end md:flex md:justify-self-end"
+            variants={{
+              hidden: prefersReduced
+                ? { opacity: 1, scale: 1, y: 0 }
+                : { opacity: 0, scale: 0.96, y: 8 },
+              visible: {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transition: {
+                  type: 'spring',
+                  stiffness: 220,
+                  damping: 24,
+                },
+              },
+            }}
+          >
+            <RotationSpeedSlider />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

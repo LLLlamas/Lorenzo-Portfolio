@@ -816,3 +816,130 @@ body::after {
   will-change: transform;
 }
 
+/* Pendulum-triggered tech strip */
+.pendulum-toggle {
+  isolation: isolate;
+}
+
+.pendulum-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  z-index: -1;
+  border-radius: 999px;
+  opacity: 0;
+  background:
+    radial-gradient(
+      34px circle at 50% 50%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 72%
+    );
+  transition: opacity 420ms var(--ease-out-expo);
+}
+
+.pendulum-toggle--active::before {
+  opacity: 1;
+}
+
+.cradle-string {
+  fill: none;
+  stroke: color-mix(in srgb, #f4f1e8 82%, var(--accent));
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  vector-effect: non-scaling-stroke;
+  filter:
+    drop-shadow(0 0 5px color-mix(in srgb, white 26%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 24%, transparent));
+  transition:
+    opacity 260ms var(--ease-out-expo),
+    stroke-dashoffset 820ms var(--ease-out-expo);
+}
+
+.pendulum-label {
+  position: relative;
+  transform-origin: 50% 0%;
+  transition:
+    color 420ms var(--ease-out-expo),
+    text-shadow 420ms var(--ease-out-expo);
+  will-change: transform;
+}
+
+.pendulum-label--primed {
+  color: var(--ink);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.cradle-strip-active .pendulum-label--active {
+  color: var(--accent);
+}
+
+@keyframes cradle-left-label {
+  0%, 7% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(-76px, -86px, 0) rotate(-8deg);
+  }
+  43% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes cradle-right-label {
+  0%, 47% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  66% {
+    transform: translate3d(76px, -86px, 0) rotate(8deg);
+  }
+  86%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes cradle-middle-label {
+  0%, 39%, 49%, 82%, 92%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  42% {
+    transform: translate3d(2px, 0, 0) rotate(0.7deg);
+  }
+  45% {
+    transform: translate3d(-2px, 0, 0) rotate(-0.45deg);
+  }
+  85% {
+    transform: translate3d(-2px, 0, 0) rotate(-0.7deg);
+  }
+  88% {
+    transform: translate3d(2px, 0, 0) rotate(0.45deg);
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .cradle-strip-active .pendulum-label--left {
+    animation: cradle-left-label 2.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) 880ms infinite;
+  }
+
+  .cradle-strip-active .pendulum-label--middle {
+    animation: cradle-middle-label 2.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) 880ms infinite;
+  }
+
+  .cradle-strip-active .pendulum-label--right {
+    animation: cradle-right-label 2.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) 880ms infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cradle-string {
+    transition-duration: 0.01ms !important;
+  }
+
+  .pendulum-label {
+    transform: none !important;
+  }
+}
+

@@ -31,7 +31,7 @@ Two-page solo-freelance portfolio for **Lorenzo Llamas**.
 
 ## Routes
 
-- `/` — landing (Hero · MarqueeTechStrip · About · Work · Capabilities · Packages · FAQ · ContactCTA)
+- `/` — landing (HeroCradleSection: Hero + pendulum tech strip · About · Work · Capabilities · Packages · FAQ · ContactCTA)
 - `/contact` — email · calendar · short form · mini-FAQ
 - `/_not-found` — 404
 
@@ -40,24 +40,27 @@ Two-page solo-freelance portfolio for **Lorenzo Llamas**.
 ```
 src/
 ├── app/
-│   ├── layout.tsx           ← root: fonts, ThemeProvider (dark default), SmoothScroll, ScrollProgress, CustomCursor, EntrySequence, ScrollScaleMount, Header, Footer
-│   ├── page.tsx             ← composes the 7 landing sections
+│   ├── layout.tsx           ← root: fonts, ThemeProvider (dark default), SmoothScroll, ScrollProgress, CursorGlow, EntrySequence, GlobalRippleTap, ScrollScaleMount, Header, Footer
+│   ├── page.tsx             ← composes landing sections; starts with HeroCradleSection
 │   ├── contact/page.tsx     ← contact form + cards + mini-FAQ
 │   ├── globals.css          ← Tailwind v4 @theme + tokens + cinematic CSS layer + reduced-motion gate + body::after film-grain overlay (SVG noise, z-9999, pointer-events: none, killed under reduced-motion)
 │   └── not-found.tsx
 ├── components/
-│   ├── sections/            ← Hero, About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal, MarqueeTechStrip
+│   ├── sections/            ← Hero, HeroCradleSection, NewtonsCradleStrip, MarqueeTechStrip, About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
-│   │                          CustomCursor, ScanLine, Modal, ScrollScaleMount, MagneticWrap
+│   │                          CustomCursor (legacy, unmounted), CursorGlow, ScanLine,
+│   │                          Modal, ScrollScaleMount, MagneticWrap, GyroTilt,
+│   │                          PendulumToggle, RippleTap, GlobalRippleTap
 │   ├── nav/                 ← Header (3D hex-prism brand + 3D cube nav links), Footer (large mailto), ThemeToggle (tetrahedron icon)
 │   └── theme/               ← ThemeProvider (next-themes wrapper)
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH for all copy/data ***
 │   ├── copy.ts              ← hero/about/capabilities/CTA/contact copy + meta
 │   ├── projects.ts          ← typed Project[]; one entry per card
 │   ├── packages.ts          ← Spark / Studio tiers + modifiers
-│   └── faqs.ts              ← landing FAQ + contact mini-FAQ
+│   ├── faqs.ts              ← landing FAQ + contact mini-FAQ
+│   └── tech-stack.ts        ← tech labels used by MarqueeTechStrip/NewtonsCradleStrip
 └── lib/
     ├── utils.ts             ← cn() class-merge, withBasePath()
     ├── motion.ts            ← shared easing / duration / stagger constants
@@ -74,6 +77,7 @@ src/
 | About paragraphs / pull-quote | `src/content/copy.ts` → `copy.about` |
 | About portrait | Drop a real photo at `/public/about/portrait.{webp,jpg}` and replace `<AboutPlaceholder />` in `About.tsx` with `<Image>`. Layout uses 4:5 aspect — no reflow on swap |
 | Capability cards | `src/content/copy.ts` → `copy.capabilities.items`. Each item has a `tags` array that drives the hover-revealed tech-pill row below the cards (`Capabilities.tsx`) |
+| Tech strip labels | `src/content/tech-stack.ts`. Used by both the static `MarqueeTechStrip` and interactive `NewtonsCradleStrip` |
 | A project card | `src/content/projects.ts` (one entry). Cover lives at `public/projects/<slug>.webp`; omit the `cover` field for projects without a screenshot — card falls back to a category-tinted gradient. Card click opens a modal showing `description`, `highlights`, `role`, `gallery`, and `link`. The "rest" grid auto-detects trailing gaps and renders a `WorkGapFiller` (LOADING placeholder) to fill them |
 | Add / replace a project screenshot | Drop the source file into `screenshots/<anything>.PNG`, add a `[filename, outputName]` row to `MAPPINGS` in `scripts/resize-screenshots.mjs` (use `<slug>` for the cover, `<slug>-1`, `<slug>-2`, … for gallery shots), then run `npm run resize-screenshots`. Outputs optimized webp to `public/projects/`. The `screenshots/` directory is gitignored — only the optimized webp is committed |
 | Add / replace a brand asset (e.g. logo) | Drop the source into `screenshots/<filename>.PNG`, add a row to `BRAND_MAPPINGS` in `scripts/resize-screenshots.mjs`, run `npm run resize-screenshots`. Outputs to `public/brand/<name>.webp` at 512px max, quality 92. The current llama logo lives at `public/brand/llama-logo.webp` and is rendered by `BrandHexPrism` in the Header |
@@ -91,6 +95,7 @@ src/
 - Lenis (smooth scroll) bypasses on touch devices and reduced-motion users — both via runtime checks in `SmoothScroll.tsx`
 - **`SmoothScroll` exposes `window.__lenis = { stop, start }`** so overlays (Modal) can pause/resume Lenis when they take over the scroll surface. Lenis runs on its own RAF loop, so `body.overflow:hidden` alone is not enough.
 - **`RotationSpeedSlider` exposes `window.__geoSpeed`** (number, 0–4, default 1) which `FloatingGeometry`'s RAF tick reads each frame to scale rotation deltas. Plumbing-via-global is the intentional pattern (matches `window.__lenis`); avoids prop-drilling through dynamic imports
+- **Pendulum tech strip is click-driven, not hover-driven.** `PendulumToggle` sits centered in the hero action row. Clicking it draws silver SVG strings from the bottom-center of the button to the center of each tech label; clicking again retracts them. Once connected, CSS keyframes make only the first and last labels swing while the middle three labels jiggle slightly on impact.
 - **`Modal` panels must have `data-lenis-prevent`** so wheel events on the panel scroll the panel rather than bleeding into Lenis. Already wired in `Modal.tsx`.
 - Easings live as CSS custom properties: `--ease-out-expo`, `--ease-out-back`, `--ease-in-out-circ`, `--ease-physical`
 - The `Stagger` primitive's `childAs` prop must be `"li"` when wrapping inside `<ul>`/`<ol>` to keep HTML valid (see `src/components/sections/FAQ.tsx`)
@@ -108,15 +113,22 @@ src/
 |---|---|
 | `EntrySequence` | 4-act page-load overlay (radial accent glow → scan-line sweep → ground fade). Plays once per session via `sessionStorage`, gated on reduced-motion. Mounted in `layout.tsx` |
 | `FloatingGeometry` | Raw three.js tetrahedron behind the hero. Dynamic-imported (`next/dynamic`, `ssr: false`) so three.js stays out of First Load JS. Mode-aware via CSS-var MutationObserver — re-reads `--geo-face` / `--geo-edge` / `--geo-opacity` when the `dark` class flips. Skipped on touch + reduced-motion |
-| `CustomCursor` | Golden/accent dot + lerping reticle ring. Sets `data-cursor="custom"` on `<html>` so global CSS hides the system cursor. Auto-disabled on touch + reduced-motion. **`z-[120]`** — sits above modals (z-100). Ring: `size-6` (24px) at rest, `size-10` (40px) on interactive hover |
+| `CustomCursor` | **Legacy — no longer mounted in `layout.tsx`.** Was golden dot + reticle ring. Superseded by `CursorGlow`. File still on disk but unused |
+| `CursorGlow` | Radial-gradient orb (`--glow-orb-color`) that follows the mouse at `z-[110]`. Splits all visible text into per-word `<span data-glow>` wrappers, then toggles `data-glow="1"` on words within a 50px radius of the cursor. Sets `data-cursor="custom"` on `<html>` to hide the system cursor. Re-scans the DOM via MutationObserver when routes change or modals open. Desktop-only, gated on reduced-motion. Mounted in `layout.tsx` |
+| `RippleTap` | Per-element touch ripple. Wraps a child, spawns a `<span class="ripple-expand">` at the touch point on `touchstart`. Touch-only + reduced-motion gated. Used on Hero CTA buttons |
+| `GlobalRippleTap` | Document-level touch ripple at `z-[55]`. Spawns `accent`-colored ripples on every `touchstart` anywhere on the page. Touch-only + reduced-motion gated. Mounted in `layout.tsx` |
+| `GyroTilt` | Device-orientation wrapper for mobile. Reads `beta`/`gamma` from `DeviceOrientationEvent`, applies perspective rotateX/Y (clamped ±12°) to its children. Handles iOS 13+ permission request on first touch. Touch-only + reduced-motion gated. Used on the Work section grid |
 | `ScanLine` | Thin accent rule that draws across when scrolled into viewport. Used above every `<SectionHeader>` eyebrow |
 | `Modal` | Generic dialog primitive. Pauses `window.__lenis`, sets `data-lenis-prevent` on the panel, body scroll lock, focus management |
 | `NavCube` (in `Header.tsx`) | True 3D cube nav link. 6 face divs (front/back/top/bottom/left/right) on a `transform-style: preserve-3d` parent. Sits FLAT at rest (`rotateY(0)`) — the 3D-ness reveals during the hover spin to `rotateY(180deg)`, ending on the accent-bordered back face. All faces use `backface-visibility: hidden` so only the camera-facing side renders (prevents the back-face label from bleeding through the front) |
 | `BrandHexPrism` (in `Header.tsx`) | 2-face flip card holding the chef-llama logo (`public/brand/llama-logo.webp`). Both faces render the same image — on hover the parent rotates `rotateY(180deg)` and the back face's combined rotation lands back at +Z, so the logo isn't mirrored when seen. Function name is historical (used to be a hex prism with text); the SVG hex outline was dropped when the logo replaced "Lorenzo Llamas" text. Square 4.5rem × 4.5rem container |
-| `RotationSpeedSlider` (in `motion/`) | Custom-styled discrete bar (range input, 0–4 in 0.5 steps, default 1) that adjusts the floating tetrahedron's rotation speed. Communicates with `FloatingGeometry` via the global `window.__geoSpeed` (read each RAF tick, multiplied into rotation deltas). No labels or numeric readout — just the bar. Hidden on touch + reduced-motion. Mounted in `Hero.tsx` just below the geometry on desktop |
+| `RotationSpeedSlider` (in `motion/`) | Custom-styled discrete bar (range input, 0–4 in 0.5 steps, default 1) that adjusts the floating tetrahedron's rotation speed. Communicates with `FloatingGeometry` via the global `window.__geoSpeed` (read each RAF tick, multiplied into rotation deltas). No labels or numeric readout — just the bar. Hidden on touch + reduced-motion. Mounted in `Hero.tsx` on the same action row as the CTAs, right-aligned on desktop |
 | `ScrollScaleMount` | Null-render fallback for the `.scroll-scale` "Lusion grid" effect. Modern Chromium uses native `animation-timeline: view()` (CSS in `globals.css`) — this component detects support and returns early there. On Safari/Firefox, it runs a passive scroll listener that lerps each `.scroll-scale` element's scale from 0.88 → 1.0 as it enters the viewport (formula: `t = clamp(1 - r.top / (vh * 0.62), 0, 1); scale = 0.88 + 0.12 * t`). Gated on reduced-motion. Mounted in `layout.tsx` |
 | `MagneticWrap` | Wrap a button/link to make it follow the cursor on `mousemove` with spring-back on leave. Default strength 0.25. Inline-block wrapper that translates via inline `style.transform`. Desktop-only — bails on `(hover: none)` and reduced-motion (returns plain wrapper). Used on Hero CTAs and ContactCTA buttons |
-| `MarqueeTechStrip` (in `sections/`) | Horizontal scrolling strip of tech-stack names (React, Next.js, TypeScript, etc.) separating Hero from About. Server component, pure CSS `@keyframes marquee` animation tagged `motion-decorative` so reduced-motion kills it. Items are hardcoded in the component (not in copy.ts) |
+| `PendulumToggle` (in `motion/`) | Small centered button in the hero action row. Owns no internal string animation; it only toggles the interactive tech strip via `HeroCradleSection`. `aria-pressed` tracks active state. |
+| `HeroCradleSection` (in `sections/`) | Client wrapper that composes `Hero`, the full-section SVG string overlay, and `NewtonsCradleStrip`. Keeps the page server component intact while sharing button/label refs and active state. The string overlay measures from the button bottom-center to each label center and updates on active animation frames so strings follow moving labels. |
+| `NewtonsCradleStrip` (in `sections/`) | Interactive tech strip used on the homepage. Renders the shared labels from `src/content/tech-stack.ts`. When active, `React & React Native` swings up-left and back, `UX / UI` swings up-right and back, and the middle three labels only get a slight jiggle. Motion is CSS keyframes in `globals.css`, gated by `prefers-reduced-motion` and `min-width: 768px`. |
+| `MarqueeTechStrip` (in `sections/`) | Static server-component version of the same five tech-stack names. Retained as a simple fallback/reusable strip, but the homepage currently uses `HeroCradleSection` + `NewtonsCradleStrip`. Items come from `src/content/tech-stack.ts`; each item has `aura-pop` + `label-select` styling for cursor-glow + dark-pill hover. **Note:** the `marquee-track` CSS class exists in `globals.css` but is **not applied** |
 
 ## Theming
 
@@ -143,7 +155,12 @@ src/
 | `brand-hex` / `brand-hex__inner` / `brand-hex__face` (`--front` / `--back`) | CSS classes for the brand mark's 2-face flip card. Sized via `--hex-w` / `--hex-h` / `--hex-d` custom properties on the root (currently 4.5rem square × 18px depth) |
 | `speed-slider` | Custom range input styling (track + thumb, both `::-webkit-` and `::-moz-` selectors). Used by `RotationSpeedSlider`. Track reads `--line`, thumb reads `--accent` |
 | `scroll-scale` / `scroll-scale--featured` | "Lusion grid" enter scale (0.88 → 1.0) driven by native `animation-timeline: view()` on Chromium and the `ScrollScaleMount` rAF fallback on Safari/Firefox. `--featured` shortens the range so big cards finish settling earlier. Applied to project cards in `Work.tsx` |
-| `marquee-track` | Continuous infinite-loop translateX(0 → -50%) over 32s. Used by `MarqueeTechStrip`. Tagged `motion-decorative` so reduced-motion kills it |
+| `marquee-track` | Continuous infinite-loop translateX(0 → -50%) over 32s. Defined in CSS but **not currently applied** to `MarqueeTechStrip` (strip is static flex). Tagged `motion-decorative` so reduced-motion kills it |
+| `pendulum-toggle` | Styles the centered pendulum icon button in the hero action row. Active state (`pendulum-toggle--active`) adds accent border/text and subtle radial glow. It does **not** animate internal strings. |
+| `cradle-string` | SVG path styling for the silver strings drawn by `HeroCradleSection`. Paths use `pathLength=1` + `stroke-dashoffset` so strings draw on click and retract on second click. Origin is the bottom-center of the pendulum button; endpoints are tech-label centers. |
+| `pendulum-label` / `pendulum-label--left` / `--middle` / `--right` / `--active` | Tech-label motion classes for `NewtonsCradleStrip`. `--left` runs `cradle-left-label`, `--right` runs `cradle-right-label`, and `--middle` runs `cradle-middle-label` only while `.cradle-strip-active` is present. Reduced-motion disables transforms. |
+| `btn-pendulum` | `transform-origin: 50% -20px`. On hover triggers `pendulum-swing` keyframes — damped left→right oscillation (700ms, physics curve). Gated on `(hover: hover)` + `prefers-reduced-motion: no-preference` |
+| `cradle-pair` / `cradle-left` / `cradle-right` | Newton's Cradle CTA pair. `transform-origin: 50% -20px`. Uses CSS `:has()` — hovering `cradle-left` triggers `cradle-send-right` on itself + `cradle-receive-right` on `cradle-right` (and vice-versa). 750ms per cycle. Used on Hero CTA buttons. Keyframes: `cradle-send-right`, `cradle-send-left`, `cradle-receive-right`, `cradle-receive-left` |
 
 ## Build & deploy
 
@@ -189,7 +206,7 @@ Header is **`h-24`** (the 3D hex prism + cubes need extra vertical room for pers
 
 | Metric | Target | Current |
 |---|---|---|
-| First Load JS (`/`) | ≤ 140 kB | 165 kB ⚠️ (Phase 3 will trim; three.js already dynamic-imported and not in this number) |
+| First Load JS (`/`) | ≤ 140 kB | 171 kB ⚠️ (Phase 3 will trim; three.js already dynamic-imported and not in this number) |
 | First Load JS (`/contact`) | ≤ 140 kB | 103 kB ✓ |
 | LCP (4G mobile) | < 2.0s | unmeasured |
 | CLS | < 0.05 | unmeasured |
