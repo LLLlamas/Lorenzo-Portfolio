@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
-import { cn } from '@/lib/utils';
 
 const FloatingGeometry = dynamic(
   () =>
@@ -90,7 +89,7 @@ export function Hero({ pendulumControl }: HeroProps) {
             },
           }}
         >
-          <div className="cradle-pair flex flex-wrap items-center gap-3 md:justify-self-start">
+          <div className="flex flex-wrap items-center gap-3 md:justify-self-start">
             {[copy.hero.primaryCta, copy.hero.secondaryCta].map((cta, i) => (
               <motion.div
                 key={cta.href}
@@ -110,7 +109,7 @@ export function Hero({ pendulumControl }: HeroProps) {
                   },
                 }}
               >
-                <RippleTap className={cn('rounded-full', i === 0 ? 'cradle-left' : 'cradle-right')}>
+                <RippleTap className="rounded-full">
                   <Button
                     href={cta.href}
                     variant={i === 0 ? 'accent' : 'ghost'}

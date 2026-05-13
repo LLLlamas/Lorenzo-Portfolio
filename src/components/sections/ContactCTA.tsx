@@ -23,7 +23,7 @@ export function ContactCTA() {
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <RippleTap className="rounded-full">
-            <Button href={copy.contactCta.cta.href} variant="accent" size="lg" className="btn-pendulum">
+            <Button href={copy.contactCta.cta.href} variant="accent" size="lg">
               {copy.contactCta.cta.label}
             </Button>
           </RippleTap>
@@ -32,7 +32,6 @@ export function ContactCTA() {
               href={`mailto:${copy.meta.email}`}
               variant="ghost"
               size="lg"
-              className="btn-pendulum"
             >
               {copy.meta.email}
             </Button>
