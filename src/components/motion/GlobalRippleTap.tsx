@@ -43,7 +43,7 @@ export function GlobalRippleTap() {
     <div
       ref={surfaceRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[55] overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[110] overflow-hidden"
     />
   );
 }

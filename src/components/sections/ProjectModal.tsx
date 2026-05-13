@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowUpRight, X } from 'lucide-react';
 import { Modal } from '@/components/motion/Modal';
 import { RippleTap } from '@/components/motion/RippleTap';
@@ -27,16 +29,23 @@ export function ProjectModal({ project, onClose }: Props) {
           {/* 0-height sticky wrapper sits at the top of the panel scroll
               viewport and pins the X to the top-right as the user scrolls.
               Lives outside <article> because article has overflow-hidden,
-              which would clip sticky behavior relative to the panel. */}
-          <div className="sticky top-0 z-20 h-0">
-            <RippleTap className="pointer-events-auto absolute right-3 top-3 rounded-full md:right-4 md:top-4">
+              which would clip sticky behavior relative to the panel.
+              `top` honors iOS safe-area inset so the X clears the notch. */}
+          <div
+            className="sticky z-20 h-0"
+            style={{ top: 'max(0px, env(safe-area-inset-top))' }}
+          >
+            <RippleTap
+              className="pointer-events-auto absolute right-4 top-4 rounded-full md:right-5 md:top-5"
+              color="var(--line-accent)"
+            >
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="grid size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink"
+                className="grid size-11 place-items-center rounded-full border border-line bg-bg/90 text-ink-soft shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)] backdrop-blur-md transition-colors hover:bg-bg hover:text-ink md:size-10"
               >
-                <X className="size-4" />
+                <X className="size-[18px] md:size-4" />
               </button>
             </RippleTap>
           </div>
@@ -277,10 +286,11 @@ function GalleryItem({
   const isPhone = image.device === 'phone';
   const alt = image.caption ?? `${title} view ${index + 2}`;
   const prefersReduced = usePrefersReducedMotion();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLButtonElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
+  const [zoomed, setZoomed] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (prefersReduced || isPhone || !cardRef.current || !imgWrapRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const dx = (e.clientX - rect.left) / rect.width - 0.5;
@@ -297,47 +307,160 @@ function GalleryItem({
 
   return (
     <figure className="space-y-2">
-      <div
-        ref={cardRef}
-        className={cn(
-          'relative overflow-hidden rounded-xl border border-line bg-bg-elevated shadow-[0_18px_44px_-32px_rgba(0,0,0,0.5)]',
-          isPhone ? 'aspect-[9/16] p-2' : 'aspect-[16/10]',
-        )}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        {isPhone ? (
-          <PhoneFrame>
-            <Image
-              src={withBasePath(image.src)}
-              alt={alt}
-              fill
-              sizes="(min-width: 768px) 220px, 45vw"
-              className="object-cover"
-            />
-          </PhoneFrame>
-        ) : (
-          <div
-            ref={imgWrapRef}
-            className="absolute inset-0"
-            style={{ willChange: 'transform' }}
-          >
-            <Image
-              src={withBasePath(image.src)}
-              alt={alt}
-              fill
-              sizes="(min-width: 768px) 280px, 50vw"
-              className="object-cover object-top"
-            />
-          </div>
-        )}
-      </div>
+      <RippleTap className={cn('rounded-xl', isPhone && 'rounded-xl')}>
+        <motion.button
+          ref={cardRef}
+          type="button"
+          onClick={() => setZoomed(true)}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          whileTap={prefersReduced ? undefined : { scale: 0.965 }}
+          transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+          aria-label={`Expand ${alt}`}
+          className={cn(
+            'group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-line bg-bg-elevated shadow-[0_18px_44px_-32px_rgba(0,0,0,0.5)] outline-none transition-shadow hover:shadow-[0_24px_60px_-32px_rgba(0,0,0,0.6)] focus-visible:ring-2 focus-visible:ring-accent',
+            isPhone ? 'aspect-[9/16] p-2' : 'aspect-[16/10]',
+          )}
+        >
+          {isPhone ? (
+            <PhoneFrame>
+              <Image
+                src={withBasePath(image.src)}
+                alt={alt}
+                fill
+                sizes="(min-width: 768px) 220px, 45vw"
+                className="object-cover"
+              />
+            </PhoneFrame>
+          ) : (
+            <div
+              ref={imgWrapRef}
+              className="absolute inset-0"
+              style={{ willChange: 'transform' }}
+            >
+              <Image
+                src={withBasePath(image.src)}
+                alt={alt}
+                fill
+                sizes="(min-width: 768px) 280px, 50vw"
+                className="object-cover object-top"
+              />
+            </div>
+          )}
+        </motion.button>
+      </RippleTap>
       {image.caption ? (
         <figcaption className="aura-pop text-center text-xs font-bold uppercase tracking-[0.12em] text-ink-quiet">
           {image.caption}
         </figcaption>
       ) : null}
+
+      <AnimatePresence>
+        {zoomed ? (
+          <ImageZoomOverlay
+            src={image.src}
+            alt={alt}
+            isPhone={isPhone}
+            onClose={() => setZoomed(false)}
+            prefersReduced={prefersReduced}
+          />
+        ) : null}
+      </AnimatePresence>
     </figure>
+  );
+}
+
+/**
+ * Fullscreen image lightbox with a 3D "pop" entrance.
+ *
+ *  - Renders into <body> via portal so it escapes the project modal's
+ *    overflow/scroll context. z-[105] sits above the project modal (z-100)
+ *    but below the custom cursor (z-120) and the global ripple surface (z-110).
+ *  - Perspective container + transform-style: preserve-3d on the inner image
+ *    gives a genuine 3D rotate-in (not a flat scale). The image enters tilted
+ *    and rotates flat as it scales, then exits with the opposite tilt.
+ *  - Captures ESC in capture phase so the underlying Modal's ESC handler
+ *    doesn't also close the project modal.
+ */
+function ImageZoomOverlay({
+  src,
+  alt,
+  isPhone,
+  onClose,
+  prefersReduced,
+}: {
+  src: string;
+  alt: string;
+  isPhone: boolean;
+  onClose: () => void;
+  prefersReduced: boolean;
+}) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handler, { capture: true });
+    return () => document.removeEventListener('keydown', handler, { capture: true });
+  }, [onClose]);
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
+    <motion.div
+      className="fixed inset-0 z-[105] flex items-center justify-center p-4 md:p-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: prefersReduced ? 0.12 : 0.22 }}
+    >
+      <button
+        type="button"
+        aria-label="Close expanded image"
+        onClick={onClose}
+        className="absolute inset-0 cursor-zoom-out bg-ink/80 backdrop-blur-md"
+      />
+
+      <div
+        className="relative z-10 flex max-h-full max-w-5xl items-center justify-center"
+        style={{ perspective: 1400 }}
+      >
+        <motion.div
+          style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
+          initial={prefersReduced
+            ? { opacity: 0 }
+            : { opacity: 0, scale: 0.72, rotateX: 14, rotateY: -12, z: -120 }
+          }
+          animate={prefersReduced
+            ? { opacity: 1 }
+            : { opacity: 1, scale: 1, rotateX: 0, rotateY: 0, z: 0 }
+          }
+          exit={prefersReduced
+            ? { opacity: 0 }
+            : { opacity: 0, scale: 0.78, rotateX: -10, rotateY: 8, z: -160 }
+          }
+          transition={prefersReduced
+            ? { duration: 0.12 }
+            : { type: 'spring', stiffness: 240, damping: 22, mass: 0.9 }
+          }
+          className="relative drop-shadow-[0_50px_80px_rgba(0,0,0,0.55)]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={withBasePath(src)}
+            alt={alt}
+            draggable={false}
+            className={cn(
+              'block w-auto select-none rounded-xl border border-line bg-bg-elevated',
+              isPhone ? 'max-h-[92vh] max-w-[78vw] md:max-w-md' : 'max-h-[88vh] max-w-full',
+            )}
+          />
+        </motion.div>
+      </div>
+    </motion.div>,
+    document.body,
   );
 }
 
