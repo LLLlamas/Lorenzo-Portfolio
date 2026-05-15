@@ -2,42 +2,104 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
+import { navigation } from '@/content/navigation';
 import { cn, withBasePath } from '@/lib/utils';
 
-const navLinks = [
-  { href: '/#work', label: 'Work' },
-  { href: '/#capabilities', label: 'Capabilities' },
-  { href: '/#packages', label: 'Packages' },
-  { href: '/#faq', label: 'FAQ' },
-];
+const navLinks = navigation.primary;
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const compactRef = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const sectionIds = navLinks
+      .map((link) => link.href.split('#')[1])
+      .filter((id): id is string => Boolean(id));
+
+    let lastY = window.scrollY;
+    let raf = 0;
+
+    const updateActiveSection = (nextCompact: boolean) => {
+      const activationLine = nextCompact ? 84 : 118;
+      let nextActive: string | null = null;
+
+      for (const id of sectionIds) {
+        const section = document.getElementById(id);
+        if (!section) continue;
+        if (section.getBoundingClientRect().top <= activationLine) {
+          nextActive = id;
+        }
+      }
+
+      setActiveSection(nextActive);
+    };
+
+    const updateHeader = () => {
+      const currentY = Math.max(window.scrollY, 0);
+      const delta = currentY - lastY;
+      let nextCompact = compactRef.current;
+
+      setScrolled(currentY > 24);
+
+      if (currentY < 72) {
+        nextCompact = false;
+      } else if (delta > 4) {
+        nextCompact = true;
+      } else if (delta < -4) {
+        nextCompact = false;
+      }
+
+      if (nextCompact !== compactRef.current) {
+        compactRef.current = nextCompact;
+        setCompact(nextCompact);
+      }
+
+      updateActiveSection(nextCompact);
+      lastY = currentY;
+      raf = 0;
+    };
+
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(updateHeader);
+    };
+
     onScroll();
+    window.addEventListener('resize', onScroll);
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   return (
     <header
+      data-nav-state={compact ? 'compact' : 'expanded'}
       className={cn(
-        'fixed inset-x-0 top-0 z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'site-header fixed inset-x-0 top-0 z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        compact && 'site-header--compact',
         scrolled
-          ? 'border-b border-line/10 bg-bg/95 backdrop-blur-xl'
+          ? 'border-b border-line/10 bg-bg/95 shadow-[0_16px_50px_-38px_var(--accent)] backdrop-blur-xl'
           : 'border-b border-transparent bg-bg/60 backdrop-blur-md',
       )}
     >
-      <div className="mx-auto flex h-24 max-w-6xl items-center justify-between gap-6 px-6">
+      <div className="relative mx-auto flex h-24 max-w-6xl items-center justify-between gap-6 px-6">
         <BrandHexPrism />
 
-        <nav className="hidden items-center gap-3 md:flex">
+        <nav className="site-nav-track hidden items-center md:absolute md:flex">
           {navLinks.map((link) => (
-            <NavCube key={link.href} href={link.href} label={link.label} />
+            <NavCube
+              key={link.href}
+              href={link.href}
+              label={link.label}
+              active={activeSection === link.href.split('#')[1]}
+            />
           ))}
         </nav>
 
@@ -62,9 +124,22 @@ export function Header() {
  * the depth visible at rest. Hover rolls rotateY by +180 so the cube
  * flips card-style to its back face (accent-bordered + accent text).
  */
-function NavCube({ href, label }: { href: string; label: string }) {
+function NavCube({
+  href,
+  label,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+}) {
   return (
-    <Link href={href} className="nav-cube" data-cursor-hover>
+    <Link
+      href={href}
+      className={cn('nav-cube', active && 'nav-cube--active')}
+      aria-current={active ? 'page' : undefined}
+      data-cursor-hover
+    >
       <div className="nav-cube__inner">
         <div className="nav-cube__face nav-cube__face--front">
           <span>{label}</span>
