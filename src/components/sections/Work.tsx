@@ -5,15 +5,15 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Card } from '@/components/ui/Card';
 import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { Stagger } from '@/components/motion/Stagger';
 import { GyroTilt } from '@/components/motion/GyroTilt';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { copy } from '@/content/copy';
-import { projects, type Project } from '@/content/projects';
+import { projects, type Project, type ProjectCategory } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 
 const ProjectModal = dynamic(
@@ -24,14 +24,42 @@ const ProjectModal = dynamic(
   { ssr: false },
 );
 
+type FilterCategory = 'all' | ProjectCategory;
+
+const filterLabels: Record<FilterCategory, string> = {
+  all: 'All',
+  web: 'Web',
+  mobile: 'Mobile',
+  game: 'Game',
+};
+
+const filterOrder: FilterCategory[] = ['all', 'web', 'mobile', 'game'];
+
 export function Work() {
   const [openProject, setOpenProject] = useState<Project | null>(null);
   const [hasLoadedModal, setHasLoadedModal] = useState(false);
+  const [filter, setFilter] = useState<FilterCategory>('all');
+  const prefersReduced = useReducedMotion();
 
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
 
-  const showGapFiller = rest.length % 2 === 1;
+  const filteredFeatured =
+    filter === 'all' ? featured : featured.filter((p) => p.category === filter);
+  const filteredRest =
+    filter === 'all' ? rest : rest.filter((p) => p.category === filter);
+  const visibleProjects = [...filteredFeatured, ...filteredRest];
+
+  const showGapFiller = filteredRest.length % 2 === 1;
+
+  const openIndex = openProject
+    ? visibleProjects.findIndex((p) => p.slug === openProject.slug)
+    : -1;
+  const prevProject = openIndex > 0 ? visibleProjects[openIndex - 1] : null;
+  const nextProject =
+    openIndex >= 0 && openIndex < visibleProjects.length - 1
+      ? visibleProjects[openIndex + 1]
+      : null;
 
   const handleSelectProject = (project: Project) => {
     setHasLoadedModal(true);
@@ -48,38 +76,138 @@ export function Work() {
             subhead={copy.work.subhead}
           />
 
-          <Stagger
-            className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8"
-            step={0.08}
-          >
-            {featured.map((project) => (
-              <ProjectCard
-                key={project.slug}
-                project={project}
-                featured
-                isSelected={openProject?.slug === project.slug}
-                onSelect={handleSelectProject}
-              />
-            ))}
-          </Stagger>
+          <div className="mb-8 flex flex-wrap gap-2">
+            {filterOrder.map((category) => {
+              const isActive = filter === category;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setFilter(category)}
+                  aria-pressed={isActive}
+                  className={cn(
+                    'relative rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors',
+                    isActive
+                      ? 'border-accent text-accent-on'
+                      : 'border-line text-ink-quiet hover:border-line-accent hover:text-ink',
+                  )}
+                >
+                  {isActive ? (
+                    <motion.span
+                      layoutId="filter-pill"
+                      className="absolute inset-0 rounded-full bg-accent"
+                      transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                    />
+                  ) : null}
+                  <span className="relative z-10">{filterLabels[category]}</span>
+                </button>
+              );
+            })}
+          </div>
 
-          {rest.length > 0 ? (
-            <Stagger
-              className="mt-6 grid grid-cols-1 gap-6 md:mt-8 md:grid-cols-2 md:gap-8"
-              step={0.06}
-              delay={0.1}
-            >
-              {rest.map((project) => (
-                <ProjectCard
-                  key={project.slug}
-                  project={project}
-                  isSelected={openProject?.slug === project.slug}
-                  onSelect={handleSelectProject}
-                />
-              ))}
-              {showGapFiller ? <WorkGapFiller key="gap" /> : null}
-            </Stagger>
+          <div className="relative md:static">
+            <div className="-mx-6 flex gap-5 overflow-x-auto snap-x snap-mandatory px-6 pb-4 scrollbar-none md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible">
+              <AnimatePresence mode="popLayout">
+                {filteredFeatured.map((project, i) => (
+                  <motion.div
+                    key={project.slug}
+                    layout={!prefersReduced}
+                    className="snap-start flex-none w-[85vw] md:w-auto"
+                    initial={
+                      prefersReduced
+                        ? false
+                        : { opacity: 0, y: 18, filter: 'blur(6px)' }
+                    }
+                    whileInView={
+                      prefersReduced
+                        ? undefined
+                        : { opacity: 1, y: 0, filter: 'blur(0px)' }
+                    }
+                    exit={
+                      prefersReduced
+                        ? undefined
+                        : {
+                            opacity: 0,
+                            scale: 0.94,
+                            filter: 'blur(4px)',
+                            transition: { duration: 0.18 },
+                          }
+                    }
+                    viewport={{ once: true, margin: '0px 0px -8% 0px' }}
+                    transition={{
+                      delay: i * 0.06,
+                      duration: 0.8,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      featured
+                      isSelected={openProject?.slug === project.slug}
+                      onSelect={handleSelectProject}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+            {/* Right-edge fade hint so users know there's more to scroll */}
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-bg to-transparent md:hidden"
+              aria-hidden
+            />
+          </div>
+
+          {filteredRest.length > 0 ? (
+            <div className="mt-6 grid grid-cols-2 gap-6 md:mt-8 md:grid-cols-2 md:gap-8">
+              <AnimatePresence mode="popLayout">
+                {filteredRest.map((project, i) => (
+                  <motion.div
+                    key={project.slug}
+                    layout={!prefersReduced}
+                    initial={
+                      prefersReduced
+                        ? false
+                        : { opacity: 0, y: 18, filter: 'blur(6px)' }
+                    }
+                    whileInView={
+                      prefersReduced
+                        ? undefined
+                        : { opacity: 1, y: 0, filter: 'blur(0px)' }
+                    }
+                    exit={
+                      prefersReduced
+                        ? undefined
+                        : {
+                            opacity: 0,
+                            scale: 0.94,
+                            filter: 'blur(4px)',
+                            transition: { duration: 0.18 },
+                          }
+                    }
+                    viewport={{ once: true, margin: '0px 0px -8% 0px' }}
+                    transition={{
+                      delay: i * 0.06,
+                      duration: 0.8,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      isSelected={openProject?.slug === project.slug}
+                      onSelect={handleSelectProject}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {showGapFiller ? <WorkGapFiller /> : null}
+            </div>
           ) : null}
+
+          {filteredFeatured.length === 0 && filteredRest.length === 0 && (
+            <div className="py-20 text-center text-ink-quiet text-sm">
+              No projects in this category yet.
+            </div>
+          )}
         </div>
       </section>
 
@@ -87,6 +215,12 @@ export function Work() {
         <ProjectModal
           project={openProject}
           onClose={() => setOpenProject(null)}
+          prevProject={prevProject}
+          nextProject={nextProject}
+          onPrev={prevProject ? () => setOpenProject(prevProject) : undefined}
+          onNext={nextProject ? () => setOpenProject(nextProject) : undefined}
+          projectIndex={openIndex >= 0 ? openIndex : undefined}
+          projectCount={visibleProjects.length}
         />
       ) : null}
     </>

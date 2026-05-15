@@ -74,7 +74,7 @@
   --bg-elevated: #18181A;
   --ink: #F5F4EE;
   --ink-soft: #B5B4AE;
-  --ink-quiet: #6E6E68;
+  --ink-quiet: #828280;
   --line: #2A2A28;
   --line-accent: rgba(166, 151, 200, 0.32);
 
@@ -703,6 +703,15 @@ body::after {
   body::after {
     display: none;
   }
+}
+
+/* ─── Scrollbar hide (used on filmstrips) ─── */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* ─── Scroll-scale cards (Lusion grid effect) ─── */

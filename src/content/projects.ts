@@ -19,6 +19,12 @@ export type GalleryImage = {
   device?: 'phone' | 'browser';
 };
 
+/**
+ * A modal highlight — an outcome, learning, or hard problem.
+ * `metric` is optional: when present it renders as a large stat above `text`.
+ */
+export type Highlight = { text: string; metric?: string };
+
 export type Project = {
   slug: string;
   title: string;
@@ -27,7 +33,7 @@ export type Project = {
   /** Longer paragraph shown in the modal. */
   description?: string;
   /** Bullet points shown in the modal — outcomes, what was learned, what was hard. */
-  highlights?: string[];
+  highlights?: Highlight[];
   /** Role — e.g. "Solo developer". */
   role?: string;
   stack: string[];
@@ -51,9 +57,9 @@ export const projects: Project[] = [
       'A React-based newsletter app where dog owners can subscribe to themed weekly digests. Built as a side project to explore React state management and email-friendly templating, then expanded into a small content publishing tool with subscription management.',
     role: 'Solo developer',
     highlights: [
-      'React frontend with custom newsletter templating',
-      'Lightweight subscription + send pipeline',
-      'Mobile-responsive across breakpoints',
+      { text: 'React frontend with custom newsletter templating' },
+      { text: 'Lightweight subscription + send pipeline' },
+      { text: 'Mobile-responsive across breakpoints' },
     ],
     stack: ['React', 'JavaScript', 'Web'],
     cover: '/projects/dogs-and-llamas.webp',
@@ -75,9 +81,9 @@ export const projects: Project[] = [
       'A browser version of Bite Defense rebuilt around React and JavaScript. The port keeps the original tower-defense loop while adapting controls, pacing, and screen layout for desktop play.',
     role: 'Solo developer',
     highlights: [
-      'React frontend with a Canvas-based playfield',
-      'Desktop-first controls and responsive HUD layout',
-      'Web port separated from the native iOS implementation',
+      { text: 'React frontend with a Canvas-based playfield' },
+      { text: 'Desktop-first controls and responsive HUD layout' },
+      { text: 'Web port separated from the native iOS implementation' },
     ],
     stack: ['React', 'JavaScript', 'Canvas', 'Web'],
     cover: '/projects/bite-defense.webp',
@@ -97,9 +103,9 @@ export const projects: Project[] = [
       'A SwiftUI cookbook that turns recipes into a guided cook mode — multiple timers per recipe, ingredient checkoff, and a clean reading layout. Built solo on iOS 18 + SwiftData; designed around the "phone-on-the-counter" use case where you want big text and one-tap controls while your hands are messy.',
     role: 'Solo developer',
     highlights: [
-      'SwiftData persistence; offline-first',
-      'Multi-timer cook mode with haptic feedback',
-      'iOS 18 features (Live Activities considered for v2)',
+      { text: 'SwiftData persistence; offline-first' },
+      { text: 'Multi-timer cook mode with haptic feedback' },
+      { text: 'iOS 18 features (Live Activities considered for v2)' },
     ],
     stack: ['SwiftUI', 'SwiftData', 'iOS'],
     cover: '/projects/llamas-cookbook.webp',
@@ -119,9 +125,9 @@ export const projects: Project[] = [
       'The original native Bite Defense build: a SwiftUI shell with SpriteKit gameplay, touch-friendly controls, and compact phone-first screens. This version focuses on fast reads and clean mobile interaction instead of sharing the web renderer.',
     role: 'Solo developer',
     highlights: [
-      'SwiftUI app shell with SpriteKit gameplay scenes',
-      'Touch-first tower placement and wave controls',
-      'Compact HUD designed for portrait phone play',
+      { text: 'SwiftUI app shell with SpriteKit gameplay scenes' },
+      { text: 'Touch-first tower placement and wave controls' },
+      { text: 'Compact HUD designed for portrait phone play' },
     ],
     stack: ['SwiftUI', 'SpriteKit', 'iOS'],
     cover: '/projects/bite-defense-1.webp',
@@ -140,7 +146,10 @@ export const projects: Project[] = [
     description:
       'A small React and JavaScript web app focused on calm, glanceable bedtime UX with a custom-built calendar. Designed to be readable with one eye open in a dark room.',
     role: 'Solo developer',
-    highlights: ['React UI with dark-friendly typography', 'No notifications, no nags'],
+    highlights: [
+      { text: 'React UI with dark-friendly typography' },
+      { text: 'No notifications, no nags' },
+    ],
     stack: ['React', 'JavaScript', 'Web'],
     cover: '/projects/sleepy-llamas.webp',
     coverFit: 'cover',

@@ -3,25 +3,42 @@
 import Image from 'next/image';
 import { useRef, useState, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowUpRight, X } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Modal } from '@/components/motion/Modal';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { copy } from '@/content/copy';
-import type { GalleryImage, Project } from '@/content/projects';
+import type { GalleryImage, Highlight, Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
 type Props = {
   project: Project | null;
   onClose: () => void;
+  prevProject?: Project | null;
+  nextProject?: Project | null;
+  onPrev?: () => void;
+  onNext?: () => void;
+  /** Zero-based index of the open project within the visible set. */
+  projectIndex?: number;
+  /** Total number of projects in the visible set. */
+  projectCount?: number;
 };
 
 const modalCopy = copy.projectModal;
 
-export function ProjectModal({ project, onClose }: Props) {
+export function ProjectModal({
+  project,
+  onClose,
+  prevProject,
+  nextProject,
+  onPrev,
+  onNext,
+  projectIndex,
+  projectCount,
+}: Props) {
   const [expandedImage, setExpandedImage] = useState<GalleryImage | null>(null);
 
   useEffect(() => {
@@ -32,28 +49,37 @@ export function ProjectModal({ project, onClose }: Props) {
     <>
       <Modal open={Boolean(project)} onClose={onClose} label={project?.title}>
         {project ? (
-          <>
-            {/* 0-height sticky wrapper sits at the top of the panel scroll viewport
-                and pins the X to the top-right as the user scrolls.
-                The absolute div wraps RippleTap so that RippleTap's own "relative
-                overflow-hidden" on touch devices doesn't override the absolute
-                positioning and push the button off-screen on mobile. */}
-            <div className="sticky top-0 z-20 h-0">
-              <div className="absolute right-3 top-3 md:right-4 md:top-4">
-                <RippleTap className="rounded-full">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label="Close"
-                    className="grid size-10 md:size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink"
-                  >
-                    <X className="size-4" />
-                  </button>
-                </RippleTap>
-              </div>
+          /* 0-height sticky wrapper sits at the top of the panel scroll viewport
+             and pins the X to the top-right as the user scrolls.
+             The absolute div wraps RippleTap so that RippleTap's own "relative
+             overflow-hidden" on touch devices doesn't override the absolute
+             positioning and push the button off-screen on mobile. */
+          <div className="sticky top-0 z-20 h-0">
+            <div className="absolute right-3 top-3 md:right-4 md:top-4">
+              <RippleTap className="rounded-full">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close"
+                  className="grid size-10 md:size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink"
+                >
+                  <X className="size-4" />
+                </button>
+              </RippleTap>
             </div>
+          </div>
+        ) : null}
 
-            <article className="overflow-hidden">
+        <AnimatePresence mode="wait">
+          {project ? (
+            <motion.article
+              key={project.slug}
+              className="overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            >
               <ProjectCover project={project} />
 
               <div className="relative px-5 pb-7 pt-6 md:px-8 md:pb-9 md:pt-8">
@@ -102,16 +128,26 @@ export function ProjectModal({ project, onClose }: Props) {
                   <section className="mt-7">
                     <SectionRule label={modalCopy.highlights} />
                     <ol className="mt-4 grid gap-3 md:grid-cols-3">
-                      {project.highlights.map((highlight, index) => (
+                      {project.highlights.map((highlight: Highlight, index) => (
                         <li
-                          key={highlight}
-                          className="rounded-xl border border-line bg-bg/60 p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
+                          key={highlight.text}
+                          className="flex flex-col rounded-xl border border-line bg-bg/60 p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
                         >
                           <span className="text-[10px] uppercase tracking-[0.16em] text-accent">
                             {String(index + 1).padStart(2, '0')}
                           </span>
-                          <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                            {highlight}
+                          {highlight.metric ? (
+                            <p className="mt-2 font-display text-2xl font-bold leading-none tracking-tight text-ink">
+                              {highlight.metric}
+                            </p>
+                          ) : null}
+                          <p
+                            className={cn(
+                              'text-sm leading-relaxed text-ink-soft',
+                              highlight.metric ? 'mt-1' : 'mt-3',
+                            )}
+                          >
+                            {highlight.text}
                           </p>
                         </li>
                       ))}
@@ -122,30 +158,61 @@ export function ProjectModal({ project, onClose }: Props) {
                 {project.gallery && project.gallery.length > 0 ? (
                   <section className="mt-8">
                     <SectionRule label={modalCopy.more} />
-                    <div
-                      className={cn(
-                        'mt-4 grid gap-4',
-                        project.gallery.some((image) => image.device === 'phone')
-                          ? 'grid-cols-2 md:grid-cols-3'
-                          : 'md:grid-cols-3',
-                      )}
-                    >
+                    <div className="-mx-5 md:-mx-8 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 md:px-8 pb-3 scrollbar-none">
                       {project.gallery.map((image, index) => (
-                        <GalleryItem
+                        <div
                           key={`${image.src}-${index}`}
-                          image={image}
-                          title={project.title}
-                          index={index}
-                          onExpand={setExpandedImage}
-                        />
+                          className={cn(
+                            'snap-start flex-none',
+                            image.device === 'phone'
+                              ? 'w-[48vw] md:w-48'
+                              : 'w-[75vw] md:w-80',
+                          )}
+                        >
+                          <GalleryItem
+                            image={image}
+                            title={project.title}
+                            index={index}
+                            onExpand={setExpandedImage}
+                          />
+                        </div>
                       ))}
                     </div>
                   </section>
                 ) : null}
               </div>
-            </article>
-          </>
-        ) : null}
+
+              {(onPrev || onNext) && (
+                <div className="flex items-center justify-between border-t border-line px-5 py-4 md:px-8">
+                  <button
+                    type="button"
+                    onClick={onPrev}
+                    disabled={!onPrev}
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                  >
+                    <ChevronLeft className="size-4" />
+                    {prevProject?.title ?? 'Previous'}
+                  </button>
+                  {projectIndex != null && projectCount != null ? (
+                    <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-quiet tabular-nums">
+                      {String(projectIndex + 1).padStart(2, '0')} /{' '}
+                      {String(projectCount).padStart(2, '0')}
+                    </span>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={onNext}
+                    disabled={!onNext}
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                  >
+                    {nextProject?.title ?? 'Next'}
+                    <ChevronRight className="size-4" />
+                  </button>
+                </div>
+              )}
+            </motion.article>
+          ) : null}
+        </AnimatePresence>
       </Modal>
 
       <GalleryLightbox
