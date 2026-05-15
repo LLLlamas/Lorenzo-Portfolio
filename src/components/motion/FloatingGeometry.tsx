@@ -81,8 +81,11 @@ export function FloatingGeometry({ className }: { className?: string }) {
         ctx.fillStyle = face;
         ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         if (logoLoaded && logoEl) {
-          const m = CANVAS_SIZE * 0.16;
-          ctx.drawImage(logoEl, m, m, CANVAS_SIZE - m * 2, CANVAS_SIZE - m * 2);
+          const maxDim = CANVAS_SIZE * 0.38;
+          const scale = Math.min(maxDim / logoEl.naturalWidth, maxDim / logoEl.naturalHeight);
+          const w = logoEl.naturalWidth * scale;
+          const h = logoEl.naturalHeight * scale;
+          ctx.drawImage(logoEl, (CANVAS_SIZE - w) / 2, (CANVAS_SIZE - h) / 2, w, h);
         }
         faceTexture.needsUpdate = true;
       };
