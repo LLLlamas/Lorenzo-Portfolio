@@ -45,6 +45,13 @@ export function ProjectModal({
     if (!project) setExpandedImage(null);
   }, [project]);
 
+  // Scroll the modal panel back to the top whenever the displayed project changes
+  useEffect(() => {
+    if (!project?.slug) return;
+    const panel = document.querySelector<HTMLElement>('[data-lenis-prevent]');
+    if (panel) panel.scrollTop = 0;
+  }, [project?.slug]);
+
   return (
     <>
       <Modal open={Boolean(project)} onClose={onClose} label={project?.title}>

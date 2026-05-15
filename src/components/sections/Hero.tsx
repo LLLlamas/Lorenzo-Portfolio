@@ -125,7 +125,7 @@ export function Hero({ pendulumControl }: HeroProps) {
 
           {pendulumControl ? (
             <motion.div
-              className="order-first flex justify-center md:order-none md:justify-self-center"
+              className="hidden md:flex md:justify-self-center"
               variants={{
                 hidden: prefersReduced
                   ? { opacity: 1, scale: 1, y: 0 }
