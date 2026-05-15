@@ -197,7 +197,7 @@ export function CursorGlow() {
     <div
       ref={layerRef}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[110] opacity-0 transition-opacity duration-700"
+      className="pointer-events-none fixed left-0 top-0 z-[600] opacity-0 transition-opacity duration-700"
       style={{
         width: SIZE,
         height: SIZE,
