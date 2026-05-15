@@ -58,7 +58,7 @@ const MAPPINGS = [
  * [sourceFilename, outputName]
  */
 const BRAND_MAPPINGS = [
-  ['Official_Llama_Logo.PNG', 'llama-logo'],
+  ['LL_Emote.PNG', 'llama-logo'],
 ];
 
 const MAX_WIDTH = 1600;
