@@ -252,8 +252,8 @@ edd-app/
 │   ├── routes/
 │   │   ├── app.jsx                  ← layout: App Bridge auth wrapper
 │   │   ├── app._index.jsx           ← dashboard / quick stats
-│   │   ├── app.settings.jsx         ← global config (cutoff, timezone, lead days, holidays)
-│   │   ├── app.products.jsx         ← per-product / per-collection overrides
+│   │   ├── app.settings.jsx         ← global config (cutoff, timezone, lead days, holidays, templates)
+│   │   ├── app.products.jsx         ← per-product / per-collection overrides (Pro plan)
 │   │   ├── app.billing.jsx          ← plan selection / upgrade
 │   │   └── webhooks.jsx             ← GDPR + app/uninstalled handlers
 │   ├── lib/
@@ -262,12 +262,17 @@ edd-app/
 │   │   └── EddPreview.jsx           ← Polaris preview card in settings
 │   └── shopify.server.js            ← app config (scopes, billing plans)
 ├── extensions/
-│   └── edd-widget/
-│       ├── blocks/
-│       │   └── edd-display.liquid   ← product page block
-│       ├── assets/
-│       │   ├── edd.js               ← client-side date calc (mirrors dateEngine.ts)
-│       │   └── edd.css
+│   ├── edd-theme-widget/            ← Theme App Extension (product page + cart)
+│   │   ├── blocks/
+│   │   │   └── edd-display.liquid
+│   │   ├── assets/
+│   │   │   ├── edd.js               ← client-side date calc (mirrors dateEngine.ts in vanilla JS)
+│   │   │   └── edd.css
+│   │   └── shopify.extension.toml
+│   └── edd-checkout/                ← Checkout Extension (separate build, separate review)
+│       ├── src/
+│       │   └── EddCheckout.tsx      ← React component using Shopify Checkout UI Kit
+│       ├── package.json
 │       └── shopify.extension.toml
 ├── prisma/
 │   └── schema.prisma
@@ -327,6 +332,94 @@ A mirror of the calculation logic in vanilla ES6 (no Node APIs). Ships in the th
 ```
 
 This means **zero AJAX for v1** — merchant config is baked into the page at render time via Shopify metafields. Faster, simpler, no network dependency.
+
+---
+
+### Checkout extension — `extensions/edd-checkout/src/EddCheckout.tsx`
+
+A separate React extension using Shopify's Checkout UI Kit — not Polaris, not arbitrary HTML. The checkout sandbox is strict: no external scripts, only approved UI components, no `document`/`window`.
+
+```tsx
+import {
+  Banner,
+  Text,
+  useAppMetafields,
+  useCartLines,
+} from '@shopify/ui-extensions-react/checkout';
+import { calculateEDD, formatEDD } from './dateEngine'; // same logic, bundled in
+
+export function EddCheckout() {
+  // Read merchant config from shop metafield (declared in shopify.extension.toml)
+  const [configMeta] = useAppMetafields({ type: 'shop', namespace: 'edd_app', key: 'config' });
+  const lines = useCartLines();
+
+  if (!configMeta?.value) return null;
+
+  const config = JSON.parse(configMeta.value);
+
+  // Use the longest lead time across all cart lines (conservative, avoids disappointment)
+  const maxLeadDays = Math.max(...lines.map(l =>
+    l.merchandise.product?.metafield?.value
+      ? parseInt(l.merchandise.product.metafield.value)
+      : config.leadDays
+  ));
+
+  const edd = calculateEDD(new Date(), { ...config, leadDays: maxLeadDays }, config.holidays);
+  const display = formatEDD(edd, config.messageTemplate, config.timezone);
+
+  return <Text>{display}</Text>;
+}
+```
+
+**Key details:**
+- `useAppMetafields()` reads metafields declared in `shopify.extension.toml` — zero network latency, runs client-side in the checkout sandbox
+- Uses the same `dateEngine` logic bundled directly into the extension (not fetched from the app server)
+- Cart-aware: takes the max lead time across all items so the EDD covers the slowest item
+- Per-product metafield (`merchandise.product.metafield`) requires the `metafield` field declared in the extension's target config
+- Goes through its **own App Store review** separate from the theme extension — plan for this in the timeline
+
+**`shopify.extension.toml` for the checkout extension:**
+```toml
+[[extensions]]
+name = "EDD Checkout Display"
+handle = "edd-checkout"
+type = "ui_extension"
+
+[[extensions.targeting]]
+module = "./src/EddCheckout.tsx"
+target = "purchase.checkout.delivery-address.render-after"
+
+[extensions.metafields]
+  [[extensions.metafields.namespaces]]
+  namespace = "edd_app"
+  key = "config"
+  type = "shop"
+
+  [[extensions.metafields.namespaces]]
+  namespace = "edd_app"
+  key = "lead_days"
+  type = "product"
+```
+
+---
+
+### Message template — presets + editable
+
+Admin UI pattern: dropdown of preset phrasings (starting point) + editable text field below it, with a token reference. Prevents blank/broken output while giving full control.
+
+**Preset options:**
+```
+"Get it by {weekday}, {month} {day}"    ← default
+"Arrives by {weekday}"
+"Estimated delivery: {date}"
+"Ships within {lead_days} business days"
+"Order now — arrives {weekday}, {month} {day}"
+```
+
+**Token reference shown below the input:**
+`{weekday}` → Tuesday · `{month}` → May · `{day}` → 26 · `{date}` → May 26, 2026 · `{lead_days}` → 3
+
+The live preview card in settings updates in real-time as the merchant edits the template.
 
 ---
 
@@ -473,6 +566,28 @@ Do these in order — each step validates the next:
 
 ---
 
+## Parallel thread — Llamas Cookbook (iOS App Store)
+
+**Status: very close to App Store release.**
+
+This is the Katie model on a second platform simultaneously. The Cookbook is a polished SwiftUI/SwiftData recipe iOS app (iOS 18, offline-first, multi-timer cook mode, per-customer accent color theming with ripple cascade). The engineering quality is well above average indie iOS work.
+
+**Why this matters strategically:**
+- Releasing the Cookbook gives you your first recurring-revenue product — before the Shopify app is even built. First live proof of the portfolio model.
+- App Store + StoreKit subscriptions work exactly like Shopify billing — same flywheel, different platform.
+- Two products from the start (iOS Cookbook + Shopify EDD) aimed at completely different customers — but that's OK for now. They don't need to cross-sell; they prove the capability and generate early learnings.
+- The color picker handoff doc already shows the level of system design on the iOS side — that engineering will raise the quality bar on everything you build.
+
+**What to track for the Cookbook:**
+- Pricing (free, paid up-front, freemium + subscription?)
+- Category (Food & Drink — competitive but large)
+- The "how do you find users" question — App Store SEO (ASO) is different from Google SEO; the Cookbook's growth channel needs to be thought through separately
+- Whether it has a web companion that could eventually cross-sell
+
+**Open Cookbook questions** — see open questions section below.
+
+---
+
 ## The color picker tangent
 
 A technical handoff doc (`c3450c25-colorpickerhandoff.md`) covers an iOS accent color picker built for the **Llamas Cookbook** app — deferred-commit pattern, ripple cascade, UIKit sync, CloudKit mirror. It already maps the iOS concepts to web/Shopify equivalents.
@@ -491,7 +606,10 @@ A technical handoff doc (`c3450c25-colorpickerhandoff.md`) covers an iOS accent 
 | App name | TBD — decide after Phase 0 immersion | May 2026 |
 | Free plan scope | Global config free; per-product/collection lead times = Pro only | May 2026 |
 | V1 holiday calendar | US only | May 2026 |
-| V1 display locations | Product page + cart + **checkout** + order email (see note below) | May 2026 |
+| V1 display locations | Product page + cart + **checkout extension** (see note) — email pushed to v2 | May 2026 |
+| Checkout extension | Yes, include in v1 — highest conversion-impact location | May 2026 |
+| Message templates | Presets dropdown + editable string (tokens: `{weekday}`, `{month}`, `{day}`, `{date}`) | May 2026 |
+| App #2 direction | TBD — let Phase 0 research surface it | May 2026 |
 
 ### Note on "everywhere including checkout"
 
@@ -510,13 +628,17 @@ Checkout display is the highest-value location (most abandonment reduction) but 
 
 ## Open questions (fill these in, they shape the build)
 
-- [ ] **App name?** Affects listing keywords, domain, and brand. Examples: `ArrivesBy` (taken), `GetItBy`, `ETA Widget`, `Exactly`. Name with the keyword in mind — "delivery," "arrives," "ETA." Decide after Phase 0.
-- [ ] **Checkout extension in v1?** Given the complexity above — include it in v1 scope, or ship product+cart first and add checkout as a fast follow? 
-- [ ] **Message templates in v1** — merchant-editable free-text string or a dropdown of presets? Presets are safer for v1 (prevents broken output from bad tokens). Decide before building admin UI.
-- [ ] **Cutoff time granularity** — one global cutoff, or per shipping method? (Recommendation: global for v1.)
-- [ ] **Llamas Cookbook** — is it on the App Store? Paid or free? Any current revenue? Worth parallel-tracking as a second product thread.
-- [ ] **Companion app direction** — what would app #2 be? Per Katie's model, think about this early so app #1's positioning sets up the cross-sell. Candidates: pre-order / back-in-stock (overlapping delivery-expectation cluster), shipping protection, order tracking widget.
-- [ ] **When does Phase 0 start?** Zero cost, zero code — just the dev store + forum immersion. Can start this week.
+**Shopify EDD app:**
+- [ ] **App name** — decide after Phase 0 immersion. Keywords to work in: delivery, arrives, ETA, estimated, date.
+- [ ] **Cutoff time granularity** — one global cutoff (recommended for v1), or per shipping method?
+- [ ] **Companion app (#2)** — let Phase 0 surface it. Candidates: pre-order / back-in-stock, order tracking widget, shipping protection.
+- [ ] **When does Phase 0 start?** Zero cost, zero code. Can start this week.
+
+**Llamas Cookbook (iOS):**
+- [ ] **Pricing model** — free, one-time paid ($2.99–$4.99), or freemium + subscription?
+- [ ] **What's the last blocker before submission?** Screenshots? TestFlight? App Review prep?
+- [ ] **Growth channel** — App Store search (ASO) on "recipe app", "cook mode", "cookbook"? Or social/content?
+- [ ] **Web companion** — is there a web version or landing page planned?
 
 ---
 
