@@ -484,16 +484,39 @@ A technical handoff doc (`c3450c25-colorpickerhandoff.md`) covers an iOS accent 
 
 ---
 
+## Decisions log
+
+| Decision | Choice | Date |
+|---|---|---|
+| App name | TBD — decide after Phase 0 immersion | May 2026 |
+| Free plan scope | Global config free; per-product/collection lead times = Pro only | May 2026 |
+| V1 holiday calendar | US only | May 2026 |
+| V1 display locations | Product page + cart + **checkout** + order email (see note below) | May 2026 |
+
+### Note on "everywhere including checkout"
+
+Checkout display is the highest-value location (most abandonment reduction) but requires a **separate Checkout Extension** — a React component using Shopify's Checkout UI Kit, distinct from the theme app extension used for product/cart pages. Two implementation paths:
+
+| Location | Extension type | Complexity |
+|---|---|---|
+| Product page | Theme app extension (Liquid block + JS) | Low |
+| Cart page | Theme app extension (same block, cart template) | Low — same extension |
+| **Checkout** | **Checkout Extension (React, separate build)** | **Moderate — separate extension, separate review** |
+| Order confirmation email | Shopify email template injection (no extension type) | High — merchant must edit email templates; not clean |
+
+**Recommended v1 scope:** product page + cart (same extension, ships together) + checkout extension (separate, but high priority given the goal). Order confirmation email: push to v2 — the mechanism is clunky and lowers the quality bar.
+
+---
+
 ## Open questions (fill these in, they shape the build)
 
-- [ ] **App name?** Affects listing keywords, domain, and brand. Examples: `ArrivesBy` (taken), `GetItBy`, `ETA Widget`, `Exactly`. Name with the keyword in mind — "delivery," "arrives," "ETA."
-- [ ] **Free plan scope** — does free include per-product overrides, or just global config? Recommendation: free = global only; Pro = per-product. But you decide.
-- [ ] **V1 geography** — US holiday calendar only, or multi-country from day 1? More countries = more holiday data to maintain, but broader appeal.
-- [ ] **Message templates in v1** — merchant-editable free-text string (e.g. type your own) or a dropdown of presets? Presets are safer for v1 (prevents broken output from bad tokens).
-- [ ] **Display locations in v1** — product page only, or also cart and order confirmation email? Product page = simplest; each additional location adds Liquid work.
+- [ ] **App name?** Affects listing keywords, domain, and brand. Examples: `ArrivesBy` (taken), `GetItBy`, `ETA Widget`, `Exactly`. Name with the keyword in mind — "delivery," "arrives," "ETA." Decide after Phase 0.
+- [ ] **Checkout extension in v1?** Given the complexity above — include it in v1 scope, or ship product+cart first and add checkout as a fast follow? 
+- [ ] **Message templates in v1** — merchant-editable free-text string or a dropdown of presets? Presets are safer for v1 (prevents broken output from bad tokens). Decide before building admin UI.
 - [ ] **Cutoff time granularity** — one global cutoff, or per shipping method? (Recommendation: global for v1.)
-- [ ] **Llamas Cookbook** — is it on the App Store? Paid or free? Any current revenue? Worth parallel-tracking.
-- [ ] **When does Phase 0 start?** The dev store + forum immersion can start this week — zero cost, zero code.
+- [ ] **Llamas Cookbook** — is it on the App Store? Paid or free? Any current revenue? Worth parallel-tracking as a second product thread.
+- [ ] **Companion app direction** — what would app #2 be? Per Katie's model, think about this early so app #1's positioning sets up the cross-sell. Candidates: pre-order / back-in-stock (overlapping delivery-expectation cluster), shipping protection, order tracking widget.
+- [ ] **When does Phase 0 start?** Zero cost, zero code — just the dev store + forum immersion. Can start this week.
 
 ---
 
