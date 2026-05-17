@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Llamas Cookbook — Snap a photo. Cook the recipe.</title>
+  <meta name="description" content="Llamas Cookbook turns any recipe — a photo, a screenshot, a handwritten card — into a guided, hands-free cooking experience for iPhone." />
+
+  <!-- PLACEHOLDER: replace REPLACE-WITH-DOMAIN.com with the real domain before launch -->
+  <meta property="og:title" content="Llamas Cookbook" />
+  <meta property="og:description" content="Snap a photo. Cook the recipe. A guided, hands-free cooking app for iPhone." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://REPLACE-WITH-DOMAIN.com" />
+  <meta property="og:image" content="https://REPLACE-WITH-DOMAIN.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#C97C5D" />
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="top">
+    <div class="container nav__inner">
+      <a class="brand" href="#top" aria-label="Llamas Cookbook home">
+        <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M7 14h18v6a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M5 14h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M13 9c0-2 6-2 6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M16 5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__name">Llamas Cookbook</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="appstore appstore--sm" href="#" aria-label="Download on the App Store">
+        <!-- PLACEHOLDER: swap href for the real App Store URL; swap this for Apple's official badge -->
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.18 8.5c0-1.5 1.2-2.2 1.26-2.24-.69-1-1.76-1.14-2.14-1.15-.9-.1-1.78.54-2.24.54-.47 0-1.18-.53-1.95-.51-1 .01-1.93.58-2.44 1.48-1.05 1.82-.27 4.5.75 5.98.5.72 1.09 1.53 1.86 1.5.75-.03 1.03-.48 1.94-.48.9 0 1.16.48 1.95.47.81-.01 1.32-.73 1.81-1.46.57-.83.8-1.64.81-1.68-.02-.01-1.56-.6-1.58-2.37ZM9.74 4.06c.41-.5.69-1.19.61-1.89-.59.03-1.31.4-1.74.89-.38.44-.71 1.14-.62 1.81.66.05 1.33-.33 1.75-.81Z"/></svg>
+        <span>App Store</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy" data-reveal>
+          <p class="eyebrow">Coming soon to the App Store</p>
+          <h1 class="hero__title">Snap a photo.<br />Cook the recipe.</h1>
+          <p class="hero__sub">
+            Llamas Cookbook turns any recipe — a photo from a cookbook, a screenshot,
+            a handwritten card — into a guided, hands-free cooking experience.
+            Multiple timers, ingredient check-off, and a layout built for messy hands.
+          </p>
+          <div class="hero__actions">
+            <a class="appstore" href="#" aria-label="Download on the App Store">
+              <!-- PLACEHOLDER: real App Store URL + Apple official badge -->
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.18 8.5c0-1.5 1.2-2.2 1.26-2.24-.69-1-1.76-1.14-2.14-1.15-.9-.1-1.78.54-2.24.54-.47 0-1.18-.53-1.95-.51-1 .01-1.93.58-2.44 1.48-1.05 1.82-.27 4.5.75 5.98.5.72 1.09 1.53 1.86 1.5.75-.03 1.03-.48 1.94-.48.9 0 1.16.48 1.95.47.81-.01 1.32-.73 1.81-1.46.57-.83.8-1.64.81-1.68-.02-.01-1.56-.6-1.58-2.37ZM9.74 4.06c.41-.5.69-1.19.61-1.89-.59.03-1.31.4-1.74.89-.38.44-.71 1.14-.62 1.81.66.05 1.33-.33 1.75-.81Z"/></svg>
+              <span class="appstore__text"><small>Download on the</small>App Store</span>
+            </a>
+            <a class="link-arrow" href="#how">See how it works <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+
+        <div class="hero__device" data-reveal data-reveal-delay="1">
+          <!-- PLACEHOLDER: replace .phone__screen content with a real screenshot <img> -->
+          <div class="phone">
+            <div class="phone__island" aria-hidden="true"></div>
+            <div class="phone__screen phone__screen--placeholder">
+              <span class="ph-label">Screenshot</span>
+              <span class="ph-sub">Cook Mode</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS / AI ============ -->
+    <section class="how" id="how">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">The magic</p>
+          <h2>From cookbook page to cook mode in seconds</h2>
+          <p class="section-sub">
+            Point your camera at any recipe. Llamas Cookbook reads the ingredients
+            and steps and builds a clean, structured recipe you can cook from
+            immediately — no typing, no reformatting.
+          </p>
+        </div>
+
+        <div class="how__flow" data-reveal>
+          <!-- BEFORE: photo placeholder -->
+          <div class="how__card how__card--photo">
+            <span class="ph-label">Photo</span>
+            <span class="ph-sub">A recipe page, screenshot, or card</span>
+          </div>
+
+          <div class="how__arrow" aria-hidden="true">
+            <svg viewBox="0 0 48 24" fill="none"><path d="M2 12h40m0 0-9-9m9 9-9 9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>AI parses it</span>
+          </div>
+
+          <!-- AFTER: a real structured recipe card (built in HTML so it sells the result) -->
+          <div class="how__card how__card--recipe">
+            <p class="recipe__kicker">Structured &amp; ready</p>
+            <h3 class="recipe__title">Brown Butter Banana Bread</h3>
+            <div class="recipe__meta">
+              <span>9 ingredients</span><span aria-hidden="true">&middot;</span><span>6 steps</span><span aria-hidden="true">&middot;</span><span>1 timer</span>
+            </div>
+            <ul class="recipe__list">
+              <li><span class="dot" aria-hidden="true"></span>3 ripe bananas, mashed</li>
+              <li><span class="dot" aria-hidden="true"></span>&frac12; cup browned butter</li>
+              <li><span class="dot" aria-hidden="true"></span>1 cup brown sugar</li>
+              <li><span class="dot recipe__more" aria-hidden="true"></span>+ 6 more</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="how__note" data-reveal>Pro feature. Free accounts can add and cook unlimited recipes by hand.</p>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Features</p>
+          <h2>Built for real kitchens</h2>
+          <p class="section-sub">Designed around the phone on the counter — big text, one-tap controls, and nothing in your way while your hands are full.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature" data-reveal>
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/><path d="M8 6l1.5-2.5h5L16 6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </span>
+            <h3>AI photo import</h3>
+            <p>Photograph any recipe and watch it become a clean, structured, editable card. <span class="tag-pro">Pro</span></p>
+          </article>
+
+          <article class="feature" data-reveal data-reveal-delay="1">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="2"/><path d="M12 13V9m0 4 3 2M9 2h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <h3>Multiple timers</h3>
+            <p>Run a timer for every step at once. The app keeps track so you don't have to. <span class="tag-pro">Pro</span></p>
+          </article>
+
+          <article class="feature" data-reveal data-reveal-delay="2">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h10M4 12h10M4 17h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m17 6 2 2 3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m17 16 2 2 3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3>Ingredient check-off</h3>
+            <p>Tap each ingredient as you go. Never lose your place in the middle of a recipe.</p>
+          </article>
+
+          <article class="feature" data-reveal>
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a5 5 0 0 1-1-9.9A7 7 0 0 1 19.5 9 4.5 4.5 0 0 1 18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m4 4 16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <h3>Works offline</h3>
+            <p>Your recipes live on your device. Cook anywhere — no signal, no account required.</p>
+          </article>
+
+          <article class="feature" data-reveal data-reveal-delay="1">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="9.5" r="1.6" fill="currentColor"/><circle cx="15.5" cy="9.5" r="1.6" fill="currentColor"/><circle cx="9" cy="15" r="1.6" fill="currentColor"/></svg>
+            </span>
+            <h3>Make it yours</h3>
+            <p>Pick an accent color and theme the entire app to your taste. <span class="tag-pro">Pro</span></p>
+          </article>
+
+          <article class="feature" data-reveal data-reveal-delay="2">
+            <span class="feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a5 5 0 0 1-1-9.9A7 7 0 0 1 19.5 9 4.5 4.5 0 0 1 18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11v6m0 0 2.5-2.5M12 17l-2.5-2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3>iCloud sync</h3>
+            <p>Your cookbook, mirrored to every device you own, automatically. <span class="tag-pro">Pro</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COOK MODE SHOWCASE ============ -->
+    <section class="showcase">
+      <div class="container showcase__inner">
+        <div class="showcase__device" data-reveal>
+          <!-- PLACEHOLDER: replace with a real Cook Mode screenshot -->
+          <div class="phone">
+            <div class="phone__island" aria-hidden="true"></div>
+            <div class="phone__screen phone__screen--placeholder phone__screen--alt">
+              <span class="ph-label">Screenshot</span>
+              <span class="ph-sub">Guided step + timers</span>
+            </div>
+          </div>
+        </div>
+        <div class="showcase__copy" data-reveal data-reveal-delay="1">
+          <p class="eyebrow">Cook Mode</p>
+          <h2>Made for the phone on the counter</h2>
+          <p class="section-sub">
+            When your hands are covered in flour, you shouldn't be squinting or
+            scrolling. Cook Mode steps through your recipe one instruction at a
+            time, in type you can read from across the kitchen.
+          </p>
+          <ul class="check-list">
+            <li>Large, glanceable text for every step</li>
+            <li>One-tap controls — advance with a knuckle if you have to</li>
+            <li>Per-step timers that start exactly when you need them</li>
+            <li>Ingredients check off as you use them</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Pricing</p>
+          <h2>Start free. Upgrade when you're ready.</h2>
+          <p class="section-sub">Add and cook unlimited recipes for free. Pro unlocks the time-savers.</p>
+        </div>
+
+        <div class="plans">
+          <article class="plan" data-reveal>
+            <h3 class="plan__name">Free</h3>
+            <p class="plan__price"><span class="plan__amount">$0</span></p>
+            <p class="plan__tagline">Everything you need to cook from your own recipes.</p>
+            <ul class="plan__list">
+              <li>Unlimited manual recipe entry</li>
+              <li>Guided Cook Mode</li>
+              <li>Ingredient check-off</li>
+              <li>Works fully offline</li>
+            </ul>
+            <a class="btn btn--ghost" href="#">Get the app</a>
+          </article>
+
+          <article class="plan plan--pro" data-reveal data-reveal-delay="1">
+            <span class="plan__badge">Most popular</span>
+            <h3 class="plan__name">Pro</h3>
+            <p class="plan__price">
+              <span class="plan__amount">$2.99</span><span class="plan__period">/month</span>
+            </p>
+            <p class="plan__alt">or $29.99/year — save 16%</p>
+            <p class="plan__tagline">For people who cook often and value their time.</p>
+            <ul class="plan__list">
+              <li>Everything in Free</li>
+              <li><strong>AI photo import</strong> — snap any recipe</li>
+              <li>Multiple simultaneous timers</li>
+              <li>iCloud sync across devices</li>
+              <li>Accent colors &amp; themes</li>
+            </ul>
+            <a class="btn btn--solid" href="#">Start free trial</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq">
+      <div class="container faq__inner">
+        <div class="section-head section-head--left" data-reveal>
+          <p class="eyebrow">Questions</p>
+          <h2>Good to know</h2>
+        </div>
+
+        <div class="faq__list" data-reveal>
+          <details class="faq__item">
+            <summary>Do I need an account to use the app?</summary>
+            <div class="faq__body"><p>No. Llamas Cookbook works fully offline the moment you install it. An account is only needed if you want optional iCloud sync across devices.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>How does photo import work?</summary>
+            <div class="faq__body"><p>Take a photo of any recipe — a cookbook page, a screenshot, a handwritten card — and the app's AI extracts the ingredients and steps into a clean, editable recipe. You can review and adjust anything before you cook.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>Which devices are supported?</summary>
+            <div class="faq__body"><p>iPhone on iOS 18 and later. iPad support is on the roadmap.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>Can I cancel the subscription anytime?</summary>
+            <div class="faq__body"><p>Yes. Pro is billed through your Apple account and you can cancel anytime in App Store settings. Your recipes stay on your device either way.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>Is my data private?</summary>
+            <div class="faq__body"><p>Your recipes are stored on your device. Photos you import are processed only to extract the recipe and are not used for anything else. <!-- PLACEHOLDER: confirm wording against the final privacy policy --></p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINAL CTA ============ -->
+    <section class="cta">
+      <div class="container cta__inner" data-reveal>
+        <h2>Your next recipe is one photo away.</h2>
+        <p>Download Llamas Cookbook and turn the recipes you love into something you can actually cook from.</p>
+        <a class="appstore appstore--lg" href="#" aria-label="Download on the App Store">
+          <!-- PLACEHOLDER: real App Store URL + Apple official badge -->
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.18 8.5c0-1.5 1.2-2.2 1.26-2.24-.69-1-1.76-1.14-2.14-1.15-.9-.1-1.78.54-2.24.54-.47 0-1.18-.53-1.95-.51-1 .01-1.93.58-2.44 1.48-1.05 1.82-.27 4.5.75 5.98.5.72 1.09 1.53 1.86 1.5.75-.03 1.03-.48 1.94-.48.9 0 1.16.48 1.95.47.81-.01 1.32-.73 1.81-1.46.57-.83.8-1.64.81-1.68-.02-.01-1.56-.6-1.58-2.37ZM9.74 4.06c.41-.5.69-1.19.61-1.89-.59.03-1.31.4-1.74.89-.38.44-.71 1.14-.62 1.81.66.05 1.33-.33 1.75-.81Z"/></svg>
+          <span class="appstore__text"><small>Download on the</small>App Store</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a class="brand" href="#top" aria-label="Llamas Cookbook home">
+          <svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M7 14h18v6a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7v-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M5 14h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M13 9c0-2 6-2 6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="brand__name">Llamas Cookbook</span>
+        </a>
+        <p class="footer__tag">A guided, hands-free cooking app for iPhone.</p>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <!-- PLACEHOLDER: point these at real pages before launch -->
+        <a href="#">Privacy</a>
+        <a href="#">Support</a>
+        <a href="mailto:hello@REPLACE-WITH-DOMAIN.com">Contact</a>
+      </nav>
+    </div>
+    <div class="container footer__base">
+      <p>&copy; <span id="year">2026</span> Llamas Cookbook. All rights reserved.</p>
+      <p>Made by Lorenzo Llamas.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

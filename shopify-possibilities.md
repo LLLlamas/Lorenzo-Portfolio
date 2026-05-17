@@ -717,7 +717,7 @@ Checkout display is the highest-value location (most abandonment reduction) but 
 **Llamas Cookbook (iOS):**
 - [ ] **App Store name** — keyword-first recommended: "Llamas Cookbook: Cook Mode & Timer" or similar.
 - [x] **Subscription pricing** — $2.99/mo · **$29.99/yr** (~16% annual discount). Simple, real incentive to go annual.
-- [x] **Landing page** — none yet. Needs to be built before or alongside App Store submission. Lorenzo has the skill to do this fast (Next.js). Options: standalone site or a route on the portfolio.
+- [x] **Landing page** — scaffolded in `cookbook-landing/` (self-contained static page, warm food aesthetic, no build step). Placeholders for screenshots, App Store links, and domain are marked with `PLACEHOLDER` comments. Needs: real screenshots, App Store URL, domain, OG image, privacy/support pages.
 
 ---
 
