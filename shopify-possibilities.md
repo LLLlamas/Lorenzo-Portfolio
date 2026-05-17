@@ -715,10 +715,9 @@ Checkout display is the highest-value location (most abandonment reduction) but 
 - [ ] **Phase 0 start date** — can start this week. When?
 
 **Llamas Cookbook (iOS):**
-- [ ] **Freemium split** — exactly which features are free vs. subscription? (See suggested split above — adjust to match what's actually built.)
 - [ ] **App Store name** — keyword-first recommended: "Llamas Cookbook: Cook Mode & Timer" or similar.
-- [ ] **Subscription price** — $1.99/mo? $9.99/yr? Both (monthly + annual)? Annual with a discount is the standard that maximizes LTV.
-- [ ] **Landing page** — does the Cookbook have a web presence / landing page before launch? Even a simple one boosts ASO and gives reviewers/journalists somewhere to go.
+- [x] **Subscription pricing** — $2.99/mo + $34.99/yr ⚠️ **Flag:** $34.99/yr ≈ $2.92/mo effective — only 2.5% discount vs. monthly. Recommend revising annual to $19.99/yr or $24.99/yr (33–44% off) to actually incentivize the stickier plan. Standard StoreKit annual discount = 30–40%.
+- [x] **Landing page** — none yet. Needs to be built before or alongside App Store submission. Lorenzo has the skill to do this fast (Next.js). Options: standalone site or a route on the portfolio.
 
 ---
 
