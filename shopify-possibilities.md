@@ -232,15 +232,25 @@ Write these in this sequence — each builds on the last and links internally:
 
 | Layer | Choice | Notes |
 |---|---|---|
+| Runtime | **Node 20 LTS** | Matches Shopify template + Fly.io default |
+| Package manager | **npm** | Template default — don't swap |
+| Language | **TypeScript (strict)** for `dateEngine.ts` + extensions; JS/JSX routes from template | Core IP is typed; route glue stays as scaffolded |
 | Framework | **Remix** (Shopify's official template) | SSR, Shopify CLI integration, App Bridge baked in |
 | UI (admin) | **Polaris** | Required for App Store review |
 | Auth | **OAuth** (handled by Remix template) | `authenticate.admin(request)` on every protected route |
-| DB | **Prisma + SQLite** (dev) → **Postgres** (prod) | Switch provider string; schema is identical |
+| DB | **Prisma** → **Neon Postgres** (prod), SQLite (local) | Same schema; switch provider string. Free tier covers KB-scale config data |
 | API | **Shopify GraphQL Admin API** | REST is deprecated |
+| Date math | **Luxon** (server engine) | IANA timezone-safe, immutable. Raw `Date` arithmetic is the exact failure mode behind the 1★ "wrong date" reviews — banned in the engine |
+| Client widget date logic | Native **`Intl.DateTimeFormat({ timeZone })`** | Keeps Luxon (~70 KB) out of the storefront bundle; `edd.js` stays dependency-free |
+| Holiday data | **`date-holidays`** (npm) | 200+ countries, observed/substitute days, bundled — no API call. v1 ships US only; Pro flips on the rest for free |
 | Storefront | **Theme App Extension** | Required for new apps; Liquid block + vanilla JS + CSS, CDN-hosted |
 | Billing | **Shopify Billing API** | Charges appear on merchant's Shopify invoice — no Stripe needed |
-| Hosting | **Fly.io** or **Render** | Persistent server for webhooks; ~$5–10/mo |
-| Testing | **Jest** for the date engine (isolated pure TS) | Test the date math thoroughly before building UI |
+| Hosting | **Fly.io** | Always-on (webhooks need a live process); ~$0–5/mo |
+| CI | **GitHub Actions** | typecheck + Jest on PR; `flyctl deploy` on merge |
+| Monitoring | **Better Stack** (uptime) + **Sentry** (errors) | Free tiers; reliability is the wedge — instrument early |
+| Testing | **Jest** | Date engine first, before any UI |
+
+**Rejected:** Temporal API (not stable on Node 20) · raw `Date` arithmetic (timezone-unsafe) · Render (Fly cheaper for an always-on process) · REST Admin API (deprecated) · Stripe (Shopify Billing is native, no extra cut).
 
 ---
 
@@ -566,6 +576,83 @@ Do these in order — each step validates the next:
 
 ---
 
+### Infrastructure & operations
+
+**Environments** — two, no staging (the dev store is the test surface; staging adds cost for no v1 value).
+
+| Env | Where | DB |
+|---|---|---|
+| Local | Shopify CLI tunnel → `localhost` | SQLite or local Postgres |
+| Production | Fly.io, single region | Neon Postgres |
+
+**Hosting (Fly.io)** — one `shared-cpu-1x` 256–512 MB instance, **always-on** (do not scale to zero — webhooks need a live process). Single region near the merchant base; multi-region is a non-issue at v1 scale.
+
+**Database (Neon)** — serverless Postgres, free tier (config is KB-scale). Pooled connection endpoint, automated daily backups. `DATABASE_URL` injected via Fly secrets.
+
+**Secrets** — Fly secrets in prod, `.env` locally, never committed: `SHOPIFY_API_KEY`, `SHOPIFY_API_SECRET`, `SHOPIFY_APP_URL`, `SCOPES`, `DATABASE_URL`, `SENTRY_DSN`.
+
+**CI/CD (GitHub Actions)**
+- PR → `npm ci` → `npm run typecheck` → `npm test`. **The date-engine suite is a hard merge gate** — a red suite never merges.
+- Merge to `main` → `flyctl deploy`.
+
+**Webhook reliability** (the wedge is reliability — treat as P0):
+- HMAC-verify every webhook (template does this — don't strip it).
+- Handlers idempotent — Shopify retries any non-200.
+- Respond `200` fast; defer slow work.
+- `app/uninstalled` + 3 GDPR webhooks registered or review fails.
+
+**Monitoring**
+- Uptime — Better Stack pings a public health route every 1–3 min.
+- Errors — Sentry captures date-engine + route exceptions.
+- Logs — `flyctl logs` (structured).
+
+**Backups / DR** — Neon automated backups; data is small and reconstructable (re-fetch shop on reinstall). No customer PII stored → minimal blast radius.
+
+**Monthly cost**
+
+| Item | Cost |
+|---|---|
+| Fly.io instance | $0–5 |
+| Neon Postgres | $0 (free tier) |
+| Sentry + Better Stack | $0 (free tiers) |
+| Blog domain (amortized) | ~$1 |
+| **Total** | **~$5–10/mo** |
+
+---
+
+### Criticality & risk
+
+**v1 component criticality** — P0 = launch-blocking or App Store gate · P1 = launch-quality · P2 = fast-follow.
+
+| Component | Level | Why |
+|---|---|---|
+| Date engine correctness | **P0** | The wedge. Wrong dates → 1★ reviews → dead app |
+| GDPR + `app/uninstalled` webhooks | **P0** | Review auto-rejects without them |
+| OAuth / session | **P0** | Template-provided; nothing works without it |
+| Polaris-only admin UI | **P0** | Review requires it |
+| Theme extension (product + cart) | **P0** | No storefront display = no product |
+| Billing API wiring | **P0** | No revenue; review checks it |
+| Admin settings + live preview | **P1** | Core UX (deferred-commit pattern) |
+| Per-product / collection overrides | **P1** | Pro differentiator; the #1 config pain |
+| Checkout extension | **P1** | High conversion value; separate review — may trail v1 by days |
+| US holiday calendar | **P1** | Differentiator; `date-holidays` makes it cheap |
+| Monitoring / error tracking | **P1** | Reliability wedge — instrument before scale |
+| Multi-country holidays | **P2** | Pro feature; lib already supports — flip on later |
+| Competitor-attack content | **P2** | Needs real reviews first |
+| Order-confirmation email | **P2** | Clunky mechanism — deferred (see decisions log) |
+
+**Top risks**
+
+| Risk | Mitigation |
+|---|---|
+| Date-math bug ships | Exhaustive Jest suite as a P0 merge gate |
+| `dateEngine.ts` ↔ client `edd.js` drift | Single shared JSON of test vectors; both run against it in CI |
+| App Store rejection round | Expect one (Polaris / webhooks) — pre-check before submit |
+| Checkout-ext review delays launch | Ship product + cart first; checkout follows independently |
+| Webhook process down → missed uninstalls | Always-on Fly instance + uptime ping; idempotent replay on Shopify retry |
+
+---
+
 ## Parallel thread — Llamas Cookbook (iOS App Store)
 
 **Status: very close to App Store release.**
@@ -685,6 +772,10 @@ A technical handoff doc (`c3450c25-colorpickerhandoff.md`) covers an iOS accent 
 | Checkout extension | Yes, include in v1 — highest conversion-impact location | May 2026 |
 | Message templates | Presets dropdown + editable string (tokens: `{weekday}`, `{month}`, `{day}`, `{date}`) | May 2026 |
 | App #2 direction | TBD — let Phase 0 research surface it | May 2026 |
+| Hosting | Fly.io — always-on (Render rejected) | May 2026 |
+| Production database | Neon Postgres (free tier) | May 2026 |
+| Date library | Luxon for the server engine; native `Intl` for the client widget | May 2026 |
+| Holiday data | `date-holidays` npm package, bundled (no API) | May 2026 |
 
 ### Note on "everywhere including checkout"
 
