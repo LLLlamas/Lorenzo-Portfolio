@@ -588,19 +588,78 @@ This is the Katie model on a second platform simultaneously. The Cookbook is a p
 
 **Freemium split** — TBD (see open questions). The color picker handoff doc already has the answer baked in: the accent theming is auth-gated ("unsigned users see a locked card"). That's the template — gated features are premium. Typical split for a cook-mode app:
 
-| Free tier | Subscription |
+| Free tier | Subscription (Pro) |
 |---|---|
-| Unlimited manual recipe entry | iCloud sync / backup |
-| Single-timer cook mode | Multi-timer cook mode (per step) |
-| Basic themes | Accent color picker + all theme variants |
-| Limited recipe count (e.g. 10) | Unlimited recipes |
-| — | Live Activities (iOS 16+) for cook timers |
+| Unlimited manual recipe entry | **AI photo import** — photograph any cookbook/card/screenshot → Claude Sonnet parses into structured ingredients + steps |
+| Cook mode (basic) | iCloud sync / backup |
+| Basic themes | Accent color picker + theme variants |
+| — | Multi-timer cook mode, Live Activities |
+
+**The AI photo import is the killer feature.** "Photograph any cookbook page → structured recipe in 5 seconds" is:
+- A clear, demonstrable value proposition (visible in a 10-second Reel)
+- Something no rival recipe app does as a first-class feature
+- A genuine reason to pay — saves 15 minutes of manual typing per recipe
+- Uses **Claude Sonnet** via the Anthropic API (vision + structured output)
+
+Cost note: Sonnet API calls for a single photo parse are cheap (~1-3 cents/parse). At typical usage, the API cost per subscriber is well below subscription revenue. Watch for prompt caching opportunities to reduce cost further — the `claude-api` skill in this session can help optimize that if needed.
 
 **Growth note:** ASO is different from Google SEO. Key ASO levers: app name (keyword-first, e.g. "Llamas Cookbook: Cook Mode & Timer"), subtitle (secondary keywords), keyword field (hidden, 100 chars), first 3 lines of description (above the fold), screenshots (the primary conversion driver). Short-form video (Reels/TikTok showing the cook mode in action + the ripple color cascade) could generate organic installs faster than ASO alone in the early days.
 
 **Content site angle:** a recipe blog that ranks for "[recipe name] easy weeknight" → drives App Store installs at the bottom. The Katie SEO model applied to iOS. This is a longer play but compounds well. Worth building once the app has traction.
 
 **Open Cookbook questions** — see open questions section below.
+
+---
+
+## Phase 0 — Week 1 checklist (start this week)
+
+Zero cost. Zero code. Pure merchant immersion.
+
+### Day 1–2: Set up your merchant environment
+
+- [ ] Create a free **Shopify Partner account** at [partners.shopify.com](https://partners.shopify.com)
+- [ ] Create a **development store** (free, unlimited, no expiry) — name it something like `lorenzo-edd-test`
+- [ ] Add 10–15 products across 2–3 collections (use placeholder images, realistic product names and prices)
+- [ ] Set up: shipping zones, shipping rates, order processing time — go through every setting in the Shipping & Delivery section
+- [ ] Install 6–8 real apps to feel the merchant install/configure loop:
+  - One EDD app (e.g. Omega EDD, ArrivesBy, or Kaktus)
+  - One reviews app (Judge.me — free)
+  - One email app (Klaviyo free tier)
+  - One page builder (PageFly free)
+  - One upsell/bundle app
+  - One utility (your choice)
+
+### Day 3–4: The 1★ review research sprint
+
+This is the most important Phase 0 work. Build a spreadsheet.
+
+**Spreadsheet columns:** App name | Review rating | Complaint category | Exact quote | Actionable? (Y/N)
+
+**Apps to review-mine (EDD category):**
+1. Omega / S: Estimated Delivery Date ETA
+2. ArrivesBy
+3. Kaktus Estimated Delivery Date
+4. C-EDD: Estimated Delivery Date Plus
+5. WowETA
+6. EDDer
+7. LEVEL 2 EDD
+
+**For each app:** sort reviews by "Most Recent", filter to 1–3 stars, read every one. Look for:
+- Recurring complaint (mentioned 3+ times = real pain)
+- Phrases merchants use to describe the problem (these become your SEO keywords)
+- Features they're asking for that don't exist yet
+- Support quality complaints
+
+### Day 5–7: Community listening
+
+- [ ] Join **r/shopify** — sort by Hot, then New. Read every post about shipping, delivery dates, customer expectations. Note what merchants say naturally.
+- [ ] Join **Shopify Community forums** (community.shopify.com) — search "estimated delivery date", "delivery time", "shipping time display". Read threads.
+- [ ] Search Facebook groups: "Shopify Entrepreneurs", "Shopify Dropshipping" — listen for delivery-date frustrations.
+- [ ] Optional: post in r/shopify as a merchant ("How do you handle customer questions about delivery dates?") — you'll get 10–20 honest replies.
+
+### Output by end of Week 1
+
+A spreadsheet with 30–50 real merchant complaints, categorized. This becomes your v1 spec and your first 3 SEO article topics. Share it here and we'll narrow the wedge together.
 
 ---
 
