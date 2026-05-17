@@ -578,11 +578,27 @@ This is the Katie model on a second platform simultaneously. The Cookbook is a p
 - Two products from the start (iOS Cookbook + Shopify EDD) aimed at completely different customers — but that's OK for now. They don't need to cross-sell; they prove the capability and generate early learnings.
 - The color picker handoff doc already shows the level of system design on the iOS side — that engineering will raise the quality bar on everything you build.
 
-**What to track for the Cookbook:**
-- Pricing (free, paid up-front, freemium + subscription?)
-- Category (Food & Drink — competitive but large)
-- The "how do you find users" question — App Store SEO (ASO) is different from Google SEO; the Cookbook's growth channel needs to be thought through separately
-- Whether it has a web companion that could eventually cross-sell
+**Cookbook decisions confirmed:**
+
+| Decision | Choice |
+|---|---|
+| Pricing | Freemium + subscription |
+| Remaining blockers | Final polish + App Store metadata (screenshots, description, preview) |
+| Growth channels | ASO ("recipe app", "cook mode") + short-form video (TikTok/Reels) + open to content site |
+
+**Freemium split** — TBD (see open questions). The color picker handoff doc already has the answer baked in: the accent theming is auth-gated ("unsigned users see a locked card"). That's the template — gated features are premium. Typical split for a cook-mode app:
+
+| Free tier | Subscription |
+|---|---|
+| Unlimited manual recipe entry | iCloud sync / backup |
+| Single-timer cook mode | Multi-timer cook mode (per step) |
+| Basic themes | Accent color picker + all theme variants |
+| Limited recipe count (e.g. 10) | Unlimited recipes |
+| — | Live Activities (iOS 16+) for cook timers |
+
+**Growth note:** ASO is different from Google SEO. Key ASO levers: app name (keyword-first, e.g. "Llamas Cookbook: Cook Mode & Timer"), subtitle (secondary keywords), keyword field (hidden, 100 chars), first 3 lines of description (above the fold), screenshots (the primary conversion driver). Short-form video (Reels/TikTok showing the cook mode in action + the ripple color cascade) could generate organic installs faster than ASO alone in the early days.
+
+**Content site angle:** a recipe blog that ranks for "[recipe name] easy weeknight" → drives App Store installs at the bottom. The Katie SEO model applied to iOS. This is a longer play but compounds well. Worth building once the app has traction.
 
 **Open Cookbook questions** — see open questions section below.
 
@@ -634,11 +650,16 @@ Checkout display is the highest-value location (most abandonment reduction) but 
 - [ ] **Companion app (#2)** — let Phase 0 surface it. Candidates: pre-order / back-in-stock, order tracking widget, shipping protection.
 - [ ] **When does Phase 0 start?** Zero cost, zero code. Can start this week.
 
+**Shopify EDD app:**
+- [ ] **App name** — keywords to work in: delivery, arrives, ETA, estimated, date.
+- [ ] **Cutoff time granularity** — global for v1 (recommended), or per shipping method?
+- [ ] **Phase 0 start date** — can start this week. When?
+
 **Llamas Cookbook (iOS):**
-- [ ] **Pricing model** — free, one-time paid ($2.99–$4.99), or freemium + subscription?
-- [ ] **What's the last blocker before submission?** Screenshots? TestFlight? App Review prep?
-- [ ] **Growth channel** — App Store search (ASO) on "recipe app", "cook mode", "cookbook"? Or social/content?
-- [ ] **Web companion** — is there a web version or landing page planned?
+- [ ] **Freemium split** — exactly which features are free vs. subscription? (See suggested split above — adjust to match what's actually built.)
+- [ ] **App Store name** — keyword-first recommended: "Llamas Cookbook: Cook Mode & Timer" or similar.
+- [ ] **Subscription price** — $1.99/mo? $9.99/yr? Both (monthly + annual)? Annual with a discount is the standard that maximizes LTV.
+- [ ] **Landing page** — does the Cookbook have a web presence / landing page before launch? Even a simple one boosts ASO and gives reviewers/journalists somewhere to go.
 
 ---
 
