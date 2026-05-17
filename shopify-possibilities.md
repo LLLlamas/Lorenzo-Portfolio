@@ -716,7 +716,7 @@ Checkout display is the highest-value location (most abandonment reduction) but 
 
 **Llamas Cookbook (iOS):**
 - [ ] **App Store name** — keyword-first recommended: "Llamas Cookbook: Cook Mode & Timer" or similar.
-- [x] **Subscription pricing** — $2.99/mo + $34.99/yr ⚠️ **Flag:** $34.99/yr ≈ $2.92/mo effective — only 2.5% discount vs. monthly. Recommend revising annual to $19.99/yr or $24.99/yr (33–44% off) to actually incentivize the stickier plan. Standard StoreKit annual discount = 30–40%.
+- [x] **Subscription pricing** — $2.99/mo · **$29.99/yr** (~16% annual discount). Simple, real incentive to go annual.
 - [x] **Landing page** — none yet. Needs to be built before or alongside App Store submission. Lorenzo has the skill to do this fast (Next.js). Options: standalone site or a route on the portfolio.
 
 ---
