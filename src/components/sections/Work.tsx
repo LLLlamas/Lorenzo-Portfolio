@@ -228,11 +228,13 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
               aria-label={`Open details for ${project.title}`}
               className="block w-full cursor-pointer text-left"
             >
-              {/* Cover — uniform 16/10 across all categories */}
+              {/* Cover — portrait for mobile, landscape for web/game */}
               <div
                 className={cn(
-                  'relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius-card)] bg-gradient-to-br',
-                  project.category === 'mobile' && 'from-accent-soft to-bg',
+                  'relative overflow-hidden rounded-t-[var(--radius-card)] bg-gradient-to-br',
+                  project.category === 'mobile'
+                    ? 'aspect-[3/4] from-accent-soft to-bg'
+                    : 'aspect-[16/10]',
                   project.category === 'web' && 'from-accent-secondary-soft to-bg',
                   project.category === 'game' &&
                     'from-accent-soft via-accent-secondary-soft to-bg',
@@ -322,13 +324,13 @@ function PhoneCoverPreview({ project }: { project: Project }) {
     .slice(0, 2) as { src: string; caption?: string }[];
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center gap-3 px-5 py-3 md:gap-5 md:px-8 md:py-5">
+    <div className="absolute inset-0 flex items-center justify-center gap-3 px-4 py-4 md:gap-5 md:px-6 md:py-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,var(--accent-soft),transparent_58%)]" />
       {shots.map((shot, index) => (
         <PhoneFrame
           key={`${shot.src}-${index}`}
           className={cn(
-            'relative h-full min-h-0 max-h-[260px]',
+            'relative h-full min-h-0',
             index > 0 && 'hidden translate-y-4 sm:grid',
           )}
         >
