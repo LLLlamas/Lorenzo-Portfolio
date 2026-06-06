@@ -217,7 +217,7 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
           <Card
             as="article"
             className={cn(
-              'project-card group relative p-0 transition-all duration-300 hover:-translate-y-1.5',
+              'project-card group relative p-0 transition-[transform,box-shadow] duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-2 will-change-transform',
               isSelected &&
                 'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',
             )}
@@ -289,7 +289,7 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
                   </div>
                   <ArrowUpRight
                     aria-hidden
-                    className="mt-0.5 size-3.5 shrink-0 text-ink-quiet transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
+                    className="mt-0.5 size-3.5 shrink-0 text-ink-quiet transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
                   />
                 </div>
 

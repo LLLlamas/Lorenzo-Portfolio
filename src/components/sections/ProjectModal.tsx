@@ -195,7 +195,7 @@ export function ProjectModal({
                     type="button"
                     onClick={onPrev}
                     disabled={!onPrev}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,opacity] duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
                   >
                     <ChevronLeft className="size-4" />
                     {prevProject?.title ?? 'Previous'}
@@ -210,7 +210,7 @@ export function ProjectModal({
                     type="button"
                     onClick={onNext}
                     disabled={!onNext}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,opacity] duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
                   >
                     {nextProject?.title ?? 'Next'}
                     <ChevronRight className="size-4" />

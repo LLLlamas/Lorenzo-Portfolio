@@ -14,7 +14,26 @@ export function About() {
 
         <div className="grid gap-10 md:grid-cols-12 md:gap-14">
           <Reveal as="div" className="md:col-span-5">
-            <AboutPlaceholder />
+            <div className="relative">
+              <AboutPlaceholder />
+              {/* Floating skill badges — decorative, hidden on mobile */}
+              <span className="floating-chip floating-chip-1 pointer-events-none absolute -right-5 top-8 hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+                <span className="inline-block size-1.5 rounded-full bg-accent" aria-hidden />
+                Next.js
+              </span>
+              <span className="floating-chip floating-chip-2 pointer-events-none absolute -left-5 top-[38%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+                <span className="inline-block size-1.5 rounded-full bg-accent-secondary" aria-hidden />
+                SwiftUI
+              </span>
+              <span className="floating-chip floating-chip-3 pointer-events-none absolute -right-5 bottom-[30%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+                <span className="inline-block size-1.5 rounded-full bg-accent" aria-hidden />
+                TypeScript
+              </span>
+              <span className="floating-chip floating-chip-4 pointer-events-none absolute -bottom-4 left-[20%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+                <span className="inline-block size-1.5 rounded-full bg-accent-secondary" aria-hidden />
+                GSAP
+              </span>
+            </div>
           </Reveal>
 
           <div className="md:col-span-7">
