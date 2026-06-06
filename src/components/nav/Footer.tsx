@@ -4,7 +4,7 @@ import { copy } from '@/content/copy';
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-line">
+    <footer className="section-glass relative border-t">
       {/* Hairline accent */}
       <span
         aria-hidden

@@ -70,8 +70,8 @@
 
 /* ─── Dark mode neutrals (shared) ─── */
 .dark {
-  --bg: #0F0F0E;
-  --bg-elevated: #18181A;
+  --bg: #100F1C;
+  --bg-elevated: #1B1929;
   --ink: #F5F4EE;
   --ink-soft: #B5B4AE;
   --ink-quiet: #828280;
@@ -133,6 +133,29 @@
     stroke var(--duration-phase) var(--ease-out-expo);
 }
 
+/* ─── Glass section utility ─── */
+.section-glass {
+  background: rgba(16, 15, 28, 0.72);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .section-glass {
+  background: rgba(16, 15, 28, 0.72);
+}
+
+/* ─── Floating chip animation (About section) ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.floating-chip { animation: float 4s ease-in-out infinite; }
+.floating-chip-1 { animation-delay: 0s; animation-duration: 3.8s; }
+.floating-chip-2 { animation-delay: -1.3s; animation-duration: 4.6s; }
+.floating-chip-3 { animation-delay: -2.6s; animation-duration: 3.4s; }
+.floating-chip-4 { animation-delay: -0.7s; animation-duration: 4.1s; }
+
 /* ─── Reduced-motion gate (single source of truth) ─── */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -154,10 +177,13 @@
 html {
   font-size: 17px;
   scroll-behavior: smooth;
+  /* Fallback canvas color — PageBackground sits above this */
+  background: var(--bg);
 }
 
+
 body {
-  background: var(--bg);
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -461,20 +487,13 @@ section[id] {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
-  border: 1px solid var(--line);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ink);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transition:
-    border-color 350ms var(--ease-out-expo),
-    color 350ms var(--ease-out-expo);
-}
-.nav-cube--active .nav-cube__face {
-  border-color: var(--line-accent);
+  transition: color 350ms var(--ease-out-expo);
 }
 .nav-cube--active .nav-cube__face--front,
 .nav-cube--active .nav-cube__face--back {
@@ -490,9 +509,6 @@ section[id] {
   background: var(--accent);
   transform-origin: center;
   animation: hairline-draw 420ms var(--ease-out-expo) both;
-}
-.nav-cube:hover .nav-cube__face {
-  border-color: var(--line-accent);
 }
 .nav-cube__face--front,
 .nav-cube__face--back {
@@ -626,7 +642,8 @@ section[id] {
   overflow: hidden;
   transition:
     color var(--duration-base) var(--ease-out-expo),
-    border-color var(--duration-phase) var(--ease-out-expo);
+    border-color var(--duration-phase) var(--ease-out-expo),
+    box-shadow 400ms var(--ease-out-expo);
 }
 .btn-sweep::before {
   content: "";

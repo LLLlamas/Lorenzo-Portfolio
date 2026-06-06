@@ -13,11 +13,11 @@ export function ContactCTA() {
           {copy.contactCta.eyebrow}
         </p>
 
-        <h2 className="mt-3 font-display text-balance text-4xl font-semibold tracking-tight md:text-6xl">
+        <h2 className="mt-3 font-display text-balance text-4xl font-semibold tracking-tight md:text-6xl [text-shadow:0_2px_16px_rgba(16,15,28,0.9),0_4px_48px_rgba(16,15,28,0.7)]">
           {copy.contactCta.headline}
         </h2>
 
-        <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-ink-soft md:text-lg">
+        <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-ink-soft md:text-lg [text-shadow:0_1px_10px_rgba(16,15,28,0.95)]">
           {copy.contactCta.subhead}
         </p>
 

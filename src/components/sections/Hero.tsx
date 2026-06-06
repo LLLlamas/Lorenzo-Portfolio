@@ -63,14 +63,14 @@ export function Hero({ pendulumControl }: HeroProps) {
 
         <SplitTextReveal
           as="h1"
-          className="font-display text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
+          className="font-display text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl [text-shadow:0_2px_16px_rgba(16,15,28,0.9),0_4px_48px_rgba(16,15,28,0.7)]"
           text={copy.hero.headline}
           delay={0.3}
           step={0.06}
         />
 
         <motion.p
-          className="mt-6 max-w-2xl text-pretty text-lg text-ink-soft md:text-xl"
+          className="mt-6 max-w-2xl text-pretty text-lg text-ink-soft md:text-xl [text-shadow:0_1px_10px_rgba(16,15,28,0.95)]"
           initial={prefersReduced ? false : { opacity: 0, y: 12, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 0.9, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}

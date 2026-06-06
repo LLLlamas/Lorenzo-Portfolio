@@ -9,6 +9,7 @@ import { CursorGlow } from '@/components/motion/CursorGlow';
 import { EntrySequence } from '@/components/motion/EntrySequence';
 import { GlobalRippleTap } from '@/components/motion/GlobalRippleTap';
 import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
+import { PageBackground } from '@/components/motion/PageBackground';
 import { copy } from '@/content/copy';
 import './globals.css';
 
@@ -69,8 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={`${dmSans.variable} ${fraunces.variable} ${shareTechMono.variable}`}
     >
-      <body className="min-h-dvh bg-bg text-ink antialiased">
+      <body className="min-h-dvh text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <PageBackground />
           <SmoothScroll />
           <ScrollProgress />
           <CursorGlow />

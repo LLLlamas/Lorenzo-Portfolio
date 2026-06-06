@@ -5,7 +5,7 @@ import { faqs } from '@/content/faqs';
 
 export function FAQ() {
   return (
-    <section id="faq" className="border-t border-line bg-bg-elevated px-6 py-24 md:py-32">
+    <section id="faq" className="section-glass border-t px-6 py-24 md:py-32">
       <div className="mx-auto max-w-3xl">
         <SectionHeader eyebrow={copy.faq.eyebrow} headline={copy.faq.headline} />
 

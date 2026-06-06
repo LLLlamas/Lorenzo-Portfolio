@@ -82,11 +82,11 @@ export function Header() {
     <header
       data-nav-state={compact ? 'compact' : 'expanded'}
       className={cn(
-        'site-header fixed inset-x-0 top-0 z-40 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'site-header fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
         compact && 'site-header--compact',
         scrolled
-          ? 'border-b border-line/10 bg-bg/95 shadow-[0_16px_50px_-38px_var(--accent)] backdrop-blur-xl'
-          : 'border-b border-transparent bg-bg/60 backdrop-blur-md',
+          ? 'border-b border-white/8 bg-[#100F1C]/70 shadow-[0_16px_60px_-30px_var(--accent)] backdrop-blur-2xl'
+          : 'border-b border-transparent bg-transparent',
       )}
     >
       <div className="relative mx-auto flex h-24 max-w-6xl items-center justify-between gap-6 px-6">
@@ -106,7 +106,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className="btn-sweep group hidden items-center rounded-full border border-ink bg-ink px-4 py-2 text-xs font-medium tracking-tight text-bg transition-colors hover:border-accent hover:text-accent-on md:inline-flex"
+            className="btn-sweep group hidden items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide text-ink backdrop-blur-sm transition-colors hover:border-accent/60 hover:bg-accent hover:text-accent-on md:inline-flex"
             style={{ ['--sweep-bg' as never]: 'var(--accent)' }}
           >
             Start a project

@@ -33,11 +33,11 @@ export function SectionHeader({
           <span className="label-select">{eyebrow}</span>
         </p>
       ) : null}
-      <h2 className="font-display text-balance text-3xl font-semibold tracking-tight md:text-5xl">
+      <h2 className="font-display text-balance text-3xl font-semibold tracking-tight md:text-5xl [text-shadow:0_2px_14px_rgba(16,15,28,0.85),0_4px_40px_rgba(16,15,28,0.6)]">
         {headline}
       </h2>
       {subhead ? (
-        <p className="max-w-2xl text-pretty text-base text-ink-soft md:text-lg">
+        <p className="max-w-2xl text-pretty text-base text-ink-soft md:text-lg [text-shadow:0_1px_8px_rgba(16,15,28,0.9)]">
           {subhead}
         </p>
       ) : null}

@@ -16,7 +16,7 @@ export function Capabilities() {
   return (
     <section
       id="capabilities"
-      className="border-y border-line bg-bg-elevated px-6 py-24 md:py-32"
+      className="section-glass border-y px-6 py-24 md:py-32"
     >
       <div className="mx-auto max-w-6xl">
         <SectionHeader
@@ -53,11 +53,15 @@ export function Capabilities() {
                   },
                 }}
                 className={cn(
-                  'card-glow group relative h-full cursor-pointer overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none transition-all duration-300 hover:-translate-y-1.5 focus-visible:ring-2 focus-visible:ring-accent',
+                  'card-glow group relative h-full cursor-pointer overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none',
+                  'transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-out-expo)]',
+                  'hover:-translate-y-2 hover:shadow-[0_12px_40px_-12px_var(--accent)]',
+                  'focus-visible:ring-2 focus-visible:ring-accent',
                   selected === i && 'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',
                 )}
+                style={{ willChange: 'transform' }}
               >
-                <div className="grid size-10 place-items-center rounded-full bg-accent-soft text-accent transition-transform duration-300 group-hover:scale-110">
+                <div className="grid size-10 place-items-center rounded-full bg-accent-soft text-accent transition-[transform] duration-300 group-hover:scale-110">
                   <Icon className="size-5" aria-hidden />
                 </div>
 
@@ -102,9 +106,9 @@ export function Capabilities() {
                 {/* Hairline that draws across on hover */}
                 <span
                   aria-hidden
-                  className="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
+                  className="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-accent transition-[transform] duration-300 group-hover:scale-x-100"
                 />
-                {/* Down-arrow hint centered on the hairline — signals "click to reveal pills" */}
+                {/* Down-arrow hint */}
                 <span
                   aria-hidden
                   className={cn(
@@ -123,18 +127,13 @@ export function Capabilities() {
           })}
         </motion.div>
 
-        {/* Tech pills row — mirrors the card columns above. Clicking a card
-            reveals the corresponding column's pills with a small staggered
-            blur-resolve. Min-height keeps the layout from jumping. */}
+        {/* Tech pills row */}
         <div
           className="mt-6 hidden md:grid md:min-h-[3.5rem] md:gap-6 md:grid-cols-3"
           aria-hidden
         >
           {copy.capabilities.items.map((item, i) => (
-            <div
-              key={item.title}
-              className="flex flex-wrap items-start gap-1.5"
-            >
+            <div key={item.title} className="flex flex-wrap items-start gap-1.5">
               <AnimatePresence>
                 {selected === i
                   ? item.tags.map((tag, j) => (
