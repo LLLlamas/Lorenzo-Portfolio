@@ -7,15 +7,15 @@ import { withBasePath } from '@/lib/utils';
 
 type Slide = { sectionId: string; src: string; pos: string };
 
-// City backdrops — each section gets its own cinematic scene (all people-free)
+// NYC + LA city backdrops — one cinematic scene per section
 const SLIDES: Slide[] = [
-  { sectionId: 'hero',         src: '/backgrounds/city-skyscraper-roads.jpg', pos: '50% 60%' },
-  { sectionId: 'about',        src: '/backgrounds/city-towers-night.jpg',      pos: '50% 40%' },
-  { sectionId: 'work',         src: '/backgrounds/city-bright-aerial.jpg',    pos: '50% 50%' },
-  { sectionId: 'capabilities', src: '/backgrounds/city-seattle-twilight.jpg', pos: '50% 40%' },
-  { sectionId: 'packages',     src: '/backgrounds/city-vibrant-aerial.jpg',   pos: '50% 50%' },
-  { sectionId: 'faq',          src: '/backgrounds/city-nyc-bridge.jpg',       pos: '50% 50%' },
-  { sectionId: 'contact-cta',  src: '/backgrounds/city-reflection.jpg',       pos: '50% 60%' },
+  { sectionId: 'hero',         src: '/backgrounds/city-nyc-freedom-tower-night.jpg', pos: '50% 40%' },
+  { sectionId: 'about',        src: '/backgrounds/city-towers-night.jpg',             pos: '50% 40%' },
+  { sectionId: 'work',         src: '/backgrounds/city-nyc-aerial-night.jpg',         pos: '50% 50%' },
+  { sectionId: 'capabilities', src: '/backgrounds/city-nyc-skyline-night.jpg',        pos: '50% 45%' },
+  { sectionId: 'packages',     src: '/backgrounds/city-la-aerial-night.jpg',          pos: '50% 55%' },
+  { sectionId: 'faq',          src: '/backgrounds/city-nyc-bridge.jpg',               pos: '50% 50%' },
+  { sectionId: 'contact-cta',  src: '/backgrounds/city-nyc-empire-state-msg.jpg',     pos: '50% 25%' },
 ];
 
 export function PageBackground() {
@@ -23,7 +23,7 @@ export function PageBackground() {
   const [activeIdx, setActiveIdx] = useState(0);
   const prefersReduced = useReducedMotion();
 
-  // Subtle parallax — image drifts at 3% of scroll speed inside the fixed viewport
+  // Subtle parallax — image drifts at 2.5% of scroll speed
   useEffect(() => {
     if (prefersReduced) return;
     const el = driftRef.current;
@@ -61,7 +61,7 @@ export function PageBackground() {
       className="pointer-events-none fixed inset-0 overflow-hidden"
       style={{ zIndex: -1 }}
     >
-      {/* Parallax container — slight scale keeps edges covered during drift */}
+      {/* Parallax container — scale(1.08) keeps edges covered during drift */}
       <div
         ref={driftRef}
         className="absolute inset-0"
@@ -75,43 +75,46 @@ export function PageBackground() {
               className="absolute inset-0"
               style={{
                 opacity: isActive ? 1 : 0,
-                transform: isActive ? 'scale(1)' : 'scale(1.06)',
-                transition: 'opacity 2200ms cubic-bezier(0.4,0,0.2,1), transform 2600ms cubic-bezier(0.4,0,0.2,1)',
+                // Inactive slides sit slightly below and zoomed — they rise and contract into place
+                transform: isActive ? 'scale(1) translateY(0px)' : 'scale(1.07) translateY(22px)',
+                transition: [
+                  'opacity 1900ms cubic-bezier(0.4,0,0.2,1)',
+                  'transform 2700ms cubic-bezier(0.22,1,0.36,1)',
+                ].join(', '),
                 willChange: 'opacity, transform',
               }}
             >
-              <Image
-                src={withBasePath(src)}
-                alt=""
-                fill
-                priority={i === 0}
-                className="object-cover"
-                style={{ objectPosition: pos }}
-                sizes="100vw"
-                quality={85}
-              />
+              {/* Ken Burns: 18 s linear transition — barely moves during crossfade,
+                  then slowly zooms while the slide is active */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  transform: isActive ? 'scale(1.07)' : 'scale(1)',
+                  transition: 'transform 18000ms linear',
+                }}
+              >
+                <Image
+                  src={withBasePath(src)}
+                  alt=""
+                  fill
+                  priority={i === 0}
+                  className="object-cover"
+                  style={{ objectPosition: pos }}
+                  sizes="100vw"
+                  quality={85}
+                />
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Vignette — heavy at edges, lighter in the centre so city lights read */}
+      {/* Thin top shield — protects the transparent header only; no vignette elsewhere */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-x-0 top-0"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(16,15,28,0.70) 0%, rgba(16,15,28,0.30) 18%, rgba(16,15,28,0.35) 55%, rgba(16,15,28,0.58) 78%, rgba(16,15,28,0.85) 100%)',
-        }}
-      />
-
-      {/* Brand accent haze — purple glow that plays off city lights */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 50% at 50% 0%, var(--accent-soft) 0%, transparent 68%)',
-          mixBlendMode: 'screen',
-          opacity: 0.55,
+          height: '14%',
+          background: 'linear-gradient(180deg, rgba(16,15,28,0.32) 0%, transparent 100%)',
         }}
       />
     </div>

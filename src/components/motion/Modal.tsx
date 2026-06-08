@@ -81,7 +81,7 @@ export function Modal({ open, onClose, children, label }: Props) {
             type="button"
             aria-label="Close modal"
             onClick={onClose}
-            className="absolute inset-0 cursor-default bg-ink/50 backdrop-blur-sm"
+            className="modal-glass-backdrop absolute inset-0 cursor-default"
           />
 
           {/* Vortex + panel wrapper — relative container for absolute vortex elements */}
@@ -130,7 +130,7 @@ export function Modal({ open, onClose, children, label }: Props) {
                   className="pointer-events-none absolute inset-0 z-10 rounded-t-2xl md:rounded-2xl"
                   style={{
                     background:
-                      'radial-gradient(ellipse at 50% 40%, color-mix(in srgb, var(--accent-soft) 95%, transparent), transparent 68%)',
+                      'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.05), transparent 68%)',
                   }}
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 0 }}
@@ -148,7 +148,7 @@ export function Modal({ open, onClose, children, label }: Props) {
               aria-label={label}
               tabIndex={-1}
               data-lenis-prevent
-              className="relative max-h-[92vh] w-full overflow-y-auto overscroll-contain rounded-t-2xl border border-line bg-bg-elevated shadow-2xl outline-none md:max-h-[90vh] md:rounded-2xl"
+              className="modal-glass-panel relative max-h-[92vh] w-full overflow-y-auto overscroll-contain rounded-t-2xl border outline-none md:max-h-[90vh] md:rounded-2xl"
               initial={prefersReduced
                 ? { opacity: 0 }
                 : { opacity: 0, scale: 0.22, rotate: 16, filter: 'blur(24px)' }

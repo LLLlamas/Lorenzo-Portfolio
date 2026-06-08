@@ -53,7 +53,7 @@ export function Capabilities() {
                   },
                 }}
                 className={cn(
-                  'card-glow group relative h-full cursor-pointer overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg p-6 outline-none',
+                  'card-glow readable-glass group relative h-full cursor-pointer overflow-hidden rounded-[var(--radius-card)] border border-line p-6 outline-none',
                   'transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-out-expo)]',
                   'hover:-translate-y-2 hover:shadow-[0_12px_40px_-12px_var(--accent)]',
                   'focus-visible:ring-2 focus-visible:ring-accent',
@@ -94,7 +94,7 @@ export function Capabilities() {
                           key={tag}
                           initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
                           animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.3, delay: j * 0.04, ease: [0.16, 1, 0.3, 1] } }}
-                          className="pill-tag rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
+                          className="pill-tag rounded-full border border-line-accent bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent backdrop-blur-sm"
                         >
                           {tag}
                         </motion.span>
@@ -156,7 +156,7 @@ export function Capabilities() {
                           filter: 'blur(2px)',
                           transition: { duration: 0.18 },
                         }}
-                        className="pill-tag rounded-full border border-line-accent bg-bg/70 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent"
+                        className="pill-tag rounded-full border border-line-accent bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-accent backdrop-blur-sm"
                       >
                         {tag}
                       </motion.span>

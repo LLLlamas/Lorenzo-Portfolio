@@ -13,13 +13,13 @@ export default function ContactPage() {
   return (
     <section className="px-6 py-24 md:py-32">
       <div className="mx-auto max-w-4xl">
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
+        <p className="copy-readable text-sm font-bold uppercase tracking-[0.18em] text-ink-soft">
           Contact
         </p>
-        <h1 className="mt-3 font-display text-balance text-5xl font-semibold tracking-tight md:text-6xl">
+        <h1 className="copy-readable mt-3 font-display text-balance text-5xl font-semibold tracking-tight md:text-6xl">
           {copy.contact.headline}
         </h1>
-        <p className="mt-5 max-w-xl text-pretty text-lg text-ink-soft md:text-xl">
+        <p className="copy-readable mt-5 max-w-xl text-pretty text-lg text-ink-soft md:text-xl">
           {copy.contact.subhead}
         </p>
 
@@ -76,10 +76,10 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-16">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="copy-readable text-sm font-bold uppercase tracking-[0.18em] text-ink-soft">
             Quick FAQ
           </p>
-          <ul className="mt-4 divide-y divide-line border-y border-line">
+          <ul className="readable-glass mt-4 divide-y divide-line rounded-[var(--radius-card)] border border-line px-5">
             {contactFaqs.map((faq) => (
               <li key={faq.question} className="py-4">
                 <p className="font-display text-base font-medium text-ink">

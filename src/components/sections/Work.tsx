@@ -93,10 +93,10 @@ export function Work() {
                   onClick={() => setFilter(category)}
                   aria-pressed={isActive}
                   className={cn(
-                    'relative rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors',
+                    'relative rounded-full border px-4 py-1.5 text-sm font-semibold backdrop-blur-md transition-colors',
                     isActive
                       ? 'border-accent text-accent-on'
-                      : 'border-line text-ink-quiet hover:border-line-accent hover:text-ink',
+                      : 'border-white/20 bg-black/28 text-ink-soft hover:border-white/35 hover:bg-black/40 hover:text-ink',
                   )}
                 >
                   {isActive ? (
@@ -132,10 +132,10 @@ export function Work() {
                     {/* Category label — visible only when showing all */}
                     {filter === 'all' && (
                       <div className="mb-5 flex items-center gap-3">
-                        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-quiet">
+                        <span className="copy-readable text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">
                           {label}
                         </span>
-                        <div className="h-px flex-1 bg-line" />
+                        <div className="h-px flex-1 bg-white/25" />
                       </div>
                     )}
 
@@ -230,13 +230,7 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
             >
               {/* Cover — uniform 16/10 across all categories */}
               <div
-                className={cn(
-                  'relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius-card)] bg-gradient-to-br',
-                  project.category === 'mobile' && 'from-accent-soft to-bg',
-                  project.category === 'web' && 'from-accent-secondary-soft to-bg',
-                  project.category === 'game' &&
-                    'from-accent-soft via-accent-secondary-soft to-bg',
-                )}
+                className="project-media-well relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius-card)]"
               >
                 {hasCover ? (
                   isPhone ? (
@@ -323,7 +317,6 @@ function PhoneCoverPreview({ project }: { project: Project }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center gap-3 px-5 py-3 md:gap-5 md:px-8 md:py-5">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,var(--accent-soft),transparent_58%)]" />
       {shots.map((shot, index) => (
         <PhoneFrame
           key={`${shot.src}-${index}`}
@@ -350,7 +343,7 @@ function WorkGapFiller() {
   return (
     <Link
       href={copy.workGapFiller.cta.href}
-      className="group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent bg-bg/40 p-6 text-center transition-transform duration-300 hover:-translate-y-1.5 md:p-8"
+      className="readable-glass group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent p-6 text-center transition-transform duration-300 hover:-translate-y-1.5 md:p-8"
     >
       <div className="flex flex-col items-center gap-3">
         <span

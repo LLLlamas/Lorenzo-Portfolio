@@ -9,20 +9,20 @@ const base =
   'btn-sweep group inline-flex items-center justify-center rounded-full border font-medium tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50';
 
 const variants: Record<Variant, string> = {
-  // Primary: glass pill → accent sweep + glow on hover
+  // Primary: dark-glass pill → accent sweep on hover
   primary:
-    'border-white/20 bg-white/10 text-ink backdrop-blur-sm hover:border-accent/60 hover:text-accent-on hover:shadow-[0_0_24px_-6px_var(--accent)]',
-  // Ghost: borderless subtle → gentle brightens on hover
+    'border-white/35 bg-black/45 text-ink backdrop-blur-md hover:border-white/55 hover:text-ink hover:shadow-[0_0_24px_-6px_var(--accent)]',
+  // Ghost: dark-glass clear pill — reads over any city backdrop
   ghost:
-    'border-white/20 bg-transparent text-ink-soft hover:border-white/40 hover:text-ink',
-  // Accent: glowing glass accent pill → solid accent + amplified glow on hover
+    'border-white/50 bg-black/40 text-ink backdrop-blur-md hover:border-white/70 hover:bg-black/55',
+  // Accent: dark-glass accent-tinted pill → solid accent sweep + glow on hover
   accent:
-    'border-accent/50 bg-accent/[0.12] text-accent backdrop-blur-sm hover:border-accent hover:text-accent-on hover:shadow-[0_0_32px_-4px_var(--accent),0_0_60px_-24px_var(--accent)]',
+    'border-accent/80 bg-black/45 text-accent backdrop-blur-md hover:border-accent hover:text-accent-on hover:shadow-[0_0_32px_-4px_var(--accent),0_0_60px_-24px_var(--accent)]',
 };
 
 const sweepStyles: Record<Variant, CSSProperties> = {
   primary: { ['--sweep-bg' as never]: 'var(--accent)' },
-  ghost: { ['--sweep-bg' as never]: 'rgba(255,255,255,0.06)' },
+  ghost: { ['--sweep-bg' as never]: 'rgba(255,255,255,0.10)' },
   accent: { ['--sweep-bg' as never]: 'var(--accent)' },
 };
 

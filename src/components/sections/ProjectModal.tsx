@@ -68,7 +68,7 @@ export function ProjectModal({
                   type="button"
                   onClick={onClose}
                   aria-label="Close"
-                  className="grid size-10 md:size-9 place-items-center rounded-full bg-bg/85 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-bg hover:text-ink"
+                  className="grid size-10 md:size-9 place-items-center rounded-full border border-white/15 bg-black/50 text-ink-soft shadow-sm backdrop-blur-md transition-colors hover:bg-black/70 hover:text-ink"
                 >
                   <X className="size-4" />
                 </button>
@@ -138,7 +138,7 @@ export function ProjectModal({
                       {project.highlights.map((highlight: Highlight, index) => (
                         <li
                           key={highlight.text}
-                          className="flex flex-col rounded-xl border border-line bg-bg/60 p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
+                          className="readable-glass-soft flex flex-col rounded-xl border p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
                         >
                           <span className="text-[10px] uppercase tracking-[0.16em] text-accent">
                             {String(index + 1).padStart(2, '0')}
@@ -238,11 +238,8 @@ function ProjectCover({ project }: { project: Project }) {
   return (
     <div
       className={cn(
-        'relative overflow-hidden bg-gradient-to-br',
+        'project-media-well relative overflow-hidden backdrop-blur-sm',
         isPhone ? 'aspect-[4/3] md:aspect-[16/8]' : 'aspect-[16/9]',
-        project.category === 'mobile' && 'from-accent-soft to-bg',
-        project.category === 'web' && 'from-accent-secondary-soft to-bg',
-        project.category === 'game' && 'from-accent-soft via-accent-secondary-soft to-bg',
       )}
     >
       {hasCover ? (
@@ -277,7 +274,6 @@ function PhoneHero({ project }: { project: Project }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center gap-4 px-7 py-5 md:gap-8 md:px-10 md:py-7">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,var(--accent-soft),transparent_60%)]" />
       {shots.map((shot, index) => (
         <PhoneFrame
           key={`${shot.src}-${index}`}
@@ -333,7 +329,7 @@ function ProjectFacts({ project }: { project: Project }) {
 
 function FactBlock({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="bg-bg-elevated p-4">
+    <div className="readable-glass-soft p-4">
       <dt>
         <DetailLabel>{label}</DetailLabel>
       </dt>
@@ -401,7 +397,7 @@ function GalleryItem({
           <motion.div
             ref={cardRef}
             className={cn(
-              'relative overflow-hidden rounded-xl border border-line bg-bg-elevated shadow-[0_18px_44px_-32px_rgba(0,0,0,0.5)] cursor-pointer',
+              'project-media-well relative overflow-hidden rounded-xl border border-white/10 shadow-[0_18px_44px_-32px_rgba(0,0,0,0.5)] cursor-pointer',
               isPhone ? 'aspect-[9/16] p-2' : 'aspect-[16/10]',
             )}
             whileTap={prefersReduced ? undefined : { scale: 1.05, rotateY: 6 }}
@@ -477,7 +473,7 @@ function GalleryLightbox({
     <AnimatePresence>
       {image ? (
         <motion.div
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-ink/85 backdrop-blur-xl cursor-pointer"
+          className="fixed inset-0 z-[500] flex cursor-pointer items-center justify-center bg-black/72 backdrop-blur-xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -531,7 +527,7 @@ function GalleryLightbox({
               type="button"
               onClick={onClose}
               aria-label="Close image"
-              className="grid size-10 place-items-center rounded-full bg-bg/50 text-ink backdrop-blur-sm transition-colors hover:bg-bg"
+              className="grid size-10 place-items-center rounded-full border border-white/15 bg-black/55 text-white backdrop-blur-sm transition-colors hover:bg-black/75"
             >
               <X className="size-4" />
             </button>

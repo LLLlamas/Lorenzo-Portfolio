@@ -31,7 +31,7 @@ export function NewtonsCradleStrip({
   return (
     <div
       className={cn(
-        'relative border-y border-line px-6 py-5',
+        'relative border-y border-white/10 bg-black/30 px-6 py-5 backdrop-blur-sm',
         active && 'cradle-strip-active',
       )}
     >
@@ -44,7 +44,7 @@ export function NewtonsCradleStrip({
             key={item}
             ref={setItemRef[index]}
             className={cn(
-              'pendulum-label aura-pop whitespace-nowrap text-sm font-bold uppercase tracking-[0.16em] text-ink-quiet',
+              'pendulum-label aura-pop whitespace-nowrap text-sm font-bold uppercase tracking-[0.16em] text-ink-soft [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]',
               index === 0 && 'pendulum-label--left',
               index > 0 && index < techStackItems.length - 1 && 'pendulum-label--middle',
               index === techStackItems.length - 1 && 'pendulum-label--right',

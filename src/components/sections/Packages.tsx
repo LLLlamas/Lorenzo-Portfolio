@@ -94,7 +94,7 @@ export function Packages() {
           ))}
         </Stagger>
 
-        <Reveal as="div" className="mt-10 rounded-[var(--radius-card)] border border-line bg-bg-elevated p-6 md:p-8">
+        <Reveal as="div" className="readable-glass mt-10 rounded-[var(--radius-card)] border border-line p-6 md:p-8">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
             <span className="label-select">Modifiers</span>
           </p>

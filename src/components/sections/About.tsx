@@ -7,7 +7,7 @@ export function About() {
     <section id="about" className="relative px-6 py-24 md:py-32">
       <div className="mx-auto max-w-6xl">
         <Reveal as="div" className="mb-10">
-          <p className="aura-pop text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet">
+          <p className="aura-pop copy-readable text-sm font-bold uppercase tracking-[0.18em] text-ink-soft">
             <span className="label-select">{copy.about.eyebrow}</span>
           </p>
         </Reveal>
@@ -17,19 +17,19 @@ export function About() {
             <div className="relative">
               <AboutPlaceholder />
               {/* Floating skill badges — decorative, hidden on mobile */}
-              <span className="floating-chip floating-chip-1 pointer-events-none absolute -right-5 top-8 hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+              <span className="floating-chip floating-chip-1 pointer-events-none absolute -right-5 top-8 hidden items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md md:flex">
                 <span className="inline-block size-1.5 rounded-full bg-accent" aria-hidden />
                 Next.js
               </span>
-              <span className="floating-chip floating-chip-2 pointer-events-none absolute -left-5 top-[38%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+              <span className="floating-chip floating-chip-2 pointer-events-none absolute -left-5 top-[38%] hidden items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md md:flex">
                 <span className="inline-block size-1.5 rounded-full bg-accent-secondary" aria-hidden />
                 SwiftUI
               </span>
-              <span className="floating-chip floating-chip-3 pointer-events-none absolute -right-5 bottom-[30%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+              <span className="floating-chip floating-chip-3 pointer-events-none absolute -right-5 bottom-[30%] hidden items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md md:flex">
                 <span className="inline-block size-1.5 rounded-full bg-accent" aria-hidden />
                 TypeScript
               </span>
-              <span className="floating-chip floating-chip-4 pointer-events-none absolute -bottom-4 left-[20%] hidden items-center gap-1.5 rounded-full border border-line bg-bg px-3 py-1.5 text-xs font-semibold text-ink shadow-sm md:flex">
+              <span className="floating-chip floating-chip-4 pointer-events-none absolute -bottom-4 left-[20%] hidden items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-md md:flex">
                 <span className="inline-block size-1.5 rounded-full bg-accent-secondary" aria-hidden />
                 GSAP
               </span>
@@ -38,7 +38,7 @@ export function About() {
 
           <div className="md:col-span-7">
             <Stagger
-              className="space-y-6 text-pretty text-lg leading-relaxed text-ink md:text-xl"
+              className="copy-readable space-y-6 text-pretty text-lg leading-relaxed text-ink md:text-xl"
               step={0.1}
             >
               {copy.about.paragraphs.map((p, i) => (
@@ -48,7 +48,7 @@ export function About() {
 
             <Reveal as="div" delay={0.2}>
               <blockquote className="mt-10 border-l-2 border-accent pl-6">
-                <p className="font-serif text-2xl italic leading-snug text-ink md:text-3xl">
+                <p className="copy-readable font-serif text-2xl italic leading-snug text-ink md:text-3xl">
                   &ldquo;{copy.about.pullQuote}&rdquo;
                 </p>
               </blockquote>

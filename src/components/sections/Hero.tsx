@@ -53,7 +53,7 @@ export function Hero({ pendulumControl }: HeroProps) {
 
       <div className="relative z-10 mx-auto max-w-5xl">
         <motion.p
-          className="aura-pop mb-6 text-sm font-bold uppercase tracking-[0.18em] text-ink-quiet"
+          className="aura-pop mb-6 text-sm font-bold uppercase tracking-[0.18em] text-ink-soft [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]"
           initial={prefersReduced ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -70,7 +70,7 @@ export function Hero({ pendulumControl }: HeroProps) {
         />
 
         <motion.p
-          className="mt-6 max-w-2xl text-pretty text-lg text-ink-soft md:text-xl [text-shadow:0_1px_10px_rgba(16,15,28,0.95)]"
+          className="mt-6 max-w-2xl text-pretty text-lg text-ink md:text-xl [text-shadow:0_1px_10px_rgba(16,15,28,0.95)]"
           initial={prefersReduced ? false : { opacity: 0, y: 12, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 0.9, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}

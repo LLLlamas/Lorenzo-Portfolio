@@ -28,7 +28,7 @@ export function Card({ children, className, as: As = 'div', shine = false }: Pro
   return (
     <El
       className={cn(
-        'card-glow rounded-[var(--radius-card)] border border-line bg-bg-elevated',
+        'card-glow readable-glass rounded-[var(--radius-card)] border border-line',
         shine && 'card-shine',
         className,
       )}
