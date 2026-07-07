@@ -6,12 +6,11 @@ import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { Card } from '@/components/ui/Card';
-import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { GyroTilt } from '@/components/motion/GyroTilt';
 import { RippleTap } from '@/components/motion/RippleTap';
+import { MosaicReveal } from '@/components/motion/MosaicReveal';
 import { copy } from '@/content/copy';
 import { projects, type Project, type ProjectCategory } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
@@ -82,8 +81,8 @@ export function Work() {
             subhead={copy.work.subhead}
           />
 
-          {/* Filter tabs */}
-          <div className="mb-10 flex flex-wrap gap-2">
+          {/* Filter tabs — bracketed mono, active fills accent */}
+          <div className="mb-12 flex flex-wrap gap-x-7 gap-y-3">
             {filterOrder.map((category) => {
               const isActive = filter === category;
               return (
@@ -93,27 +92,18 @@ export function Work() {
                   onClick={() => setFilter(category)}
                   aria-pressed={isActive}
                   className={cn(
-                    'relative rounded-full border px-4 py-1.5 text-sm font-semibold backdrop-blur-md transition-colors',
-                    isActive
-                      ? 'border-accent text-accent-on'
-                      : 'border-white/20 bg-black/28 text-ink-soft hover:border-white/35 hover:bg-black/40 hover:text-ink',
+                    'link-bracket cursor-pointer text-xs',
+                    isActive && 'link-bracket--accent',
                   )}
                 >
-                  {isActive ? (
-                    <motion.span
-                      layoutId="filter-pill"
-                      className="absolute inset-0 rounded-full bg-accent"
-                      transition={{ type: 'spring', stiffness: 420, damping: 36 }}
-                    />
-                  ) : null}
-                  <span className="relative z-10">{filterLabels[category]}</span>
+                  {filterLabels[category]}
                 </button>
               );
             })}
           </div>
 
           {/* Category rows */}
-          <div className="space-y-14">
+          <div className="space-y-16">
             <AnimatePresence mode="popLayout">
               {activeCategories.map(({ category, label }) => {
                 const catProjects = projects.filter((p) => p.category === category);
@@ -131,11 +121,11 @@ export function Work() {
                   >
                     {/* Category label — visible only when showing all */}
                     {filter === 'all' && (
-                      <div className="mb-5 flex items-center gap-3">
-                        <span className="copy-readable text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">
-                          {label}
+                      <div className="mb-6 flex items-baseline gap-4">
+                        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-quiet">
+                          {label}/
                         </span>
-                        <div className="h-px flex-1 bg-white/25" />
+                        <div className="h-px flex-1 self-center bg-line" />
                       </div>
                     )}
 
@@ -146,12 +136,12 @@ export function Work() {
                           initial={
                             prefersReduced
                               ? false
-                              : { opacity: 0, y: 18, filter: 'blur(6px)' }
+                              : { opacity: 0, y: 18 }
                           }
                           whileInView={
                             prefersReduced
                               ? undefined
-                              : { opacity: 1, y: 0, filter: 'blur(0px)' }
+                              : { opacity: 1, y: 0 }
                           }
                           viewport={{ once: true, margin: '0px 0px -8% 0px' }}
                           transition={{
@@ -162,6 +152,7 @@ export function Work() {
                         >
                           <ProjectCard
                             project={project}
+                            index={visibleProjects.findIndex((p) => p.slug === project.slug)}
                             isSelected={openProject?.slug === project.slug}
                             onSelect={handleSelectProject}
                           />
@@ -176,7 +167,7 @@ export function Work() {
           </div>
 
           {visibleProjects.length === 0 && (
-            <div className="py-20 text-center text-sm text-ink-quiet">
+            <div className="py-20 text-center font-mono text-xs uppercase tracking-[0.18em] text-ink-quiet">
               No projects in this category yet.
             </div>
           )}
@@ -201,25 +192,28 @@ export function Work() {
 
 type ProjectCardProps = {
   project: Project;
+  /** Position within the currently visible list — rendered as the 01/ index. */
+  index: number;
   isSelected?: boolean;
   onSelect: (project: Project) => void;
 };
 
-function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps) {
+function ProjectCard({ project, index, isSelected = false, onSelect }: ProjectCardProps) {
   const hasCover = Boolean(project.cover);
   const fit = project.coverFit ?? 'cover';
   const isPhone = project.category === 'mobile' && project.coverFit === 'contain';
+  const indexLabel = String(index + 1).padStart(2, '0');
 
   return (
     <div className="scroll-scale" style={{ transformOrigin: 'center bottom' }}>
-      <RippleTap className="rounded-[var(--radius-card)]">
+      <RippleTap className="rounded-lg">
         <GyroTilt>
-          <Card
-            as="article"
+          <article
             className={cn(
-              'project-card group relative p-0 transition-[transform,box-shadow] duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-2 will-change-transform',
-              isSelected &&
-                'ring-2 ring-accent/60 border-accent/50 shadow-[0_0_0_1px_var(--accent-soft),0_0_20px_-4px_var(--accent)]',
+              'project-card group relative overflow-hidden rounded-lg border border-line bg-bg-elevated',
+              'transition-[transform,border-color,box-shadow] duration-300 ease-[var(--ease-out-expo)] will-change-transform',
+              'hover:-translate-y-1.5 hover:border-ink-quiet/50',
+              isSelected && 'border-accent/60 shadow-[0_0_24px_-8px_var(--accent)]',
             )}
           >
             <button
@@ -228,20 +222,13 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
               aria-label={`Open details for ${project.title}`}
               className="block w-full cursor-pointer text-left"
             >
-              {/* Cover — uniform 16/10 across all categories */}
-              <div
-                className="project-media-well relative aspect-[16/10] overflow-hidden rounded-t-[var(--radius-card)]"
-              >
+              {/* Cover — mosaic tiles dissolve to reveal the shot */}
+              <MosaicReveal className="project-media-well relative aspect-[16/10]">
                 {hasCover ? (
                   isPhone ? (
                     <PhoneCoverPreview project={project} />
                   ) : (
-                    <div
-                      className={cn(
-                        'absolute inset-0',
-                        project.featured && fit === 'cover' && 'ken-burns motion-decorative',
-                      )}
-                    >
+                    <div className="absolute inset-0 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]">
                       <Image
                         src={withBasePath(project.cover!)}
                         alt={`${project.title} screenshot`}
@@ -257,50 +244,42 @@ function ProjectCard({ project, isSelected = false, onSelect }: ProjectCardProps
                   )
                 ) : (
                   <div className="absolute inset-0 grid place-items-center">
-                    <span className="text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
-                      Screenshot pending
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
+                      [ Screenshot pending ]
                     </span>
                   </div>
                 )}
-              </div>
+              </MosaicReveal>
 
-              {/* Body */}
-              <div className="p-4 md:p-5">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <h3
-                      className="cascade-step cascade-1 font-display text-sm font-extrabold tracking-tight text-ink md:text-base"
-                      style={{ transitionDelay: '0ms' }}
-                    >
-                      {project.title}
-                    </h3>
-                    <p
-                      className="cascade-step cascade-2 mt-0.5 text-xs font-semibold text-ink-soft md:text-sm"
-                      style={{ transitionDelay: '90ms' }}
-                    >
-                      {project.tagline}
-                    </p>
+              {/* Body — index, title, tagline, mono stack line */}
+              <div className="border-t border-line p-4 md:p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-baseline gap-3">
+                    <span className="font-mono text-[11px] text-accent">
+                      {indexLabel}/
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="font-display text-sm font-extrabold uppercase tracking-tight text-ink transition-colors md:text-base">
+                        {project.title}
+                      </h3>
+                      <p className="mt-1 hidden text-xs text-ink-soft sm:block md:text-sm">
+                        {project.tagline}
+                      </p>
+                    </div>
                   </div>
                   <ArrowUpRight
                     aria-hidden
-                    className="mt-0.5 size-3.5 shrink-0 text-ink-quiet transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
+                    className="mt-0.5 size-4 shrink-0 text-ink-quiet transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
                   />
                 </div>
 
-                <div className="mt-3 flex flex-wrap gap-1">
-                  {project.stack.slice(0, 3).map((tag, i) => (
-                    <Tag
-                      key={tag}
-                      className="cascade-step cascade-3 text-[10px]"
-                      style={{ transitionDelay: `${180 + i * 50}ms` }}
-                    >
-                      {tag}
-                    </Tag>
-                  ))}
-                </div>
+                <p className="mt-3 truncate font-mono text-[10px] uppercase tracking-[0.16em] text-ink-quiet">
+                  {project.stack.slice(0, 4).join(' / ')}
+                  <span className="text-line"> — {project.year}</span>
+                </p>
               </div>
             </button>
-          </Card>
+          </article>
         </GyroTilt>
       </RippleTap>
     </div>
@@ -343,30 +322,25 @@ function WorkGapFiller() {
   return (
     <Link
       href={copy.workGapFiller.cta.href}
-      className="readable-glass group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-[var(--radius-card)] border border-dashed border-line-accent p-6 text-center transition-transform duration-300 hover:-translate-y-1.5 md:p-8"
+      className="group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed border-line bg-bg-elevated/60 p-6 text-center transition-[transform,border-color] duration-300 hover:-translate-y-1.5 hover:border-accent/50 md:p-8"
     >
       <div className="flex flex-col items-center gap-3">
         <span
-          className="loading-blink text-[10px] uppercase tracking-[0.18em] text-accent"
+          className="loading-blink font-mono text-[10px] uppercase tracking-[0.2em] text-accent"
           aria-hidden
         >
-          {copy.workGapFiller.eyebrow}
+          [ {copy.workGapFiller.eyebrow} ]
         </span>
-        <p className="font-display text-xl font-semibold tracking-tight text-ink md:text-2xl">
+        <p className="font-display text-xl font-extrabold uppercase tracking-tight text-ink md:text-2xl">
           {copy.workGapFiller.headline}
         </p>
         <p className="max-w-xs text-sm text-ink-soft">{copy.workGapFiller.body}</p>
       </div>
 
-      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-transform duration-200 group-hover:translate-x-0.5">
+      <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-transform duration-200 group-hover:translate-x-0.5">
         {copy.workGapFiller.cta.label}
         <ArrowUpRight className="size-3.5" />
       </span>
-
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-x-6 top-1/2 h-px origin-left scale-x-0 bg-accent/40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
-      />
     </Link>
   );
 }

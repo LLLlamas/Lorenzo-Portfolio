@@ -8,10 +8,14 @@ export const copy = {
   },
 
   hero: {
-    eyebrow: 'Lorenzo Llamas — Solo developer',
+    eyebrow: 'Solo developer — Portfolio',
+    /** Giant stacked wordmark — one array entry per line. */
+    wordmark: ['Lorenzo', 'Llamas'],
     headline: 'Landing pages, websites, and small web tools — shipped fast.',
     subhead:
       'Solo senior developer. Landing pages and single-purpose tools first; bigger web apps and iOS when the project calls for it.',
+    /** Small mono annotation pinned to the hero's lower edge. */
+    annotation: 'NYC — 40.7128° N / 74.0060° W',
     primaryCta: { label: 'See work', href: '/#work' },
     secondaryCta: { label: 'Start a project', href: '/contact' },
   },

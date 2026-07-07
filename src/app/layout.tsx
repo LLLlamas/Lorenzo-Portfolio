@@ -9,7 +9,7 @@ import { CursorGlow } from '@/components/motion/CursorGlow';
 import { EntrySequence } from '@/components/motion/EntrySequence';
 import { GlobalRippleTap } from '@/components/motion/GlobalRippleTap';
 import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
-import { PageBackground } from '@/components/motion/PageBackground';
+import { VoidBackground } from '@/components/motion/VoidBackground';
 import { copy } from '@/content/copy';
 import './globals.css';
 
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#FAFAF7' },
-    { media: '(prefers-color-scheme: dark)', color: '#0F0F0E' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0D' },
   ],
 };
 
@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-dvh text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <PageBackground />
+          <VoidBackground />
           <SmoothScroll />
           <ScrollProgress />
           <CursorGlow />

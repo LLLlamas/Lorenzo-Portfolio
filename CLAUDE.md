@@ -47,9 +47,10 @@ src/
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
-│   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap
+│   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
+│   │                          VoidBackground, ScrambleText, MosaicReveal
 │   │                          (CustomCursor = legacy, unmounted)
-│   ├── nav/                 ← Header (BrandHexPrism + NavCube links), Footer, ThemeToggle
+│   ├── nav/                 ← Header (mono wordmark + bracket links), Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH — all copy/data ***
 │   ├── copy.ts              ← hero · about · capabilities · CTA · contact · meta
@@ -90,31 +91,33 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 
 | Metric | Target | Current |
 |---|---|---|
-| First Load JS `/` | ≤ 140 kB | 171 kB ⚠️ |
+| First Load JS `/` | ≤ 140 kB | 169 kB ⚠️ |
 | First Load JS `/contact` | ≤ 140 kB | 103 kB ✓ |
 | LCP (4G mobile) | < 2.0s | unmeasured |
 | Lighthouse Perf mobile | ≥ 95 | unmeasured |
 
-## Design conventions (current)
+## Design conventions (current — "editorial void" system)
+
+The site backdrop is `VoidBackground` (near-black ground + faint dot grid + two slow-drifting accent orbs). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial: giant uppercase display type, mono bracketed labels, hairline dividers, numbered indexes.
+
+### Editorial idioms
+- **Bracket links** (`.link-bracket` in `globals.css`): mono uppercase label with `[` `]` pseudo-element brackets that split apart + turn accent on hover. Used for nav links, hero CTAs, section eyebrows, and Work filter tabs. `.link-bracket--accent` fills the label with accent. Must stay `display: inline-block` — inline-flex collapses inner spaces.
+- **ScrambleText** (`motion/ScrambleText.tsx`): glyph-scramble reveal on in-view; `rescrambleOnHover` for nav links.
+- **Mono indexes**: `01/` numbering on Work cards and Capability rows, mono `text-accent`.
+- **MosaicReveal** (`motion/MosaicReveal.tsx`): tile-grid dissolve over project covers on scroll-in.
+- Section headlines are uppercase `font-display font-extrabold` (see `SectionHeader`); hero + footer carry giant wordmarks.
+
+### Header
+- Minimal editorial bar: llama logo + mono wordmark left (wordmark hidden `< sm`), bracket links center, `[ Start a project ]` accent bracket + ThemeToggle right. Height stays `h-24` (coupled — see don'ts).
 
 ### Footer
-- Compact single-row: `py-5 flex items-center justify-between` with copyright + Contact link only.
+- Mono link columns (`Menu/`, `Contact/`, `Base/`) above a giant full-width `LORENZO.LLAMAS` wordmark, compact legal row underneath.
 - **No email address displayed in the footer.** Email lives in `ContactCTA` (ghost button) and the `/contact` page only.
 - Uses `section-glass` (the only section that gets glass blur/dark-tint besides `Capabilities` and `FAQ`).
 
-### Button variants
-- **Ghost:** `border-white/45 bg-transparent text-ink` — legible over city backdrops without a glass overlay.
-- **Accent:** `border-accent/70 bg-accent/20` — solid accent-glass pill with amplified glow on hover.
-- **Primary:** glass pill `border-white/20 bg-white/10 text-ink` — used inside the Header and for non-featured package CTAs.
-
 ### Project card cover / PhoneCoverPreview / PhoneHero (ProjectModal)
 - Cover container background: `bg-transparent` (card cover) / no inline background style (modal cover) — lets the parent's `bg-bg-elevated` surface show through. No accent-soft or accent-secondary-soft gradient overlays.
-- `accent-soft` and `accent-secondary-soft` gradients are intentional in: `Hero` (full-page radial), `About` placeholder portrait (decorative frame), `Capabilities` icon pill (`bg-accent-soft`), `EntrySequence`, and `HeroBackground`. Do **not** introduce them on card-cover or modal-cover containers.
-
-### Text color conventions over city backdrop (no glass overlay)
-- Headings and subheads visible directly over city imagery: use `text-ink` (not `text-ink-soft`) + `[text-shadow:...]` for punch. See `Hero` subhead and `ContactCTA` subhead/headline.
-- Eyebrow labels directly over city imagery: `text-ink-soft` + `[text-shadow:0_1px_8px_rgba(16,15,28,0.9)]`. See `ContactCTA` eyebrow.
-- Eyebrow labels in glass-backed or card-backed sections: `text-ink-quiet` is fine (e.g. `SectionHeader`, `About`, `Packages`, `Work`).
+- `accent-soft` and `accent-secondary-soft` gradients are intentional in: `Hero` (full-page radial), `ContactCTA` (radial light pool), `About` placeholder portrait (decorative frame), and `EntrySequence`. Do **not** introduce them on card-cover or modal-cover containers.
 
 ### `section-glass` usage
 - Applied to: `Footer`, `Capabilities` (border-y), `FAQ` (border-t). These are the only three. Do not add it to other sections.
