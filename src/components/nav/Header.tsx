@@ -69,16 +69,20 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Primary nav — bracketed mono links, scramble on hover */}
+        {/* Primary nav — numbered waypoint links, scramble on hover */}
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
-          {navLinks.map((link) => (
+          {navLinks.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
               className="link-bracket text-[11px]"
               data-cursor-hover
             >
-              <ScrambleText text={link.label} rescrambleOnHover duration={450} />
+              <ScrambleText
+                text={`0${i + 1}/ ${link.label}`}
+                rescrambleOnHover
+                duration={450}
+              />
             </Link>
           ))}
         </nav>

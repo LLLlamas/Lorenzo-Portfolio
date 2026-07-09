@@ -17,6 +17,7 @@ export function Packages() {
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={copy.packages.eyebrow}
+          index={4}
           headline={copy.packages.headline}
           subhead={copy.packages.subhead}
         />

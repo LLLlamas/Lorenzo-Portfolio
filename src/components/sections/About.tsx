@@ -10,7 +10,7 @@ export function About() {
         <Reveal as="div" className="mb-10">
           <p>
             <ScrambleText
-              text={copy.about.eyebrow}
+              text={`01 // ${copy.about.eyebrow}`}
               className="link-bracket text-[11px]"
               duration={700}
             />

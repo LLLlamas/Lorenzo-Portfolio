@@ -23,6 +23,7 @@ export function Capabilities() {
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={copy.capabilities.eyebrow}
+          index={3}
           headline={copy.capabilities.headline}
           subhead={copy.capabilities.subhead}
         />

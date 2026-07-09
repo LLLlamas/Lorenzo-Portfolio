@@ -619,6 +619,81 @@ section[id] {
 .void-orb--a { animation: void-drift-a 58s var(--ease-in-out-circ) infinite; }
 .void-orb--b { animation: void-drift-b 70s var(--ease-in-out-circ) infinite; }
 
+/* ─── Shooting star — a thin streak that fires diagonally, then waits out a
+   long loop. Two instances with offset delays keep it rare enough to feel
+   like a real event rather than wallpaper. ─── */
+@keyframes shooting-star {
+  0%   { transform: translate3d(0, 0, 0) rotate(-35deg); opacity: 0; }
+  2%   { opacity: 0.9; }
+  8%   { transform: translate3d(-42vw, 29vw, 0) rotate(-35deg); opacity: 0; }
+  100% { transform: translate3d(-42vw, 29vw, 0) rotate(-35deg); opacity: 0; }
+}
+.shooting-star {
+  position: absolute;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink) 60%, transparent);
+  opacity: 0;
+  animation: shooting-star 17s linear infinite;
+  will-change: transform, opacity;
+}
+
+/* ─── Scroll hint — vertical line that repeatedly draws downward ─── */
+@keyframes scroll-hint-drop {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  45%  { transform: scaleY(1); transform-origin: top; }
+  55%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-hint-line {
+  animation: scroll-hint-drop 2.2s var(--ease-in-out-circ) infinite;
+}
+
+/* ─── Status beacon — slow breathing dot (● open for projects) ─── */
+@keyframes beacon-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+  50%      { opacity: 0.65; box-shadow: 0 0 0 5px transparent; }
+}
+.status-beacon {
+  animation: beacon-pulse 2.6s var(--ease-in-out-circ) infinite;
+}
+
+/* ─── Arrival glow — the warm light pool ContactCTA descends into ─── */
+@keyframes sun-breathe {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.04); }
+}
+.sun-breathe {
+  animation: sun-breathe 9s var(--ease-in-out-circ) infinite;
+  transform-origin: 50% 100%;
+  will-change: opacity, transform;
+}
+
+/* ─── HUD corner ticks — technical-drawing corner brackets on covers.
+   Rendered as four spans (.hud-tick) inside a .hud-corners container;
+   faint at rest, accent on card hover. ─── */
+.hud-corners .hud-tick {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.7;
+  transition:
+    border-color 300ms var(--ease-out-expo),
+    opacity 300ms var(--ease-out-expo);
+  z-index: 5;
+}
+.hud-corners .hud-tick--tl { top: 8px; left: 8px; border-top-width: 1px; border-left-width: 1px; }
+.hud-corners .hud-tick--tr { top: 8px; right: 8px; border-top-width: 1px; border-right-width: 1px; }
+.hud-corners .hud-tick--bl { bottom: 8px; left: 8px; border-bottom-width: 1px; border-left-width: 1px; }
+.hud-corners .hud-tick--br { bottom: 8px; right: 8px; border-bottom-width: 1px; border-right-width: 1px; }
+.group:hover .hud-corners .hud-tick {
+  border-color: var(--accent);
+  opacity: 1;
+}
+
 /* ─── Capability row ghost hover — offset duplicate of the title, like a
    misregistered print pass. Needs data-text on the element. ─── */
 .ghost-title {

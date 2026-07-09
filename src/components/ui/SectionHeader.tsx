@@ -6,6 +6,8 @@ import { ScrambleText } from '@/components/motion/ScrambleText';
 
 type Props = {
   eyebrow?: string;
+  /** Waypoint number — renders the eyebrow as `[ 0N // Label ]`. */
+  index?: number;
   headline: ReactNode;
   subhead?: ReactNode;
   align?: 'left' | 'center';
@@ -14,11 +16,16 @@ type Props = {
 
 export function SectionHeader({
   eyebrow,
+  index,
   headline,
   subhead,
   align = 'left',
   className,
 }: Props) {
+  const eyebrowText =
+    eyebrow && index != null
+      ? `${String(index).padStart(2, '0')} // ${eyebrow}`
+      : eyebrow;
   return (
     <Reveal
       as="div"
@@ -29,10 +36,10 @@ export function SectionHeader({
       )}
     >
       <ScanLine className="mb-2 max-w-[6rem]" />
-      {eyebrow ? (
+      {eyebrowText ? (
         <p>
           <ScrambleText
-            text={eyebrow}
+            text={eyebrowText}
             className="link-bracket text-[11px]"
             duration={700}
           />

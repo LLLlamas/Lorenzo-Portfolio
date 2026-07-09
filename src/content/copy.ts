@@ -5,6 +5,8 @@ export const copy = {
     email: 'hello@lorenzollamas.com',
     calendar: '',
     siteUrl: 'https://llllamas.github.io/Lorenzo-Portfolio',
+    /** Status beacon label — shown with the pulsing dot in the hero. */
+    availability: 'Open for projects',
   },
 
   hero: {
@@ -16,6 +18,8 @@ export const copy = {
       'Solo senior developer. Landing pages and single-purpose tools first; bigger web apps and iOS when the project calls for it.',
     /** Small mono annotation pinned to the hero's lower edge. */
     annotation: 'NYC — 40.7128° N / 74.0060° W',
+    /** Scroll affordance under the hero. */
+    scrollHint: 'Scroll to explore',
     primaryCta: { label: 'See work', href: '/#work' },
     secondaryCta: { label: 'Start a project', href: '/contact' },
   },

@@ -10,6 +10,7 @@ import { EntrySequence } from '@/components/motion/EntrySequence';
 import { GlobalRippleTap } from '@/components/motion/GlobalRippleTap';
 import { ScrollScaleMount } from '@/components/motion/ScrollScaleMount';
 import { VoidBackground } from '@/components/motion/VoidBackground';
+import { JourneyRail } from '@/components/motion/JourneyRail';
 import { copy } from '@/content/copy';
 import './globals.css';
 
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <VoidBackground />
+          <JourneyRail />
           <SmoothScroll />
           <ScrollProgress />
           <CursorGlow />

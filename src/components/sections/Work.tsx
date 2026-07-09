@@ -77,6 +77,7 @@ export function Work() {
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow={copy.work.eyebrow}
+            index={2}
             headline={copy.work.headline}
             subhead={copy.work.subhead}
           />
@@ -223,7 +224,11 @@ function ProjectCard({ project, index, isSelected = false, onSelect }: ProjectCa
               className="block w-full cursor-pointer text-left"
             >
               {/* Cover — mosaic tiles dissolve to reveal the shot */}
-              <MosaicReveal className="project-media-well relative aspect-[16/10]">
+              <MosaicReveal className="hud-corners project-media-well relative aspect-[16/10]">
+                <span aria-hidden className="hud-tick hud-tick--tl" />
+                <span aria-hidden className="hud-tick hud-tick--tr" />
+                <span aria-hidden className="hud-tick hud-tick--bl" />
+                <span aria-hidden className="hud-tick hud-tick--br" />
                 {hasCover ? (
                   isPhone ? (
                     <PhoneCoverPreview project={project} />

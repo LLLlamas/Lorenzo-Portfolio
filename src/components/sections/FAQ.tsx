@@ -7,7 +7,7 @@ export function FAQ() {
   return (
     <section id="faq" className="section-glass border-t px-6 py-24 md:py-32">
       <div className="mx-auto max-w-3xl">
-        <SectionHeader eyebrow={copy.faq.eyebrow} headline={copy.faq.headline} />
+        <SectionHeader eyebrow={copy.faq.eyebrow} index={5} headline={copy.faq.headline} />
 
         <Stagger
           as="ul"

@@ -30,7 +30,7 @@ export function Hero({ pendulumControl }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative isolate overflow-hidden px-6 pb-20 pt-20 md:pt-28"
+      className="relative isolate overflow-hidden px-6 pb-16 pt-20 md:pt-24"
     >
       {/* Faint accent radial — anchors the void */}
       <div
@@ -73,7 +73,7 @@ export function Hero({ pendulumControl }: HeroProps) {
           {copy.hero.wordmark.map((line, i) => (
             <span
               key={line}
-              className="block overflow-hidden pb-[0.06em] text-[clamp(3.8rem,13.5vw,11rem)] font-extrabold"
+              className="block overflow-hidden pb-[0.06em] text-[clamp(3.8rem,12.3vw,10rem)] font-extrabold"
             >
               <motion.span
                 className="block will-change-transform"
@@ -97,7 +97,7 @@ export function Hero({ pendulumControl }: HeroProps) {
         </h1>
 
         {/* Statement + subhead */}
-        <div className="mt-10 grid gap-8 md:mt-14 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-16">
+        <div className="mt-10 grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-16">
           <motion.p
             className="max-w-xl text-pretty font-display text-2xl font-semibold leading-snug tracking-tight text-ink md:text-3xl"
             initial={prefersReduced ? false : { opacity: 0, y: 14, filter: 'blur(8px)' }}
@@ -119,7 +119,7 @@ export function Hero({ pendulumControl }: HeroProps) {
 
         {/* CTAs + pendulum + annotation */}
         <motion.div
-          className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6 md:mt-16"
+          className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6"
           initial={prefersReduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -151,8 +151,33 @@ export function Hero({ pendulumControl }: HeroProps) {
             <span className="hidden md:inline-flex">{pendulumControl}</span>
           ) : null}
 
-          <span className="ml-auto hidden font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet md:inline">
-            {copy.hero.annotation}
+          <span className="ml-auto hidden items-center gap-6 md:inline-flex">
+            <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-soft">
+              <span
+                aria-hidden
+                className="status-beacon motion-decorative inline-block size-1.5 rounded-full bg-accent"
+              />
+              {copy.meta.availability}
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
+              {copy.hero.annotation}
+            </span>
+          </span>
+        </motion.div>
+
+        {/* Scroll affordance — the journey starts below */}
+        <motion.div
+          className="mt-10 hidden flex-col items-center gap-3 md:flex"
+          initial={prefersReduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.7, ease: [0.16, 1, 0.3, 1] }}
+          aria-hidden
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.26em] text-ink-quiet">
+            {copy.hero.scrollHint}
+          </span>
+          <span className="h-10 w-px overflow-hidden bg-line">
+            <span className="scroll-hint-line motion-decorative block h-full w-full bg-accent" />
           </span>
         </motion.div>
       </div>

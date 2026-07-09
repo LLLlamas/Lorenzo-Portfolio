@@ -8,21 +8,31 @@ import { copy } from '@/content/copy';
 
 export function ContactCTA() {
   return (
-    <section id="contact-cta" className="relative px-6 py-28 md:py-40">
-      {/* Accent radial — a single warm pool of light in the void */}
+    <section id="contact-cta" className="relative overflow-hidden px-6 py-28 md:py-40">
+      {/* Arrival glow — a breathing light source rising past the horizon,
+          the destination the whole scroll journey has been descending toward */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className="sun-breathe motion-decorative pointer-events-none absolute inset-x-0 bottom-0 h-[70%]"
         style={{
           background:
-            'radial-gradient(48rem 30rem at 50% 45%, var(--accent-soft) 0%, transparent 72%)',
+            'radial-gradient(64rem 28rem at 50% 108%, color-mix(in srgb, var(--accent) 42%, transparent) 0%, color-mix(in srgb, var(--accent) 15%, transparent) 45%, transparent 76%)',
+        }}
+      />
+      {/* Horizon hairline the glow bleeds over */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 45%, transparent) 50%, transparent)',
         }}
       />
 
       <Reveal as="div" className="relative z-10 mx-auto max-w-4xl text-center">
         <p>
           <ScrambleText
-            text={copy.contactCta.eyebrow}
+            text={`06 // ${copy.contactCta.eyebrow}`}
             className="link-bracket text-[11px]"
             duration={700}
           />

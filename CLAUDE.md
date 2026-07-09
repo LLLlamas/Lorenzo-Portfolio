@@ -48,7 +48,7 @@ src/
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
 │   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
-│   │                          VoidBackground, ScrambleText, MosaicReveal
+│   │                          VoidBackground, JourneyRail, ScrambleText, MosaicReveal
 │   │                          (CustomCursor = legacy, unmounted)
 │   ├── nav/                 ← Header (mono wordmark + bracket links), Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
@@ -98,7 +98,15 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 
 ## Design conventions (current — "editorial void" system)
 
-The site backdrop is `VoidBackground` (near-black ground + faint dot grid + two slow-drifting accent orbs). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial: giant uppercase display type, mono bracketed labels, hairline dividers, numbered indexes.
+The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canvas **parallax starfield** with three depth bands + two slow-drifting accent orbs + rare CSS shooting-star streaks). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial with a scroll-as-voyage layer: giant uppercase display type, mono bracketed labels, hairline dividers, numbered waypoint indexes, HUD instrument chrome.
+
+### Voyage layer (scroll-as-journey)
+- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge telemetry — vertical hairline + ticks, accent diamond marker driven by **raw scroll fraction only** (deliberately NOT section-tracked, to stay clear of the banned active-section indicator), mono `ALT nnn // EN ROUTE` readout. Hidden `< lg` and under reduced motion.
+- **Waypoint numbering**: nav links render `0N/ Label`; section eyebrows render `[ 0N // Label ]` via `SectionHeader`'s `index` prop (About=01 … ContactCTA=06; About and ContactCTA format theirs inline).
+- **Status beacon**: pulsing accent dot + `copy.meta.availability` in the hero annotation row (`.status-beacon`).
+- **Scroll hint**: `copy.hero.scrollHint` + animated dropping line (`.scroll-hint-line`) at the hero's base; hero is sized so it lands above the fold at 1440×900.
+- **HUD corner ticks**: `.hud-corners` + four `.hud-tick--*` spans on Work card covers — faint ink at rest, accent on card hover.
+- **Arrival glow**: `ContactCTA` ends the journey — bottom-anchored breathing accent radial (`.sun-breathe`) over a horizon hairline.
 
 ### Editorial idioms
 - **Bracket links** (`.link-bracket` in `globals.css`): mono uppercase label with `[` `]` pseudo-element brackets that split apart + turn accent on hover. Used for nav links, hero CTAs, section eyebrows, and Work filter tabs. `.link-bracket--accent` fills the label with accent. Must stay `display: inline-block` — inline-flex collapses inner spaces.
