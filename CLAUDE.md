@@ -25,7 +25,7 @@ Goal: convert serious leads via `/contact`. Tone: confident calm, cinematic, pre
 
 ## Routes
 
-- `/` — HeroCradleSection · About · Work · Capabilities · Packages · FAQ · ContactCTA
+- `/` — HeroCradleSection · About · ProofStrip · WordMarquee · Work · Capabilities · Packages · FAQ · ContactCTA
 - `/contact` — email · calendar · form · mini-FAQ
 - `/_not-found` — 404
 
@@ -42,7 +42,8 @@ src/
 │   └── not-found.tsx
 ├── components/
 │   ├── sections/            ← Hero, HeroCradleSection, NewtonsCradleStrip, MarqueeTechStrip,
-│   │                          About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal
+│   │                          About, ProofStrip, WordMarquee, Work, Capabilities, Packages,
+│   │                          FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
@@ -50,7 +51,8 @@ src/
 │   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
 │   │                          VoidBackground, JourneyRail, ScrambleText, MosaicReveal
 │   │                          (CustomCursor = legacy, unmounted)
-│   ├── nav/                 ← Header (mono wordmark + bracket links), Footer, ThemeToggle
+│   ├── nav/                 ← Header (mono wordmark + bracket links + [ Menu ]), OverlayMenu,
+│   │                          Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH — all copy/data ***
 │   ├── copy.ts              ← hero · about · capabilities · CTA · contact · meta
@@ -91,7 +93,7 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 
 | Metric | Target | Current |
 |---|---|---|
-| First Load JS `/` | ≤ 140 kB | 169 kB ⚠️ |
+| First Load JS `/` | ≤ 140 kB | 174 kB ⚠️ |
 | First Load JS `/contact` | ≤ 140 kB | 103 kB ✓ |
 | LCP (4G mobile) | < 2.0s | unmeasured |
 | Lighthouse Perf mobile | ≥ 95 | unmeasured |
@@ -115,8 +117,16 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - **MosaicReveal** (`motion/MosaicReveal.tsx`): tile-grid dissolve over project covers on scroll-in.
 - Section headlines are uppercase `font-display font-extrabold` (see `SectionHeader`); hero + footer carry giant wordmarks.
 
-### Header
-- Minimal editorial bar: llama logo + mono wordmark left (wordmark hidden `< sm`), bracket links center, `[ Start a project ]` accent bracket + ThemeToggle right. Height stays `h-24` (coupled — see don'ts).
+### Header + OverlayMenu
+- Minimal editorial bar: llama logo + mono wordmark left (wordmark hidden `< sm`), numbered bracket links center (**`lg+` only** — they collide with the wordmark below that), `[ Start a project ]` (md+) + `[ Menu ]` + ThemeToggle right. Height stays `h-24` (coupled — see don'ts).
+- `[ Menu ]` opens **OverlayMenu** (`nav/OverlayMenu.tsx`): full-screen dialog, five-column ground wipe, giant numbered destinations (from `navigation.overlay`) with clip-reveal stagger, status-beacon meta row at the bottom. Locks body scroll + Lenis like `Modal`; ESC closes; focus moves in and restores on close. This is the ONLY nav below `lg`.
+
+### Showcase (Work section)
+- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
+- Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
+- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
+- **WordMarquee** (`sections/WordMarquee.tsx`): outline-text marquee of `copy.marquee` words between ProofStrip and Work (`.marquee-word`, `.marquee-track`).
+- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
 - Mono link columns (`Menu/`, `Contact/`, `Base/`) above a giant full-width `LORENZO.LLAMAS` wordmark, compact legal row underneath.

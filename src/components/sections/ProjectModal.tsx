@@ -10,7 +10,7 @@ import { RippleTap } from '@/components/motion/RippleTap';
 import { Tag } from '@/components/ui/Tag';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { copy } from '@/content/copy';
-import type { GalleryImage, Highlight, Project } from '@/content/projects';
+import { categoryLabels, type GalleryImage, type Highlight, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 
@@ -94,10 +94,12 @@ export function ProjectModal({
 
                 <header className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
                   <div className="min-w-0">
-                    <p className="aura-pop text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
-                      <span className="label-select">{project.year}</span>
+                    <p>
+                      <span className="link-bracket text-[10px]">
+                        {`${categoryLabels[project.category]} — ${project.year}`}
+                      </span>
                     </p>
-                    <h2 className="mt-2 text-pretty font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+                    <h2 className="mt-3 text-pretty font-display text-3xl font-extrabold uppercase leading-[0.95] tracking-tight text-ink md:text-4xl">
                       {project.title}
                     </h2>
                     <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-ink-soft md:text-lg">
@@ -106,17 +108,14 @@ export function ProjectModal({
                   </div>
 
                   {project.link ? (
-                    <RippleTap className="rounded-full">
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-5 text-sm font-medium text-accent-on transition-opacity hover:opacity-90"
-                      >
-                        {modalCopy.visitLive}
-                        <ArrowUpRight className="ml-1.5 size-4" />
-                      </a>
-                    </RippleTap>
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="link-bracket link-bracket--accent mt-2 text-xs"
+                    >
+                      {modalCopy.visitLive}
+                    </a>
                   ) : null}
                 </header>
 
@@ -138,9 +137,9 @@ export function ProjectModal({
                       {project.highlights.map((highlight: Highlight, index) => (
                         <li
                           key={highlight.text}
-                          className="readable-glass-soft flex flex-col rounded-xl border p-4 shadow-[0_14px_40px_-28px_rgba(0,0,0,0.45)]"
+                          className="flex flex-col rounded-lg border border-line bg-bg-elevated p-4"
                         >
-                          <span className="text-[10px] uppercase tracking-[0.16em] text-accent">
+                          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
                             {String(index + 1).padStart(2, '0')}
                           </span>
                           {highlight.metric ? (
@@ -190,18 +189,18 @@ export function ProjectModal({
               </div>
 
               {(onPrev || onNext) && (
-                <div className="flex items-center justify-between border-t border-line px-5 py-4 md:px-8">
+                <div className="flex items-center justify-between border-t border-line px-5 py-5 md:px-8">
                   <button
                     type="button"
                     onClick={onPrev}
                     disabled={!onPrev}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,opacity] duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                    className="link-bracket inline-flex max-w-[38%] cursor-pointer items-center gap-2 text-[11px] disabled:cursor-not-allowed disabled:opacity-30"
                   >
-                    <ChevronLeft className="size-4" />
-                    {prevProject?.title ?? 'Previous'}
+                    <ChevronLeft className="size-3.5 shrink-0" />
+                    <span className="truncate">{prevProject?.title ?? 'Previous'}</span>
                   </button>
                   {projectIndex != null && projectCount != null ? (
-                    <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-quiet tabular-nums">
+                    <span className="font-mono text-[11px] tabular-nums tracking-[0.14em] text-ink-quiet">
                       {String(projectIndex + 1).padStart(2, '0')} /{' '}
                       {String(projectCount).padStart(2, '0')}
                     </span>
@@ -210,10 +209,10 @@ export function ProjectModal({
                     type="button"
                     onClick={onNext}
                     disabled={!onNext}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,opacity] duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:enabled:bg-bg-elevated"
+                    className="link-bracket inline-flex max-w-[38%] cursor-pointer items-center gap-2 text-[11px] disabled:cursor-not-allowed disabled:opacity-30"
                   >
-                    {nextProject?.title ?? 'Next'}
-                    <ChevronRight className="size-4" />
+                    <span className="truncate">{nextProject?.title ?? 'Next'}</span>
+                    <ChevronRight className="size-3.5 shrink-0" />
                   </button>
                 </div>
               )}
@@ -329,7 +328,7 @@ function ProjectFacts({ project }: { project: Project }) {
 
 function FactBlock({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="readable-glass-soft p-4">
+    <div className="bg-bg-elevated p-4">
       <dt>
         <DetailLabel>{label}</DetailLabel>
       </dt>
@@ -349,8 +348,8 @@ function SectionRule({ label }: { label: string }) {
 
 function DetailLabel({ children }: { children: ReactNode }) {
   return (
-    <span className="aura-pop self-start text-xs font-bold uppercase tracking-[0.18em] text-ink-quiet">
-      <span className="label-select">{children}</span>
+    <span className="self-start font-mono text-[11px] uppercase tracking-[0.2em] text-ink-quiet">
+      {children}/
     </span>
   );
 }

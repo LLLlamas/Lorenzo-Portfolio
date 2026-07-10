@@ -3,7 +3,12 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'motion/react';
 import { ScrambleText } from '@/components/motion/ScrambleText';
 import { copy } from '@/content/copy';
 
@@ -20,12 +25,19 @@ type HeroProps = {
 };
 
 /**
- * Editorial hero — the name IS the composition. Giant stacked wordmark
- * clip-reveals line by line out of the void, statement + subhead follow,
- * CTAs are bracketed mono links. FloatingGeometry drifts behind the type.
+ * Editorial hero — the name IS the composition. The stacked wordmark
+ * clip-reveals character by character out of the void; scrolling away
+ * parallaxes it upward and fades it (the page departs the launch pad).
+ * Statement + subhead follow, CTAs are bracketed mono links.
  */
 export function Hero({ pendulumControl }: HeroProps) {
   const prefersReduced = useReducedMotion();
+
+  // Scroll-driven exit — wordmark lags the scroll and dissolves
+  const { scrollY } = useScroll();
+  const wordmarkY = useTransform(scrollY, [0, 700], [0, -110]);
+  const wordmarkOpacity = useTransform(scrollY, [0, 550], [1, 0]);
+  const statementY = useTransform(scrollY, [0, 700], [0, -50]);
 
   return (
     <section
@@ -68,36 +80,57 @@ export function Hero({ pendulumControl }: HeroProps) {
           />
         </motion.p>
 
-        {/* Giant stacked wordmark */}
-        <h1 className="font-display uppercase leading-[0.92] tracking-[-0.035em] text-ink">
-          {copy.hero.wordmark.map((line, i) => (
+        {/* Giant stacked wordmark — per-character clip reveal, parallax exit */}
+        <motion.h1
+          className="font-display uppercase leading-[0.92] tracking-[-0.035em] text-ink"
+          style={prefersReduced ? undefined : { y: wordmarkY, opacity: wordmarkOpacity }}
+        >
+          <span className="sr-only">{copy.hero.wordmark.join(' ')}</span>
+          {copy.hero.wordmark.map((line, lineIndex) => (
             <span
               key={line}
+              aria-hidden
               className="block overflow-hidden pb-[0.06em] text-[clamp(3.8rem,12.3vw,10rem)] font-extrabold"
             >
-              <motion.span
-                className="block will-change-transform"
-                initial={prefersReduced ? false : { y: '110%' }}
-                animate={{ y: 0 }}
-                transition={{
-                  duration: 1.1,
-                  delay: 0.35 + i * 0.14,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-              >
-                {line}
-                {i === copy.hero.wordmark.length - 1 ? (
-                  <span className="align-top text-[0.22em] font-bold text-accent">
-                    ®
-                  </span>
-                ) : null}
-              </motion.span>
+              {line.split('').map((char, charIndex) => (
+                <motion.span
+                  key={charIndex}
+                  className="inline-block will-change-transform"
+                  initial={prefersReduced ? false : { y: '112%', rotate: 6 }}
+                  animate={{ y: 0, rotate: 0 }}
+                  transition={{
+                    duration: 0.95,
+                    delay: 0.3 + lineIndex * 0.22 + charIndex * 0.035,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              {lineIndex === copy.hero.wordmark.length - 1 ? (
+                <motion.span
+                  className="inline-block align-top text-[0.22em] font-bold text-accent"
+                  initial={prefersReduced ? false : { opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: 0.3 + lineIndex * 0.22 + line.length * 0.035 + 0.25,
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 18,
+                  }}
+                >
+                  ®
+                </motion.span>
+              ) : null}
             </span>
           ))}
-        </h1>
+        </motion.h1>
 
         {/* Statement + subhead */}
-        <div className="mt-10 grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-16">
+        <motion.div
+          className="mt-10 grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-16"
+          style={prefersReduced ? undefined : { y: statementY }}
+        >
           <motion.p
             className="max-w-xl text-pretty font-display text-2xl font-semibold leading-snug tracking-tight text-ink md:text-3xl"
             initial={prefersReduced ? false : { opacity: 0, y: 14, filter: 'blur(8px)' }}
@@ -115,7 +148,7 @@ export function Hero({ pendulumControl }: HeroProps) {
           >
             {copy.hero.subhead}
           </motion.p>
-        </div>
+        </motion.div>
 
         {/* CTAs + pendulum + annotation */}
         <motion.div

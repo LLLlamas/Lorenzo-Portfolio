@@ -549,15 +549,19 @@ section[id] {
 /* ─── Editorial bracket links ───
    The navbar / CTA idiom: mono uppercase label wrapped in literal brackets.
    Brackets are pseudo-elements so they can breathe apart on hover without
-   the label shifting. `.link-bracket--accent` fills with accent on hover. */
-.link-bracket {
-  position: relative;
-  display: inline-block;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-soft);
-  transition: color var(--duration-base) var(--ease-out-expo);
+   the label shifting. `.link-bracket--accent` fills with accent on hover.
+   Lives in @layer components so Tailwind utilities (`hidden`, etc.) can
+   still override the display — unlayered rules would beat every utility. */
+@layer components {
+  .link-bracket {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-soft);
+    transition: color var(--duration-base) var(--ease-out-expo);
+  }
 }
 .link-bracket::before,
 .link-bracket::after {
@@ -577,6 +581,10 @@ section[id] {
 .link-bracket:hover,
 .link-bracket:focus-visible {
   color: var(--ink);
+}
+.link-bracket:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
 }
 .link-bracket:hover::before,
 .link-bracket:focus-visible::before {
@@ -701,7 +709,9 @@ section[id] {
   display: inline-block;
 }
 .ghost-title::before {
-  content: attr(data-text);
+  /* `/ ""` = empty alternative text — keeps the ghost duplicate out of the
+     accessibility tree so links/buttons don't announce their label twice */
+  content: attr(data-text) / "";
   position: absolute;
   inset: 0;
   color: var(--accent);
@@ -861,6 +871,33 @@ body::after {
 .marquee-track {
   animation: marquee 32s linear infinite;
   will-change: transform;
+}
+
+/* Outline word for the giant marquee — hollow letters, hairline stroke */
+.marquee-word {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 45%, transparent);
+  transition: color 400ms var(--ease-out-expo);
+}
+.marquee-word:hover {
+  color: var(--accent);
+  -webkit-text-stroke-color: var(--accent);
+}
+
+/* Giant watermark waypoint number behind section headers */
+.section-watermark {
+  position: absolute;
+  right: 0;
+  top: -0.35em;
+  z-index: -1;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(7rem, 17vw, 13rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 12%, transparent);
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Pendulum-triggered tech strip */

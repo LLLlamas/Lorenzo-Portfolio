@@ -14,6 +14,8 @@ type Props = {
   as?: 'h1' | 'h2' | 'h3' | 'p';
   /** Optional extra content to render after the split text. */
   trailing?: ReactNode;
+  /** Fire when scrolled into view (once) instead of on mount. */
+  inView?: boolean;
 };
 
 const containerVariants = (step: number, delay: number): Variants => ({
@@ -53,6 +55,7 @@ export function SplitTextReveal({
   step = 0.06,
   as = 'h1',
   trailing,
+  inView = false,
 }: Props) {
   const prefersReduced = useReducedMotion();
   const Tag = as;
@@ -74,7 +77,9 @@ export function SplitTextReveal({
       <motion.span
         aria-hidden="true"
         initial="hidden"
-        animate="visible"
+        {...(inView
+          ? { whileInView: 'visible', viewport: { once: true, margin: '0px 0px -10% 0px' } }
+          : { animate: 'visible' })}
         variants={containerVariants(step, delay)}
         className="inline"
       >

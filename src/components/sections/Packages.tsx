@@ -26,7 +26,7 @@ export function Packages() {
           {packages.map((pkg) => (
             <div key={pkg.name} className="relative pt-3">
               {pkg.popular ? (
-                <span className="soft-pulse motion-decorative absolute left-7 top-0 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-accent-on">
+                <span className="soft-pulse motion-decorative absolute left-7 top-0 z-10 bg-accent px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-accent-on">
                   Most projects land here
                 </span>
               ) : null}

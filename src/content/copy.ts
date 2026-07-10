@@ -9,6 +9,12 @@ export const copy = {
     availability: 'Open for projects',
   },
 
+  /** UI chrome labels shared by Header + OverlayMenu. */
+  nav: {
+    menu: 'Menu',
+    close: 'Close',
+  },
+
   hero: {
     eyebrow: 'Solo developer — Portfolio',
     /** Giant stacked wordmark — one array entry per line. */
@@ -38,6 +44,8 @@ export const copy = {
     eyebrow: 'Work',
     headline: 'Tasks Brought To Life.',
     subhead: 'Specializes in web and mobile iOS development.',
+    archiveLabel: 'Archive / More builds',
+    openCase: 'Open case',
   },
 
   projectModal: {
@@ -56,6 +64,44 @@ export const copy = {
     body: 'Landing page, web tool, or focused web app — Spark or Studio.',
     cta: { label: 'Start a project', href: '/contact' },
   },
+
+  /**
+   * Proof strip — hard numbers pulled from real commitments elsewhere on the
+   * site (packages timelines, contact reply window, solo practice). Keep these
+   * consistent with packages.ts and the contact copy if either changes.
+   */
+  proof: {
+    eyebrow: 'Field notes',
+    items: [
+      {
+        target: 12,
+        prefix: '5–',
+        unit: 'days',
+        label: 'A Spark site — brief to live on your domain.',
+      },
+      {
+        target: 3,
+        prefix: '2–',
+        unit: 'weeks',
+        label: 'A Studio build — design, backend, and deploy.',
+      },
+      {
+        target: 1,
+        prefix: '0',
+        unit: 'working day',
+        label: 'Max reply time on any message, project or not.',
+      },
+      {
+        target: 1,
+        prefix: '0',
+        unit: 'developer',
+        label: 'Design through deploy in one seat. Zero handoffs.',
+      },
+    ],
+  },
+
+  /** Word marquee divider — the working values, oversized. */
+  marquee: ['Design', 'Build', 'Ship', 'Fast', 'Detailed', 'Solo'],
 
   capabilities: {
     eyebrow: 'Capabilities',
