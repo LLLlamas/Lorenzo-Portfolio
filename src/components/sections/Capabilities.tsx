@@ -63,9 +63,6 @@ export function Capabilities() {
                   </div>
 
                   <span className="flex items-center gap-3 self-center">
-                    <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet md:inline">
-                      {item.kicker}
-                    </span>
                     <span
                       className={cn(
                         'grid size-9 place-items-center rounded-full border border-line text-ink-quiet transition-[transform,border-color,color] duration-300',

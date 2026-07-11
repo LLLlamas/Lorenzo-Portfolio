@@ -173,6 +173,10 @@ export const projects: Project[] = [
     title: 'Tranquil',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['React', 'TypeScript'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot via
+    // `npm run resize-screenshots`, then delete the placeholder file.
+    cover: '/projects/placeholder-tranquil.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',
@@ -182,6 +186,9 @@ export const projects: Project[] = [
     title: 'Condensed Reviews',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['Next.js', 'TypeScript'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot.
+    cover: '/projects/placeholder-condensed-reviews.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',
@@ -191,6 +198,9 @@ export const projects: Project[] = [
     title: 'Flight Searcher',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['Next.js', 'TypeScript', 'API'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot.
+    cover: '/projects/placeholder-flight-searcher.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',

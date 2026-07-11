@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-gotham), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-gotham), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -882,6 +882,18 @@ body::after {
 .marquee-word:hover {
   color: var(--accent);
   -webkit-text-stroke-color: var(--accent);
+}
+
+/* Giant hollow row index behind each case row's meta column */
+.case-index-ghost {
+  z-index: -1;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(6rem, 13vw, 11rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 14%, transparent);
+  will-change: transform;
 }
 
 /* Giant watermark waypoint number behind section headers */

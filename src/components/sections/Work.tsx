@@ -137,12 +137,20 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
   const prefersReduced = useReducedMotion();
   const rowRef = useRef<HTMLElement | null>(null);
 
-  // Cover parallax — the shot drifts inside its frame as the row crosses the viewport
+  // Cover parallax — the shot drifts inside its frame while the whole plate
+  // tilts a hair and settles to scale 1 as the row crosses the viewport
   const { scrollYProgress } = useScroll({
     target: rowRef,
     offset: ['start end', 'end start'],
   });
-  const coverY = useTransform(scrollYProgress, [0, 1], ['-4.5%', '4.5%']);
+  const coverY = useTransform(scrollYProgress, [0, 1], ['-7%', '7%']);
+  const plateRotate = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    flip ? ['1.6deg', '0deg', '-1.6deg'] : ['-1.6deg', '0deg', '1.6deg'],
+  );
+  const plateScale = useTransform(scrollYProgress, [0, 0.35], [0.96, 1]);
+  const indexY = useTransform(scrollYProgress, [0, 1], ['12%', '-12%']);
 
   const indexLabel = String(index + 1).padStart(2, '0');
   const isPhone = project.category === 'mobile' && project.coverFit === 'contain';
@@ -170,6 +178,10 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
           )}
           data-cursor-hover
         >
+          <motion.div
+            style={prefersReduced ? undefined : { rotate: plateRotate, scale: plateScale }}
+            className="will-change-transform"
+          >
           <MosaicReveal
             className={cn(
               'hud-corners project-media-well relative aspect-[16/10] overflow-hidden rounded-lg border border-line bg-bg-elevated',
@@ -217,10 +229,22 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
               FIG. {indexLabel} — {project.title}
             </span>
           </MosaicReveal>
+          </motion.div>
         </button>
 
         {/* Meta column */}
-        <div className={cn('min-w-0 md:col-span-5', flip && 'md:order-1')}>
+        <div className={cn('relative min-w-0 md:col-span-5', flip && 'md:order-1')}>
+          {/* Giant counter-parallax row index behind the meta stack */}
+          <motion.span
+            aria-hidden
+            className={cn(
+              'case-index-ghost pointer-events-none absolute -top-8 select-none md:-top-14',
+              flip ? 'left-0 md:-left-6' : 'right-0 md:-right-6',
+            )}
+            style={prefersReduced ? undefined : { y: indexY }}
+          >
+            {indexLabel}
+          </motion.span>
           <motion.div
             initial={prefersReduced ? false : 'hidden'}
             whileInView={prefersReduced ? undefined : 'visible'}
