@@ -677,29 +677,31 @@ section[id] {
   will-change: opacity, transform;
 }
 
-/* ─── HUD corner ticks — technical-drawing corner brackets on covers.
-   Rendered as four spans (.hud-tick) inside a .hud-corners container;
-   faint at rest, accent on card hover. ─── */
-.hud-corners .hud-tick {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
-  border-style: solid;
-  border-width: 0;
-  opacity: 0.7;
+/* ─── Tech chips — stack pills on case rows. They spring in staggered
+   (motion handles entry) and float on hover. Hover uses the `translate`
+   property so it never fights motion's inline transform. ─── */
+.tech-chip {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  background: color-mix(in srgb, var(--bg-elevated) 62%, transparent);
   transition:
-    border-color 300ms var(--ease-out-expo),
-    opacity 300ms var(--ease-out-expo);
-  z-index: 5;
+    translate 300ms var(--ease-out-back),
+    border-color 260ms var(--ease-out-expo),
+    color 260ms var(--ease-out-expo),
+    box-shadow 300ms var(--ease-out-expo);
 }
-.hud-corners .hud-tick--tl { top: 8px; left: 8px; border-top-width: 1px; border-left-width: 1px; }
-.hud-corners .hud-tick--tr { top: 8px; right: 8px; border-top-width: 1px; border-right-width: 1px; }
-.hud-corners .hud-tick--bl { bottom: 8px; left: 8px; border-bottom-width: 1px; border-left-width: 1px; }
-.hud-corners .hud-tick--br { bottom: 8px; right: 8px; border-bottom-width: 1px; border-right-width: 1px; }
-.group:hover .hud-corners .hud-tick {
-  border-color: var(--accent);
-  opacity: 1;
+.tech-chip:hover {
+  translate: 0 -4px;
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  color: var(--accent);
+  box-shadow: 0 10px 26px -14px var(--accent);
 }
 
 /* ─── Capability row ghost hover — offset duplicate of the title, like a
