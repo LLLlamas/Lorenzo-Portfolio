@@ -49,8 +49,8 @@ src/
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
 │   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
-│   │                          VoidBackground, JourneyRail, ScrambleText, MosaicReveal
-│   │                          (CustomCursor = legacy, unmounted)
+│   │                          VoidBackground, JourneyRail, ScrambleText, TiltCard,
+│   │                          HoverRevealCover, ParallaxDrift (CustomCursor = legacy, unmounted)
 │   ├── nav/                 ← Header (mono wordmark + bracket links + [ Menu ]), OverlayMenu,
 │   │                          Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
@@ -107,14 +107,14 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - **Waypoint numbering**: nav links render `0N/ Label`; section eyebrows render `[ 0N // Label ]` via `SectionHeader`'s `index` prop (About=01 … ContactCTA=06; About and ContactCTA format theirs inline).
 - **Status beacon**: pulsing accent dot + `copy.meta.availability` in the hero annotation row (`.status-beacon`).
 - **Scroll hint**: `copy.hero.scrollHint` + animated dropping line (`.scroll-hint-line`) at the hero's base; hero is sized so it lands above the fold at 1440×900.
-- **HUD corner ticks**: `.hud-corners` + four `.hud-tick--*` spans on Work card covers — faint ink at rest, accent on card hover.
 - **Arrival glow**: `ContactCTA` ends the journey — bottom-anchored breathing accent radial (`.sun-breathe`) over a horizon hairline.
 
 ### Editorial idioms
 - **Bracket links** (`.link-bracket` in `globals.css`): mono uppercase label with `[` `]` pseudo-element brackets that split apart + turn accent on hover. Used for nav links, hero CTAs, section eyebrows, and Work filter tabs. `.link-bracket--accent` fills the label with accent. Must stay `display: inline-block` — inline-flex collapses inner spaces.
 - **ScrambleText** (`motion/ScrambleText.tsx`): glyph-scramble reveal on in-view; `rescrambleOnHover` for nav links.
 - **Mono indexes**: `01/` numbering on Work cards and Capability rows, mono `text-accent`.
-- **MosaicReveal** (`motion/MosaicReveal.tsx`): tile-grid dissolve over project covers on scroll-in.
+- **TiltCard** (`motion/TiltCard.tsx`): sprung pointer-tracked 3D tilt plate that also feeds `--shine-x`/`--shine-y` so `.card-shine` children paint a cursor-following light. Mouse-only; inert on touch + reduced motion. Used on Work covers and archive tiles.
+- **ParallaxDrift** (`motion/ParallaxDrift.tsx`): scroll-linked vertical drift wrapper for decorative depth layers — drives the `SectionHeader` watermark numbers.
 - Section headlines are uppercase `font-display font-extrabold` (see `SectionHeader`); hero + footer carry giant wordmarks.
 
 ### Header + OverlayMenu
@@ -122,12 +122,12 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - `[ Menu ]` opens **OverlayMenu** (`nav/OverlayMenu.tsx`): full-screen dialog, five-column ground wipe, giant numbered destinations (from `navigation.overlay`) with clip-reveal stagger, status-beacon meta row at the bottom. Locks body scroll + Lenis like `Modal`; ESC closes; focus moves in and restores on close. This is the ONLY nav below `lg`.
 
 ### Showcase (Work section)
-- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
-- Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
-- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
+- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[12%]` wrapper + ±9% translate), cinematic clip-path reveal + settle-scale on covers, `TiltCard` pointer tilt + `card-shine` glare on the plate, mono index + category line, ghost-title hover, proof line = the project's first highlight, staggered `.tech-chip` stack pills, `[ Open case ]` opens ProjectModal. Covers use **HoverRevealCover** (`motion/HoverRevealCover.tsx`): cursor-origin zoom (mousemove feeds `--zx`/`--zy` into transform-origin) and, when a non-phone gallery shot exists, a clip-path wipe to it behind an accent seam. Mouse-only; static under touch/reduced motion. **The retro chrome (MosaicReveal tile dissolve, HUD corner ticks, FIG. captions, scramble on Open case) was removed by owner request 2026-07 — don't reintroduce it here.**
+- Non-featured projects render in the compact **archive grid** below (aspect-video covers with their own scroll parallax, `TiltCard` + `card-shine` hover, HoverRevealCover zoom/wipe, scattered rotate-in entrance, mono meta), the **lead tile double-width** (`wide` prop → `lg:col-span-2`), capped by the availability CTA tile.
+- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About; hovering floods a tile with accent and inverts it. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
 - **WordMarquee** (`sections/WordMarquee.tsx`): velocity-reactive outline-text marquee of `copy.marquee` words between ProofStrip and Work — drifts continuously, multiplies speed/direction with scroll velocity and skews under load (`useVelocity` + `useAnimationFrame`); static strip under reduced motion.
-- **Case-row depth** (`sections/Work.tsx` CaseRow): covers parallax ±7% inside a plate that tilts ±1.6° and settles to scale 1 across the viewport; a giant hollow row index (`.case-index-ghost`) counter-parallaxes behind the meta column.
-- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
+- **Case-row depth** (`sections/Work.tsx` CaseRow): covers parallax ±9% inside a plate that scroll-tilts ±1.8°, settles to scale 1 across the viewport, and leans toward the cursor via `TiltCard`; a giant hollow row index (`.case-index-ghost`) counter-parallaxes ±20% behind the meta column.
+- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header, drifting on its own scroll plane via `ParallaxDrift`; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
 - Mono link columns (`Menu/`, `Contact/`, `Base/`) above a giant full-width `LORENZO.LLAMAS` wordmark, compact legal row underneath.

@@ -39,6 +39,7 @@ export function ProjectModal({
   projectIndex,
   projectCount,
 }: Props) {
+  const prefersReduced = usePrefersReducedMotion();
   const [expandedImage, setExpandedImage] = useState<GalleryImage | null>(null);
 
   useEffect(() => {
@@ -135,9 +136,18 @@ export function ProjectModal({
                     <SectionRule label={modalCopy.highlights} />
                     <ol className="mt-4 grid gap-3 md:grid-cols-3">
                       {project.highlights.map((highlight: Highlight, index) => (
-                        <li
+                        <motion.li
                           key={highlight.text}
-                          className="flex flex-col rounded-lg border border-line bg-bg-elevated p-4"
+                          className="flex flex-col rounded-lg border border-line bg-bg-elevated p-4 transition-[border-color,box-shadow] duration-300 hover:border-accent/40 hover:shadow-[0_16px_40px_-24px_var(--accent)]"
+                          initial={prefersReduced ? false : { opacity: 0, y: 22, scale: 0.96 }}
+                          whileInView={prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{
+                            delay: index * 0.09,
+                            type: 'spring',
+                            stiffness: 260,
+                            damping: 24,
+                          }}
                         >
                           <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
                             {String(index + 1).padStart(2, '0')}
@@ -155,7 +165,7 @@ export function ProjectModal({
                           >
                             {highlight.text}
                           </p>
-                        </li>
+                        </motion.li>
                       ))}
                     </ol>
                   </section>
@@ -296,6 +306,7 @@ function PhoneHero({ project }: { project: Project }) {
 }
 
 function ProjectFacts({ project }: { project: Project }) {
+  const prefersReduced = usePrefersReducedMotion();
   return (
     <dl
       className={cn(
@@ -307,8 +318,22 @@ function ProjectFacts({ project }: { project: Project }) {
     >
       <FactBlock label={modalCopy.stack}>
         <div className="flex flex-wrap gap-1.5">
-          {project.stack.map((stackItem) => (
-            <Tag key={stackItem}>{stackItem}</Tag>
+          {project.stack.map((stackItem, i) => (
+            <motion.span
+              key={stackItem}
+              className="inline-block"
+              initial={prefersReduced ? false : { opacity: 0, y: 12, scale: 0.85 }}
+              whileInView={prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                delay: 0.1 + i * 0.06,
+                type: 'spring',
+                stiffness: 320,
+                damping: 22,
+              }}
+            >
+              <Tag>{stackItem}</Tag>
+            </motion.span>
           ))}
         </div>
       </FactBlock>

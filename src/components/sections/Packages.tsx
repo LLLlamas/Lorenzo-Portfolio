@@ -32,8 +32,9 @@ export function Packages() {
               ) : null}
             <RippleTap className="rounded-[var(--radius-card)]">
             <Card
+              shine
               className={cn(
-                'group relative p-7 transition-[border-color,box-shadow] duration-300 md:p-8',
+                'group relative p-7 transition-[border-color,box-shadow,transform] duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1.5 md:p-8',
                 pkg.popular &&
                   'border-accent/40 shadow-[0_0_0_1px_var(--accent-soft)] ring-1 ring-accent/20',
               )}

@@ -14,8 +14,8 @@ import {
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { RippleTap } from '@/components/motion/RippleTap';
-import { MosaicReveal } from '@/components/motion/MosaicReveal';
-import { ScrambleText } from '@/components/motion/ScrambleText';
+import { TiltCard } from '@/components/motion/TiltCard';
+import { HoverRevealCover } from '@/components/motion/HoverRevealCover';
 import { copy } from '@/content/copy';
 import { categoryLabels, projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
@@ -28,11 +28,20 @@ const ProjectModal = dynamic(
   { ssr: false },
 );
 
+/** First browser-frame gallery shot — the hover wipe's alternate slide. */
+function alternateShot(project: Project) {
+  const shot = project.gallery?.find((g) => g.device !== 'phone');
+  return shot ? { src: shot.src, alt: '' } : null;
+}
+
 /**
  * The showcase. Featured projects run as full-width editorial case rows —
- * parallax covers, mosaic reveals, mono telemetry, a proof line pulled from
- * each project's first highlight. Everything else lands in a compact archive
- * grid below, capped by the availability CTA tile.
+ * covers open with a cinematic clip reveal, drift on scroll parallax, and
+ * lean toward the cursor on a sprung 3D tilt with a moving light glare.
+ * Hovering a cover zooms from the cursor and, when a second browser shot
+ * exists, wipes to it behind an accent seam. Everything else lands in the
+ * archive grid below (lead tile double-width), capped by the availability
+ * CTA tile.
  */
 export function Work() {
   const [openProject, setOpenProject] = useState<Project | null>(null);
@@ -99,6 +108,7 @@ export function Work() {
                   key={project.slug}
                   project={project}
                   index={featured.length + i}
+                  wide={i === 0}
                   isSelected={openProject?.slug === project.slug}
                   onSelect={handleSelectProject}
                 />
@@ -137,20 +147,21 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
   const prefersReduced = useReducedMotion();
   const rowRef = useRef<HTMLElement | null>(null);
 
-  // Cover parallax — the shot drifts inside its frame while the whole plate
-  // tilts a hair and settles to scale 1 as the row crosses the viewport
+  // Depth planes — the shot drifts inside its frame while the whole plate
+  // tilts a hair and settles to scale 1 as the row crosses the viewport;
+  // the giant ghost index counter-drifts behind the meta column.
   const { scrollYProgress } = useScroll({
     target: rowRef,
     offset: ['start end', 'end start'],
   });
-  const coverY = useTransform(scrollYProgress, [0, 1], ['-7%', '7%']);
+  const coverY = useTransform(scrollYProgress, [0, 1], ['-9%', '9%']);
   const plateRotate = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    flip ? ['1.6deg', '0deg', '-1.6deg'] : ['-1.6deg', '0deg', '1.6deg'],
+    flip ? ['1.8deg', '0deg', '-1.8deg'] : ['-1.8deg', '0deg', '1.8deg'],
   );
-  const plateScale = useTransform(scrollYProgress, [0, 0.35], [0.96, 1]);
-  const indexY = useTransform(scrollYProgress, [0, 1], ['12%', '-12%']);
+  const plateScale = useTransform(scrollYProgress, [0, 0.35], [0.94, 1]);
+  const indexY = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
 
   const indexLabel = String(index + 1).padStart(2, '0');
   const isPhone = project.category === 'mobile' && project.coverFit === 'contain';
@@ -182,53 +193,58 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
             style={prefersReduced ? undefined : { rotate: plateRotate, scale: plateScale }}
             className="will-change-transform"
           >
-          <MosaicReveal
-            className={cn(
-              'hud-corners project-media-well relative aspect-[16/10] overflow-hidden rounded-lg border border-line bg-bg-elevated',
-              'transition-[border-color,box-shadow] duration-300',
-              'group-hover:border-ink-quiet/50',
-              isSelected && 'border-accent/60 shadow-[0_0_28px_-10px_var(--accent)]',
-            )}
-          >
-            <span aria-hidden className="hud-tick hud-tick--tl" />
-            <span aria-hidden className="hud-tick hud-tick--tr" />
-            <span aria-hidden className="hud-tick hud-tick--bl" />
-            <span aria-hidden className="hud-tick hud-tick--br" />
-
-            {project.cover ? (
-              isPhone ? (
-                <PhoneCasePreview project={project} />
-              ) : (
-                <motion.div
-                  className="absolute -inset-y-[8%] inset-x-0 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
-                  style={prefersReduced ? undefined : { y: coverY }}
-                >
-                  <Image
-                    src={withBasePath(project.cover)}
-                    alt={`${project.title} screenshot`}
-                    fill
-                    sizes="(min-width: 768px) 60vw, 100vw"
-                    className={cn(
-                      fit === 'cover' && 'object-cover object-top',
-                      fit === 'contain' && 'object-contain p-4 md:p-8',
-                    )}
-                    priority={index === 0}
-                  />
-                </motion.div>
-              )
-            ) : (
-              <div className="absolute inset-0 grid place-items-center">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
-                  [ Screenshot pending ]
-                </span>
-              </div>
-            )}
-
-            {/* Mono cover caption */}
-            <span className="pointer-events-none absolute bottom-3 left-4 z-[6] font-mono text-[9px] uppercase tracking-[0.22em] text-ink-quiet opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              FIG. {indexLabel} — {project.title}
-            </span>
-          </MosaicReveal>
+            <TiltCard maxTilt={4.5}>
+              <motion.div
+                className={cn(
+                  'card-shine project-media-well relative aspect-[16/10] overflow-hidden rounded-lg border border-line bg-bg-elevated',
+                  'transition-[border-color,box-shadow] duration-300',
+                  'group-hover:border-ink-quiet/50 group-hover:shadow-[0_36px_90px_-38px_rgba(0,0,0,0.85)]',
+                  isSelected && 'border-accent/60 shadow-[0_0_28px_-10px_var(--accent)]',
+                )}
+                initial={
+                  prefersReduced
+                    ? false
+                    : { clipPath: 'inset(16% 9% 16% 9% round 0.5rem)', opacity: 0.4 }
+                }
+                whileInView={
+                  prefersReduced
+                    ? undefined
+                    : { clipPath: 'inset(0% 0% 0% 0% round 0.5rem)', opacity: 1 }
+                }
+                viewport={{ once: true, margin: '0px 0px -14% 0px' }}
+                transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {project.cover ? (
+                  isPhone ? (
+                    <PhoneCasePreview project={project} />
+                  ) : (
+                    <motion.div
+                      className="absolute -inset-y-[12%] inset-x-0"
+                      style={prefersReduced ? undefined : { y: coverY }}
+                      initial={prefersReduced ? false : { scale: 1.16 }}
+                      whileInView={prefersReduced ? undefined : { scale: 1 }}
+                      viewport={{ once: true, margin: '0px 0px -14% 0px' }}
+                      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <HoverRevealCover
+                        primary={{ src: project.cover, alt: `${project.title} screenshot` }}
+                        alternate={alternateShot(project)}
+                        fit={fit}
+                        sizes="(min-width: 768px) 60vw, 100vw"
+                        priority={index === 0}
+                        containClassName="p-4 md:p-8"
+                      />
+                    </motion.div>
+                  )
+                ) : (
+                  <div className="absolute inset-0 grid place-items-center">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
+                      [ Screenshot pending ]
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            </TiltCard>
           </motion.div>
         </button>
 
@@ -294,9 +310,25 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
             ) : null}
 
             <CaseLine>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-quiet">
-                {project.stack.join(' / ')}
-              </p>
+              <ul className="mt-6 flex max-w-md flex-wrap gap-2" aria-label="Stack">
+                {project.stack.map((item, i) => (
+                  <motion.li
+                    key={item}
+                    className="tech-chip"
+                    initial={prefersReduced ? false : { opacity: 0, y: 16, scale: 0.85 }}
+                    whileInView={prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, margin: '0px 0px -8% 0px' }}
+                    transition={{
+                      delay: 0.4 + i * 0.08,
+                      type: 'spring',
+                      stiffness: 320,
+                      damping: 22,
+                    }}
+                  >
+                    {item}
+                  </motion.li>
+                ))}
+              </ul>
             </CaseLine>
 
             <CaseLine>
@@ -307,7 +339,7 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
                   className="link-bracket link-bracket--accent cursor-pointer text-xs"
                   data-cursor-hover
                 >
-                  <ScrambleText text={copy.work.openCase} rescrambleOnHover duration={420} />
+                  {copy.work.openCase}
                 </button>
                 {project.link ? (
                   <a
@@ -380,81 +412,113 @@ function PhoneCasePreview({ project }: { project: Project }) {
 type ArchiveCardProps = {
   project: Project;
   index: number;
+  /** Lead tile spans two columns on lg — the archive gets a hero. */
+  wide?: boolean;
   isSelected: boolean;
   onSelect: (project: Project) => void;
 };
 
-function ArchiveCard({ project, index, isSelected, onSelect }: ArchiveCardProps) {
+function ArchiveCard({ project, index, wide = false, isSelected, onSelect }: ArchiveCardProps) {
   const prefersReduced = useReducedMotion();
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const hasCover = Boolean(project.cover);
   const fit = project.coverFit ?? 'cover';
+  // Placeholder SVG covers carry their own composed text — parallax overscan
+  // would crop it, so they sit flush until a real screenshot lands.
+  const isPlaceholder = project.cover?.endsWith('.svg') ?? false;
+  const parallaxEnabled = !prefersReduced && !isPlaceholder;
+
+  // Each tile is its own depth plane — the cover drifts inside the frame as
+  // the grid crosses the viewport.
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ['start end', 'end start'],
+  });
+  const coverY = useTransform(scrollYProgress, [0, 1], ['-7%', '7%']);
 
   return (
     <motion.div
-      initial={prefersReduced ? false : { opacity: 0, y: 16 }}
-      whileInView={prefersReduced ? undefined : { opacity: 1, y: 0 }}
+      ref={cardRef}
+      className={cn(wide && 'lg:col-span-2')}
+      initial={
+        prefersReduced
+          ? false
+          : { opacity: 0, y: 44, scale: 0.94, rotate: index % 2 ? 1.8 : -1.8 }
+      }
+      whileInView={
+        prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1, rotate: 0 }
+      }
       viewport={{ once: true, margin: '0px 0px -8% 0px' }}
-      transition={{ duration: 0.7, delay: (index % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.9, delay: (index % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
     >
       <RippleTap className="rounded-lg">
-        <article
-          className={cn(
-            'project-card group relative overflow-hidden rounded-lg border border-line bg-bg-elevated',
-            'transition-[transform,border-color,box-shadow] duration-300 ease-[var(--ease-out-expo)] will-change-transform',
-            'hover:-translate-y-1.5 hover:border-ink-quiet/50',
-            isSelected && 'border-accent/60 shadow-[0_0_24px_-8px_var(--accent)]',
-          )}
-        >
-          <button
-            type="button"
-            onClick={() => onSelect(project)}
-            aria-label={`Open details for ${project.title}`}
-            className="block w-full cursor-pointer text-left"
+        <TiltCard maxTilt={6} hoverScale={1.02}>
+          <article
+            className={cn(
+              'card-shine project-card group relative overflow-hidden rounded-lg border border-line bg-bg-elevated',
+              'transition-[border-color,box-shadow] duration-300 ease-[var(--ease-out-expo)]',
+              'hover:border-ink-quiet/50 hover:shadow-[0_28px_70px_-32px_rgba(0,0,0,0.85)]',
+              isSelected && 'border-accent/60 shadow-[0_0_24px_-8px_var(--accent)]',
+            )}
           >
-            <div className="project-media-well relative aspect-video overflow-hidden">
-              {hasCover ? (
-                <div className="absolute inset-0 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.05]">
-                  <Image
-                    src={withBasePath(project.cover!)}
-                    alt={`${project.title} screenshot`}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            <button
+              type="button"
+              onClick={() => onSelect(project)}
+              aria-label={`Open details for ${project.title}`}
+              className="block w-full cursor-pointer text-left"
+            >
+              <div className="project-media-well relative aspect-video overflow-hidden">
+                {hasCover ? (
+                  <motion.div
                     className={cn(
-                      fit === 'cover' && 'object-cover object-top',
-                      fit === 'contain' && 'object-contain p-3',
+                      'absolute inset-x-0',
+                      parallaxEnabled ? '-inset-y-[9%]' : 'inset-y-0',
                     )}
-                  />
-                </div>
-              ) : (
-                <div className="absolute inset-0 grid place-items-center">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
-                    [ Screenshot pending ]
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-start justify-between gap-3 border-t border-line p-4">
-              <div className="flex min-w-0 items-baseline gap-3">
-                <span className="font-mono text-[11px] text-accent">
-                  {String(index + 1).padStart(2, '0')}/
-                </span>
-                <div className="min-w-0">
-                  <h3 className="truncate font-display text-sm font-extrabold uppercase tracking-tight text-ink">
-                    {project.title}
-                  </h3>
-                  <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-[0.16em] text-ink-quiet">
-                    {project.stack.slice(0, 3).join(' / ')} — {project.year}
-                  </p>
-                </div>
+                    style={parallaxEnabled ? { y: coverY } : undefined}
+                  >
+                    <HoverRevealCover
+                      primary={{ src: project.cover!, alt: `${project.title} screenshot` }}
+                      alternate={isPlaceholder ? null : alternateShot(project)}
+                      fit={fit}
+                      sizes={
+                        wide
+                          ? '(min-width: 1024px) 66vw, (min-width: 640px) 50vw, 100vw'
+                          : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+                      }
+                      containClassName="p-3"
+                    />
+                  </motion.div>
+                ) : (
+                  <div className="absolute inset-0 grid place-items-center">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
+                      [ Screenshot pending ]
+                    </span>
+                  </div>
+                )}
               </div>
-              <ArrowUpRight
-                aria-hidden
-                className="mt-0.5 size-3.5 shrink-0 text-ink-quiet transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
-              />
-            </div>
-          </button>
-        </article>
+
+              <div className="flex items-start justify-between gap-3 border-t border-line p-4">
+                <div className="flex min-w-0 items-baseline gap-3">
+                  <span className="font-mono text-[11px] text-accent">
+                    {String(index + 1).padStart(2, '0')}/
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="truncate font-display text-sm font-extrabold uppercase tracking-tight text-ink">
+                      {project.title}
+                    </h3>
+                    <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-[0.16em] text-ink-quiet">
+                      {project.stack.slice(0, 3).join(' / ')} — {project.year}
+                    </p>
+                  </div>
+                </div>
+                <ArrowUpRight
+                  aria-hidden
+                  className="mt-0.5 size-3.5 shrink-0 text-ink-quiet transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+                />
+              </div>
+            </button>
+          </article>
+        </TiltCard>
       </RippleTap>
     </motion.div>
   );

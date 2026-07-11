@@ -44,8 +44,13 @@ export function Capabilities() {
                   type="button"
                   onClick={() => setSelected(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="capability-row group grid w-full cursor-pointer grid-cols-[auto_1fr_auto] items-baseline gap-x-5 py-7 text-left outline-none focus-visible:bg-white/[0.03] md:gap-x-10 md:py-9"
+                  className="capability-row group relative grid w-full cursor-pointer grid-cols-[auto_1fr_auto] items-baseline gap-x-5 py-7 text-left outline-none transition-[padding] duration-500 ease-[var(--ease-out-expo)] focus-visible:bg-white/[0.03] hover:pl-4 md:gap-x-10 md:py-9 md:hover:pl-6"
                 >
+                  {/* Accent bar draws up the row's left edge on hover */}
+                  <span
+                    aria-hidden
+                    className="absolute bottom-0 left-0 top-0 w-[3px] origin-bottom scale-y-0 bg-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-y-100"
+                  />
                   <span className="font-mono text-xs text-accent md:text-sm">
                     0{i + 1}/
                   </span>
