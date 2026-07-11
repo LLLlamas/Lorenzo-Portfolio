@@ -44,17 +44,23 @@ export function ProofStrip() {
               }}
             >
               <p className="sr-only">{`${item.prefix}${item.target} ${item.unit} — ${item.label}`}</p>
-              <div aria-hidden>
-                <p className="font-display text-5xl font-extrabold tracking-tight text-ink md:text-6xl">
-                  <span className="text-accent">{item.prefix}</span>
-                  <CountUp target={item.target} />
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-accent">
-                  {item.unit}
-                </p>
-                <p className="mt-3 max-w-[16rem] text-sm leading-relaxed text-ink-soft">
-                  {item.label}
-                </p>
+              {/* Hover flood — accent rises from the baseline and the tile inverts */}
+              <div aria-hidden className="group relative -my-2 overflow-hidden py-2 pr-4">
+                <span className="absolute inset-0 origin-bottom scale-y-0 bg-accent transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-y-100" />
+                <div className="relative transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-2">
+                  <p className="font-display text-5xl font-extrabold tracking-tight text-ink transition-colors duration-300 group-hover:text-accent-on md:text-6xl">
+                    <span className="text-accent transition-colors duration-300 group-hover:text-accent-on/70">
+                      {item.prefix}
+                    </span>
+                    <CountUp target={item.target} />
+                  </p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-accent transition-colors duration-300 group-hover:text-accent-on/80">
+                    {item.unit}
+                  </p>
+                  <p className="mt-3 max-w-[16rem] text-sm leading-relaxed text-ink-soft transition-colors duration-300 group-hover:text-accent-on/90">
+                    {item.label}
+                  </p>
+                </div>
               </div>
             </motion.div>
           ))}

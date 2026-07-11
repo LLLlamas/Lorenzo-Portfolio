@@ -15,6 +15,7 @@ import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { RippleTap } from '@/components/motion/RippleTap';
 import { TiltCard } from '@/components/motion/TiltCard';
+import { HoverRevealCover } from '@/components/motion/HoverRevealCover';
 import { copy } from '@/content/copy';
 import { categoryLabels, projects, type Project } from '@/content/projects';
 import { cn, withBasePath } from '@/lib/utils';
@@ -27,12 +28,20 @@ const ProjectModal = dynamic(
   { ssr: false },
 );
 
+/** First browser-frame gallery shot — the hover wipe's alternate slide. */
+function alternateShot(project: Project) {
+  const shot = project.gallery?.find((g) => g.device !== 'phone');
+  return shot ? { src: shot.src, alt: '' } : null;
+}
+
 /**
  * The showcase. Featured projects run as full-width editorial case rows —
  * covers open with a cinematic clip reveal, drift on scroll parallax, and
  * lean toward the cursor on a sprung 3D tilt with a moving light glare.
- * Everything else lands in a compact archive grid below, capped by the
- * availability CTA tile.
+ * Hovering a cover zooms from the cursor and, when a second browser shot
+ * exists, wipes to it behind an accent seam. Everything else lands in the
+ * archive grid below (lead tile double-width), capped by the availability
+ * CTA tile.
  */
 export function Work() {
   const [openProject, setOpenProject] = useState<Project | null>(null);
@@ -99,6 +108,7 @@ export function Work() {
                   key={project.slug}
                   project={project}
                   index={featured.length + i}
+                  wide={i === 0}
                   isSelected={openProject?.slug === project.slug}
                   onSelect={handleSelectProject}
                 />
@@ -209,23 +219,20 @@ function CaseRow({ project, index, flip, isSelected, onSelect }: CaseRowProps) {
                     <PhoneCasePreview project={project} />
                   ) : (
                     <motion.div
-                      className="absolute -inset-y-[12%] inset-x-0 transition-[scale] duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
+                      className="absolute -inset-y-[12%] inset-x-0"
                       style={prefersReduced ? undefined : { y: coverY }}
                       initial={prefersReduced ? false : { scale: 1.16 }}
                       whileInView={prefersReduced ? undefined : { scale: 1 }}
                       viewport={{ once: true, margin: '0px 0px -14% 0px' }}
                       transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <Image
-                        src={withBasePath(project.cover)}
-                        alt={`${project.title} screenshot`}
-                        fill
+                      <HoverRevealCover
+                        primary={{ src: project.cover, alt: `${project.title} screenshot` }}
+                        alternate={alternateShot(project)}
+                        fit={fit}
                         sizes="(min-width: 768px) 60vw, 100vw"
-                        className={cn(
-                          fit === 'cover' && 'object-cover object-top',
-                          fit === 'contain' && 'object-contain p-4 md:p-8',
-                        )}
                         priority={index === 0}
+                        containClassName="p-4 md:p-8"
                       />
                     </motion.div>
                   )
@@ -405,11 +412,13 @@ function PhoneCasePreview({ project }: { project: Project }) {
 type ArchiveCardProps = {
   project: Project;
   index: number;
+  /** Lead tile spans two columns on lg — the archive gets a hero. */
+  wide?: boolean;
   isSelected: boolean;
   onSelect: (project: Project) => void;
 };
 
-function ArchiveCard({ project, index, isSelected, onSelect }: ArchiveCardProps) {
+function ArchiveCard({ project, index, wide = false, isSelected, onSelect }: ArchiveCardProps) {
   const prefersReduced = useReducedMotion();
   const cardRef = useRef<HTMLDivElement | null>(null);
   const hasCover = Boolean(project.cover);
@@ -430,10 +439,17 @@ function ArchiveCard({ project, index, isSelected, onSelect }: ArchiveCardProps)
   return (
     <motion.div
       ref={cardRef}
-      initial={prefersReduced ? false : { opacity: 0, y: 28, scale: 0.96 }}
-      whileInView={prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
+      className={cn(wide && 'lg:col-span-2')}
+      initial={
+        prefersReduced
+          ? false
+          : { opacity: 0, y: 44, scale: 0.94, rotate: index % 2 ? 1.8 : -1.8 }
+      }
+      whileInView={
+        prefersReduced ? undefined : { opacity: 1, y: 0, scale: 1, rotate: 0 }
+      }
       viewport={{ once: true, margin: '0px 0px -8% 0px' }}
-      transition={{ duration: 0.8, delay: (index % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.9, delay: (index % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
     >
       <RippleTap className="rounded-lg">
         <TiltCard maxTilt={6} hoverScale={1.02}>
@@ -455,20 +471,21 @@ function ArchiveCard({ project, index, isSelected, onSelect }: ArchiveCardProps)
                 {hasCover ? (
                   <motion.div
                     className={cn(
-                      'absolute inset-x-0 transition-[scale] duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.06]',
+                      'absolute inset-x-0',
                       parallaxEnabled ? '-inset-y-[9%]' : 'inset-y-0',
                     )}
                     style={parallaxEnabled ? { y: coverY } : undefined}
                   >
-                    <Image
-                      src={withBasePath(project.cover!)}
-                      alt={`${project.title} screenshot`}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className={cn(
-                        fit === 'cover' && 'object-cover object-top',
-                        fit === 'contain' && 'object-contain p-3',
-                      )}
+                    <HoverRevealCover
+                      primary={{ src: project.cover!, alt: `${project.title} screenshot` }}
+                      alternate={isPlaceholder ? null : alternateShot(project)}
+                      fit={fit}
+                      sizes={
+                        wide
+                          ? '(min-width: 1024px) 66vw, (min-width: 640px) 50vw, 100vw'
+                          : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+                      }
+                      containClassName="p-3"
                     />
                   </motion.div>
                 ) : (
