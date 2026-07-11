@@ -25,7 +25,7 @@ Goal: convert serious leads via `/contact`. Tone: confident calm, cinematic, pre
 
 ## Routes
 
-- `/` — HeroCradleSection · About · Work · Capabilities · Packages · FAQ · ContactCTA
+- `/` — HeroCradleSection · About · ProofStrip · WordMarquee · Work · Capabilities · Packages · FAQ · ContactCTA
 - `/contact` — email · calendar · form · mini-FAQ
 - `/_not-found` — 404
 
@@ -42,14 +42,17 @@ src/
 │   └── not-found.tsx
 ├── components/
 │   ├── sections/            ← Hero, HeroCradleSection, NewtonsCradleStrip, MarqueeTechStrip,
-│   │                          About, Work, Capabilities, Packages, FAQ, ContactCTA, ProjectModal
+│   │                          About, ProofStrip, WordMarquee, Work, Capabilities, Packages,
+│   │                          FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
-│   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap
+│   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
+│   │                          VoidBackground, JourneyRail, ScrambleText, MosaicReveal
 │   │                          (CustomCursor = legacy, unmounted)
-│   ├── nav/                 ← Header (BrandHexPrism + NavCube links), Footer, ThemeToggle
+│   ├── nav/                 ← Header (mono wordmark + bracket links + [ Menu ]), OverlayMenu,
+│   │                          Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
 ├── content/                 ← *** SINGLE SOURCE OF TRUTH — all copy/data ***
 │   ├── copy.ts              ← hero · about · capabilities · CTA · contact · meta
@@ -90,31 +93,49 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 
 | Metric | Target | Current |
 |---|---|---|
-| First Load JS `/` | ≤ 140 kB | 171 kB ⚠️ |
+| First Load JS `/` | ≤ 140 kB | 174 kB ⚠️ |
 | First Load JS `/contact` | ≤ 140 kB | 103 kB ✓ |
 | LCP (4G mobile) | < 2.0s | unmeasured |
 | Lighthouse Perf mobile | ≥ 95 | unmeasured |
 
-## Design conventions (current)
+## Design conventions (current — "editorial void" system)
+
+The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canvas **parallax starfield** with three depth bands + two slow-drifting accent orbs + rare CSS shooting-star streaks). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial with a scroll-as-voyage layer: giant uppercase display type, mono bracketed labels, hairline dividers, numbered waypoint indexes, HUD instrument chrome.
+
+### Voyage layer (scroll-as-journey)
+- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge telemetry — vertical hairline + ticks, accent diamond marker driven by **raw scroll fraction only** (deliberately NOT section-tracked, to stay clear of the banned active-section indicator), mono `ALT nnn // EN ROUTE` readout. Hidden `< lg` and under reduced motion.
+- **Waypoint numbering**: nav links render `0N/ Label`; section eyebrows render `[ 0N // Label ]` via `SectionHeader`'s `index` prop (About=01 … ContactCTA=06; About and ContactCTA format theirs inline).
+- **Status beacon**: pulsing accent dot + `copy.meta.availability` in the hero annotation row (`.status-beacon`).
+- **Scroll hint**: `copy.hero.scrollHint` + animated dropping line (`.scroll-hint-line`) at the hero's base; hero is sized so it lands above the fold at 1440×900.
+- **HUD corner ticks**: `.hud-corners` + four `.hud-tick--*` spans on Work card covers — faint ink at rest, accent on card hover.
+- **Arrival glow**: `ContactCTA` ends the journey — bottom-anchored breathing accent radial (`.sun-breathe`) over a horizon hairline.
+
+### Editorial idioms
+- **Bracket links** (`.link-bracket` in `globals.css`): mono uppercase label with `[` `]` pseudo-element brackets that split apart + turn accent on hover. Used for nav links, hero CTAs, section eyebrows, and Work filter tabs. `.link-bracket--accent` fills the label with accent. Must stay `display: inline-block` — inline-flex collapses inner spaces.
+- **ScrambleText** (`motion/ScrambleText.tsx`): glyph-scramble reveal on in-view; `rescrambleOnHover` for nav links.
+- **Mono indexes**: `01/` numbering on Work cards and Capability rows, mono `text-accent`.
+- **MosaicReveal** (`motion/MosaicReveal.tsx`): tile-grid dissolve over project covers on scroll-in.
+- Section headlines are uppercase `font-display font-extrabold` (see `SectionHeader`); hero + footer carry giant wordmarks.
+
+### Header + OverlayMenu
+- Minimal editorial bar: llama logo + mono wordmark left (wordmark hidden `< sm`), numbered bracket links center (**`lg+` only** — they collide with the wordmark below that), `[ Start a project ]` (md+) + `[ Menu ]` + ThemeToggle right. Height stays `h-24` (coupled — see don'ts).
+- `[ Menu ]` opens **OverlayMenu** (`nav/OverlayMenu.tsx`): full-screen dialog, five-column ground wipe, giant numbered destinations (from `navigation.overlay`) with clip-reveal stagger, status-beacon meta row at the bottom. Locks body scroll + Lenis like `Modal`; ESC closes; focus moves in and restores on close. This is the ONLY nav below `lg`.
+
+### Showcase (Work section)
+- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
+- Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
+- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
+- **WordMarquee** (`sections/WordMarquee.tsx`): outline-text marquee of `copy.marquee` words between ProofStrip and Work (`.marquee-word`, `.marquee-track`).
+- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
-- Compact single-row: `py-5 flex items-center justify-between` with copyright + Contact link only.
+- Mono link columns (`Menu/`, `Contact/`, `Base/`) above a giant full-width `LORENZO.LLAMAS` wordmark, compact legal row underneath.
 - **No email address displayed in the footer.** Email lives in `ContactCTA` (ghost button) and the `/contact` page only.
 - Uses `section-glass` (the only section that gets glass blur/dark-tint besides `Capabilities` and `FAQ`).
 
-### Button variants
-- **Ghost:** `border-white/45 bg-transparent text-ink` — legible over city backdrops without a glass overlay.
-- **Accent:** `border-accent/70 bg-accent/20` — solid accent-glass pill with amplified glow on hover.
-- **Primary:** glass pill `border-white/20 bg-white/10 text-ink` — used inside the Header and for non-featured package CTAs.
-
 ### Project card cover / PhoneCoverPreview / PhoneHero (ProjectModal)
 - Cover container background: `bg-transparent` (card cover) / no inline background style (modal cover) — lets the parent's `bg-bg-elevated` surface show through. No accent-soft or accent-secondary-soft gradient overlays.
-- `accent-soft` and `accent-secondary-soft` gradients are intentional in: `Hero` (full-page radial), `About` placeholder portrait (decorative frame), `Capabilities` icon pill (`bg-accent-soft`), `EntrySequence`, and `HeroBackground`. Do **not** introduce them on card-cover or modal-cover containers.
-
-### Text color conventions over city backdrop (no glass overlay)
-- Headings and subheads visible directly over city imagery: use `text-ink` (not `text-ink-soft`) + `[text-shadow:...]` for punch. See `Hero` subhead and `ContactCTA` subhead/headline.
-- Eyebrow labels directly over city imagery: `text-ink-soft` + `[text-shadow:0_1px_8px_rgba(16,15,28,0.9)]`. See `ContactCTA` eyebrow.
-- Eyebrow labels in glass-backed or card-backed sections: `text-ink-quiet` is fine (e.g. `SectionHeader`, `About`, `Packages`, `Work`).
+- `accent-soft` and `accent-secondary-soft` gradients are intentional in: `Hero` (full-page radial), `ContactCTA` (radial light pool), `About` placeholder portrait (decorative frame), and `EntrySequence`. Do **not** introduce them on card-cover or modal-cover containers.
 
 ### `section-glass` usage
 - Applied to: `Footer`, `Capabilities` (border-y), `FAQ` (border-t). These are the only three. Do not add it to other sections.

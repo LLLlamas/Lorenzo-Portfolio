@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/motion/Reveal';
 import { Stagger } from '@/components/motion/Stagger';
+import { ScrambleText } from '@/components/motion/ScrambleText';
 import { copy } from '@/content/copy';
 
 export function About() {
@@ -7,8 +8,12 @@ export function About() {
     <section id="about" className="relative px-6 py-24 md:py-32">
       <div className="mx-auto max-w-6xl">
         <Reveal as="div" className="mb-10">
-          <p className="aura-pop copy-readable text-sm font-bold uppercase tracking-[0.18em] text-ink-soft">
-            <span className="label-select">{copy.about.eyebrow}</span>
+          <p>
+            <ScrambleText
+              text={`01 // ${copy.about.eyebrow}`}
+              className="link-bracket text-[11px]"
+              duration={700}
+            />
           </p>
         </Reveal>
 

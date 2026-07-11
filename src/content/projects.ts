@@ -1,5 +1,12 @@
 export type ProjectCategory = 'web' | 'mobile' | 'game';
 
+/** Display labels for project categories (used by Work + ProjectModal). */
+export const categoryLabels: Record<ProjectCategory, string> = {
+  web: 'Web',
+  mobile: 'iOS',
+  game: 'Game',
+};
+
 /**
  * coverFit:
  *  - 'cover'   → image fills the 16:10 card and crops as needed (default for landscape shots)

@@ -1,11 +1,15 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { Button } from '@/components/ui/Button';
-import { SplitTextReveal } from '@/components/motion/SplitTextReveal';
-import { RippleTap } from '@/components/motion/RippleTap';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'motion/react';
+import { ScrambleText } from '@/components/motion/ScrambleText';
 import { copy } from '@/content/copy';
 
 const FloatingGeometry = dynamic(
@@ -20,15 +24,27 @@ type HeroProps = {
   pendulumControl?: ReactNode;
 };
 
+/**
+ * Editorial hero — the name IS the composition. The stacked wordmark
+ * clip-reveals character by character out of the void; scrolling away
+ * parallaxes it upward and fades it (the page departs the launch pad).
+ * Statement + subhead follow, CTAs are bracketed mono links.
+ */
 export function Hero({ pendulumControl }: HeroProps) {
   const prefersReduced = useReducedMotion();
+
+  // Scroll-driven exit — wordmark lags the scroll and dissolves
+  const { scrollY } = useScroll();
+  const wordmarkY = useTransform(scrollY, [0, 700], [0, -110]);
+  const wordmarkOpacity = useTransform(scrollY, [0, 550], [1, 0]);
+  const statementY = useTransform(scrollY, [0, 700], [0, -50]);
 
   return (
     <section
       id="hero"
-      className="relative isolate overflow-hidden px-6 pb-24 pt-32 md:pt-44"
+      className="relative isolate overflow-hidden px-6 pb-16 pt-20 md:pt-24"
     >
-      {/* Faint accent radial — replaces the old blob, anchors the void */}
+      {/* Faint accent radial — anchors the void */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-20"
@@ -38,115 +54,164 @@ export function Hero({ pendulumControl }: HeroProps) {
         }}
       />
 
-      {/* Floating tetrahedron — sits behind copy, far right.
-          top-12 (was top-1/4) keeps the bottom clear of the section's
-          overflow-hidden clip on shorter hero stacks. */}
+      {/* Floating tetrahedron — behind the wordmark, far right */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute right-[-4%] top-12 -z-10 size-[260px] md:size-[420px] lg:size-[520px]"
+        className="pointer-events-none absolute right-[-6%] top-8 -z-10 size-[260px] md:size-[440px] lg:size-[560px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.4, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.4, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <FloatingGeometry className="h-full w-full" />
       </motion.div>
 
-      <div className="relative z-10 mx-auto max-w-5xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <motion.p
-          className="aura-pop mb-6 text-sm font-bold uppercase tracking-[0.18em] text-ink-soft [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]"
+          className="mb-8"
           initial={prefersReduced ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="label-select">{copy.hero.eyebrow}</span>
+          <ScrambleText
+            text={copy.hero.eyebrow}
+            className="link-bracket text-[11px] md:text-xs"
+            delay={300}
+            duration={900}
+          />
         </motion.p>
 
-        <SplitTextReveal
-          as="h1"
-          className="font-display text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl [text-shadow:0_2px_16px_rgba(16,15,28,0.9),0_4px_48px_rgba(16,15,28,0.7)]"
-          text={copy.hero.headline}
-          delay={0.3}
-          step={0.06}
-        />
-
-        <motion.p
-          className="mt-6 max-w-2xl text-pretty text-lg text-ink md:text-xl [text-shadow:0_1px_10px_rgba(16,15,28,0.95)]"
-          initial={prefersReduced ? false : { opacity: 0, y: 12, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.9, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        {/* Giant stacked wordmark — per-character clip reveal, parallax exit */}
+        <motion.h1
+          className="font-display uppercase leading-[0.92] tracking-[-0.035em] text-ink"
+          style={prefersReduced ? undefined : { y: wordmarkY, opacity: wordmarkOpacity }}
         >
-          {copy.hero.subhead}
-        </motion.p>
+          <span className="sr-only">{copy.hero.wordmark.join(' ')}</span>
+          {copy.hero.wordmark.map((line, lineIndex) => (
+            <span
+              key={line}
+              aria-hidden
+              className="block overflow-hidden pb-[0.06em] text-[clamp(3.8rem,12.3vw,10rem)] font-extrabold"
+            >
+              {line.split('').map((char, charIndex) => (
+                <motion.span
+                  key={charIndex}
+                  className="inline-block will-change-transform"
+                  initial={prefersReduced ? false : { y: '112%', rotate: 6 }}
+                  animate={{ y: 0, rotate: 0 }}
+                  transition={{
+                    duration: 0.95,
+                    delay: 0.3 + lineIndex * 0.22 + charIndex * 0.035,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              {lineIndex === copy.hero.wordmark.length - 1 ? (
+                <motion.span
+                  className="inline-block align-top text-[0.22em] font-bold text-accent"
+                  initial={prefersReduced ? false : { opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: 0.3 + lineIndex * 0.22 + line.length * 0.035 + 0.25,
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 18,
+                  }}
+                >
+                  ®
+                </motion.span>
+              ) : null}
+            </span>
+          ))}
+        </motion.h1>
 
+        {/* Statement + subhead */}
         <motion.div
-          className="relative mt-10 flex flex-col gap-5 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: { staggerChildren: 0.08, delayChildren: 1.05 },
-            },
-          }}
+          className="mt-10 grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end md:gap-16"
+          style={prefersReduced ? undefined : { y: statementY }}
         >
-          <div className="flex flex-wrap items-center gap-3 md:justify-self-start">
-            {[copy.hero.primaryCta, copy.hero.secondaryCta].map((cta, i) => (
-              <motion.div
-                key={cta.href}
-                variants={{
-                  hidden: prefersReduced
-                    ? { opacity: 1, scale: 1, y: 0 }
-                    : { opacity: 0, scale: 0.96, y: 8 },
-                  visible: {
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                    transition: {
-                      type: 'spring',
-                      stiffness: 220,
-                      damping: 24,
-                    },
-                  },
-                }}
-              >
-                <RippleTap className="rounded-full">
-                  <Button
-                    href={cta.href}
-                    variant={i === 0 ? 'accent' : 'ghost'}
-                    size="lg"
-                  >
-                    {cta.label}
-                  </Button>
-                </RippleTap>
-              </motion.div>
-            ))}
+          <motion.p
+            className="max-w-xl text-pretty font-display text-2xl font-semibold leading-snug tracking-tight text-ink md:text-3xl"
+            initial={prefersReduced ? false : { opacity: 0, y: 14, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {copy.hero.headline}
+          </motion.p>
 
-          </div>
+          <motion.p
+            className="max-w-md text-pretty text-sm leading-relaxed text-ink-soft md:text-base"
+            initial={prefersReduced ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.05, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {copy.hero.subhead}
+          </motion.p>
+        </motion.div>
+
+        {/* CTAs + pendulum + annotation */}
+        <motion.div
+          className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6"
+          initial={prefersReduced ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Link
+            href={copy.hero.primaryCta.href}
+            className="link-bracket link-bracket--accent text-[13px]"
+            data-cursor-hover
+          >
+            <ScrambleText
+              text={copy.hero.primaryCta.label}
+              rescrambleOnHover
+              duration={450}
+            />
+          </Link>
+          <Link
+            href={copy.hero.secondaryCta.href}
+            className="link-bracket text-[13px]"
+            data-cursor-hover
+          >
+            <ScrambleText
+              text={copy.hero.secondaryCta.label}
+              rescrambleOnHover
+              duration={450}
+            />
+          </Link>
 
           {pendulumControl ? (
-            <motion.div
-              className="hidden md:flex md:justify-self-center"
-              variants={{
-                hidden: prefersReduced
-                  ? { opacity: 1, scale: 1, y: 0 }
-                  : { opacity: 0, scale: 0.96, y: 8 },
-                visible: {
-                  opacity: 1,
-                  scale: 1,
-                  y: 0,
-                  transition: {
-                    type: 'spring',
-                    stiffness: 220,
-                    damping: 24,
-                  },
-                },
-              }}
-            >
-              {pendulumControl}
-            </motion.div>
-          ) : <span aria-hidden />}
+            <span className="hidden md:inline-flex">{pendulumControl}</span>
+          ) : null}
 
-          <span aria-hidden className="hidden md:block" />
+          <span className="ml-auto hidden items-center gap-6 md:inline-flex">
+            <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-soft">
+              <span
+                aria-hidden
+                className="status-beacon motion-decorative inline-block size-1.5 rounded-full bg-accent"
+              />
+              {copy.meta.availability}
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet">
+              {copy.hero.annotation}
+            </span>
+          </span>
+        </motion.div>
+
+        {/* Scroll affordance — the journey starts below */}
+        <motion.div
+          className="mt-10 hidden flex-col items-center gap-3 md:flex"
+          initial={prefersReduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.7, ease: [0.16, 1, 0.3, 1] }}
+          aria-hidden
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.26em] text-ink-quiet">
+            {copy.hero.scrollHint}
+          </span>
+          <span className="h-10 w-px overflow-hidden bg-line">
+            <span className="scroll-hint-line motion-decorative block h-full w-full bg-accent" />
+          </span>
         </motion.div>
       </div>
     </section>

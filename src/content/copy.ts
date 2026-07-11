@@ -5,13 +5,27 @@ export const copy = {
     email: 'hello@lorenzollamas.com',
     calendar: '',
     siteUrl: 'https://llllamas.github.io/Lorenzo-Portfolio',
+    /** Status beacon label — shown with the pulsing dot in the hero. */
+    availability: 'Open for projects',
+  },
+
+  /** UI chrome labels shared by Header + OverlayMenu. */
+  nav: {
+    menu: 'Menu',
+    close: 'Close',
   },
 
   hero: {
-    eyebrow: 'Lorenzo Llamas — Solo developer',
+    eyebrow: 'Solo developer — Portfolio',
+    /** Giant stacked wordmark — one array entry per line. */
+    wordmark: ['Lorenzo', 'Llamas'],
     headline: 'Landing pages, websites, and small web tools — shipped fast.',
     subhead:
       'Solo senior developer. Landing pages and single-purpose tools first; bigger web apps and iOS when the project calls for it.',
+    /** Small mono annotation pinned to the hero's lower edge. */
+    annotation: 'NYC — 40.7128° N / 74.0060° W',
+    /** Scroll affordance under the hero. */
+    scrollHint: 'Scroll to explore',
     primaryCta: { label: 'See work', href: '/#work' },
     secondaryCta: { label: 'Start a project', href: '/contact' },
   },
@@ -30,6 +44,8 @@ export const copy = {
     eyebrow: 'Work',
     headline: 'Tasks Brought To Life.',
     subhead: 'Specializes in web and mobile iOS development.',
+    archiveLabel: 'Archive / More builds',
+    openCase: 'Open case',
   },
 
   projectModal: {
@@ -48,6 +64,44 @@ export const copy = {
     body: 'Landing page, web tool, or focused web app — Spark or Studio.',
     cta: { label: 'Start a project', href: '/contact' },
   },
+
+  /**
+   * Proof strip — hard numbers pulled from real commitments elsewhere on the
+   * site (packages timelines, contact reply window, solo practice). Keep these
+   * consistent with packages.ts and the contact copy if either changes.
+   */
+  proof: {
+    eyebrow: 'Field notes',
+    items: [
+      {
+        target: 12,
+        prefix: '5–',
+        unit: 'days',
+        label: 'A Spark site — brief to live on your domain.',
+      },
+      {
+        target: 3,
+        prefix: '2–',
+        unit: 'weeks',
+        label: 'A Studio build — design, backend, and deploy.',
+      },
+      {
+        target: 1,
+        prefix: '0',
+        unit: 'working day',
+        label: 'Max reply time on any message, project or not.',
+      },
+      {
+        target: 1,
+        prefix: '0',
+        unit: 'developer',
+        label: 'Design through deploy in one seat. Zero handoffs.',
+      },
+    ],
+  },
+
+  /** Word marquee divider — the working values, oversized. */
+  marquee: ['Design', 'Build', 'Ship', 'Fast', 'Detailed', 'Solo'],
 
   capabilities: {
     eyebrow: 'Capabilities',
