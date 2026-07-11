@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces, Share_Tech_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Header } from '@/components/nav/Header';
 import { Footer } from '@/components/nav/Footer';
@@ -13,27 +12,6 @@ import { VoidBackground } from '@/components/motion/VoidBackground';
 import { JourneyRail } from '@/components/motion/JourneyRail';
 import { copy } from '@/content/copy';
 import './globals.css';
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-  display: 'swap',
-  axes: ['opsz', 'SOFT'],
-});
-
-const shareTechMono = Share_Tech_Mono({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-share-tech-mono',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(copy.meta.siteUrl),
@@ -66,11 +44,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${dmSans.variable} ${fraunces.variable} ${shareTechMono.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning>
       <body className="min-h-dvh text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <VoidBackground />

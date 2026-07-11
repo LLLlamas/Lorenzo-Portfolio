@@ -100,9 +100,6 @@ export const copy = {
     ],
   },
 
-  /** Word marquee divider — the working values, oversized. */
-  marquee: ['Design', 'Build', 'Ship', 'Fast', 'Detailed', 'Solo'],
-
   capabilities: {
     eyebrow: 'Capabilities',
     headline: 'What I build.',

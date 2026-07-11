@@ -3,10 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-share-tech-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Gotham", "Gotham SSm", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Gotham", "Gotham SSm", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Gotham", "Gotham SSm", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Gotham", "Gotham SSm", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
@@ -861,27 +861,6 @@ body::after {
       animation-range: entry 0% cover 40%;
     }
   }
-}
-
-/* ─── Marquee tech strip ─── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation: marquee 32s linear infinite;
-  will-change: transform;
-}
-
-/* Outline word for the giant marquee — hollow letters, hairline stroke */
-.marquee-word {
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 45%, transparent);
-  transition: color 400ms var(--ease-out-expo);
-}
-.marquee-word:hover {
-  color: var(--accent);
-  -webkit-text-stroke-color: var(--accent);
 }
 
 /* Giant watermark waypoint number behind section headers */

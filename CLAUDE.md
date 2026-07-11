@@ -14,7 +14,7 @@ Goal: convert serious leads via `/contact`. Tone: confident calm, cinematic, pre
 | Language | TypeScript (strict) | `@/*` → `src/*` |
 | Styling | Tailwind v4 (CSS-first) | **No `tailwind.config.ts`** — tokens in `globals.css @theme {}` |
 | Theme | next-themes | `defaultTheme: 'dark'`, `enableSystem: false` |
-| Fonts | DM Sans · Fraunces · Share Tech Mono | Loaded in `layout.tsx` |
+| Fonts | Gotham → Helvetica (local/system stack) | All four `--font-*` tokens in `globals.css @theme` — no webfonts loaded |
 | Motion | Motion 12 + GSAP 3.15 + Lenis 1.3 | All free |
 | 3D | three.js (raw) | Dynamic-imported in `FloatingGeometry.tsx` — out of First Load JS |
 | Icons | lucide-react | |
@@ -25,7 +25,7 @@ Goal: convert serious leads via `/contact`. Tone: confident calm, cinematic, pre
 
 ## Routes
 
-- `/` — HeroCradleSection · About · ProofStrip · WordMarquee · Work · Capabilities · Packages · FAQ · ContactCTA
+- `/` — HeroCradleSection · About · ProofStrip · Work · Capabilities · Packages · FAQ · ContactCTA
 - `/contact` — email · calendar · form · mini-FAQ
 - `/_not-found` — 404
 
@@ -42,7 +42,7 @@ src/
 │   └── not-found.tsx
 ├── components/
 │   ├── sections/            ← Hero, HeroCradleSection, NewtonsCradleStrip, MarqueeTechStrip,
-│   │                          About, ProofStrip, WordMarquee, Work, Capabilities, Packages,
+│   │                          About, ProofStrip, Work, Capabilities, Packages,
 │   │                          FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
 │   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
@@ -125,7 +125,6 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
 - Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
 - **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
-- **WordMarquee** (`sections/WordMarquee.tsx`): outline-text marquee of `copy.marquee` words between ProofStrip and Work (`.marquee-word`, `.marquee-track`).
 - **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
@@ -145,7 +144,8 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - Never hard-code copy in JSX — use `src/content/`
 - Never import `three` synchronously outside `FloatingGeometry.tsx` (~150 kB hit)
 - Never change Header `h-24` without updating `pt-24` + Lenis offset `-96` + `scroll-margin-top: 6rem` (all coupled)
-- Never reintroduce `btn-glow` or the active-section nav indicator (both explicitly removed)
+- Never reintroduce `btn-glow`, the active-section nav indicator, or the WordMarquee scrolling word strip (all explicitly removed)
+- Never load webfonts — typography is the Gotham → Helvetica local/system stack set in `globals.css @theme` (owner decision, 2026-07)
 - Never add server actions / API routes — `output: 'export'` has no server runtime
 - Never put accent-soft/accent-secondary-soft gradients on project card covers or modal covers — use `bg-transparent` (card covers) or no inline background style (modal covers)
 

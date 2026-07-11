@@ -1,6 +1,5 @@
 import { About } from '@/components/sections/About';
 import { ProofStrip } from '@/components/sections/ProofStrip';
-import { WordMarquee } from '@/components/sections/WordMarquee';
 import { Work } from '@/components/sections/Work';
 import { Capabilities } from '@/components/sections/Capabilities';
 import { Packages } from '@/components/sections/Packages';
@@ -14,7 +13,6 @@ export default function HomePage() {
       <HeroCradleSection />
       <About />
       <ProofStrip />
-      <WordMarquee />
       <Work />
       <Capabilities />
       <Packages />
