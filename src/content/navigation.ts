@@ -13,4 +13,14 @@ export const navigation = {
     { href: '/#faq', label: 'FAQ' },
     { href: '/contact', label: 'Contact' },
   ],
+  /** Right-edge journey rail — landing-page section ids + display labels. */
+  waypoints: [
+    { id: 'hero', label: 'Intro' },
+    { id: 'about', label: 'About' },
+    { id: 'work', label: 'Work' },
+    { id: 'capabilities', label: 'Capabilities' },
+    { id: 'packages', label: 'Packages' },
+    { id: 'faq', label: 'FAQ' },
+    { id: 'contact-cta', label: 'Contact' },
+  ],
 } as const;

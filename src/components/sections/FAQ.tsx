@@ -17,7 +17,9 @@ export function FAQ() {
         >
           {faqs.map((faq) => (
             <details key={faq.question} className="group py-5">
-              <summary className="flex cursor-pointer items-center justify-between gap-6 text-left font-display text-base font-medium text-ink md:text-lg">
+              {/* list-none + marker overrides kill the native disclosure arrow —
+                  the rotating plus circle is the single expand affordance */}
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-left font-display text-base font-medium text-ink marker:content-none [&::-webkit-details-marker]:hidden md:text-lg">
                 <span className="text-pretty">{faq.question}</span>
                 <span
                   aria-hidden

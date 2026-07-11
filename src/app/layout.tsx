@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces, Share_Tech_Mono } from 'next/font/google';
+import { Montserrat, Fraunces, Share_Tech_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Header } from '@/components/nav/Header';
 import { Footer } from '@/components/nav/Footer';
-import { ScrollProgress } from '@/components/motion/ScrollProgress';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { CursorGlow } from '@/components/motion/CursorGlow';
 import { EntrySequence } from '@/components/motion/EntrySequence';
@@ -14,10 +13,17 @@ import { JourneyRail } from '@/components/motion/JourneyRail';
 import { copy } from '@/content/copy';
 import './globals.css';
 
-const dmSans = DM_Sans({
+/**
+ * Gotham stand-in. True Gotham is a commercial Hoefler&Co font that can't be
+ * bundled without a license — Montserrat is the closest open geometric sans
+ * (same Deco skeleton). To switch to licensed Gotham later: drop the woff2
+ * files in src/fonts/, replace this with next/font/local, keep the same
+ * `variable` name and nothing else changes.
+ */
+const gothamSans = Montserrat({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-dm-sans',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-gotham',
   display: 'swap',
 });
 
@@ -69,14 +75,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${fraunces.variable} ${shareTechMono.variable}`}
+      className={`${gothamSans.variable} ${fraunces.variable} ${shareTechMono.variable}`}
     >
       <body className="min-h-dvh text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <VoidBackground />
           <JourneyRail />
           <SmoothScroll />
-          <ScrollProgress />
           <CursorGlow />
           <EntrySequence />
           <GlobalRippleTap />

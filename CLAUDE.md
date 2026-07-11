@@ -14,7 +14,7 @@ Goal: convert serious leads via `/contact`. Tone: confident calm, cinematic, pre
 | Language | TypeScript (strict) | `@/*` → `src/*` |
 | Styling | Tailwind v4 (CSS-first) | **No `tailwind.config.ts`** — tokens in `globals.css @theme {}` |
 | Theme | next-themes | `defaultTheme: 'dark'`, `enableSystem: false` |
-| Fonts | DM Sans · Fraunces · Share Tech Mono | Loaded in `layout.tsx` |
+| Fonts | Montserrat (Gotham stand-in) · Fraunces · Share Tech Mono | Loaded in `layout.tsx` via `--font-gotham`. True Gotham is commercial — to license it later, swap to `next/font/local`, keep the variable name |
 | Motion | Motion 12 + GSAP 3.15 + Lenis 1.3 | All free |
 | 3D | three.js (raw) | Dynamic-imported in `FloatingGeometry.tsx` — out of First Load JS |
 | Icons | lucide-react | |
@@ -45,7 +45,7 @@ src/
 │   │                          About, ProofStrip, WordMarquee, Work, Capabilities, Packages,
 │   │                          FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
-│   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
+│   ├── motion/              ← Reveal, Stagger, SplitTextReveal, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
 │   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
@@ -103,7 +103,7 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canvas **parallax starfield** with three depth bands + two slow-drifting accent orbs + rare CSS shooting-star streaks). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial with a scroll-as-voyage layer: giant uppercase display type, mono bracketed labels, hairline dividers, numbered waypoint indexes, HUD instrument chrome.
 
 ### Voyage layer (scroll-as-journey)
-- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge telemetry — vertical hairline + ticks, accent diamond marker driven by **raw scroll fraction only** (deliberately NOT section-tracked, to stay clear of the banned active-section indicator), mono `ALT nnn // EN ROUTE` readout. Hidden `< lg` and under reduced motion.
+- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge waypoint nav — one labeled, clickable diamond tick per landing section (`navigation.waypoints`), active label in accent, raw-scroll marker on the hairline, mono `0N / Label` readout. Section-tracked **by owner request (2026-07)** — the standing ban covers the header nav indicator, not this rail. Readout must stay a `div` (CursorGlow rewrites text nodes inside `p`, which orphans React-updated text). Hidden `< lg`; stays mounted under reduced motion (it's functional nav).
 - **Waypoint numbering**: nav links render `0N/ Label`; section eyebrows render `[ 0N // Label ]` via `SectionHeader`'s `index` prop (About=01 … ContactCTA=06; About and ContactCTA format theirs inline).
 - **Status beacon**: pulsing accent dot + `copy.meta.availability` in the hero annotation row (`.status-beacon`).
 - **Scroll hint**: `copy.hero.scrollHint` + animated dropping line (`.scroll-hint-line`) at the hero's base; hero is sized so it lands above the fold at 1440×900.
@@ -125,7 +125,8 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
 - Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
 - **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
-- **WordMarquee** (`sections/WordMarquee.tsx`): outline-text marquee of `copy.marquee` words between ProofStrip and Work (`.marquee-word`, `.marquee-track`).
+- **WordMarquee** (`sections/WordMarquee.tsx`): velocity-reactive outline-text marquee of `copy.marquee` words between ProofStrip and Work — drifts continuously, multiplies speed/direction with scroll velocity and skews under load (`useVelocity` + `useAnimationFrame`); static strip under reduced motion.
+- **Case-row depth** (`sections/Work.tsx` CaseRow): covers parallax ±7% inside a plate that tilts ±1.6° and settles to scale 1 across the viewport; a giant hollow row index (`.case-index-ghost`) counter-parallaxes behind the meta column.
 - **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
@@ -145,7 +146,8 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - Never hard-code copy in JSX — use `src/content/`
 - Never import `three` synchronously outside `FloatingGeometry.tsx` (~150 kB hit)
 - Never change Header `h-24` without updating `pt-24` + Lenis offset `-96` + `scroll-margin-top: 6rem` (all coupled)
-- Never reintroduce `btn-glow` or the active-section nav indicator (both explicitly removed)
+- Never reintroduce `btn-glow` or an active-section indicator **in the Header nav** (explicitly removed; the JourneyRail's section tracking is the owner-approved exception)
+- Never render React-state-driven text inside elements matched by CursorGlow's `TEXT_SELECTOR` (`p`, headings, `li`, `a`, …) — its word-wrapper orphans React's text nodes and updates stop painting; use a `div`/plain `span` or key the element
 - Never add server actions / API routes — `output: 'export'` has no server runtime
 - Never put accent-soft/accent-secondary-soft gradients on project card covers or modal covers — use `bg-transparent` (card covers) or no inline background style (modal covers)
 

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#F5F4EE" opacity="0.07"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="110%" r="80%">
+      <stop offset="0%" stop-color="#A697C8" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#A697C8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#0A0A0D"/>
+  <rect width="1600" height="1000" fill="url(#dots)"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <!-- HUD corner ticks -->
+  <path d="M40 60 V40 H60 M1540 40 H1560 V60 M1560 940 V960 H1540 M60 960 H40 V940" stroke="#A697C8" stroke-width="2" fill="none" opacity="0.6"/>
+  <!-- giant outline index -->
+  <text x="1520" y="330" text-anchor="end" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="300" fill="none" stroke="#F5F4EE" stroke-opacity="0.12" stroke-width="2">07</text>
+  <!-- title -->
+  <text x="80" y="560" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="96" letter-spacing="-2" fill="#F5F4EE">CONDENSED REVIEWS</text>
+  <!-- mono annotation -->
+  <text x="80" y="640" font-family="'Share Tech Mono', 'Courier New', monospace" font-size="26" letter-spacing="6" fill="#A697C8">[ SCREENSHOT PENDING — PLACEHOLDER ]</text>
+  <text x="80" y="920" font-family="'Share Tech Mono', 'Courier New', monospace" font-size="22" letter-spacing="5" fill="#8F8F8C">LORENZO.LLAMAS — CASE FILE 07</text>
+  <rect x="80" y="670" width="120" height="2" fill="#A697C8" opacity="0.7"/>
+</svg>
