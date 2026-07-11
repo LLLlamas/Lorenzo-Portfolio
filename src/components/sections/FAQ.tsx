@@ -17,11 +17,15 @@ export function FAQ() {
         >
           {faqs.map((faq) => (
             <details key={faq.question} className="group py-5">
-              <summary className="flex cursor-pointer items-center justify-between gap-6 text-left font-display text-base font-medium text-ink md:text-lg">
-                <span className="text-pretty">{faq.question}</span>
+              {/* list-none + marker overrides kill the native disclosure arrow —
+                  the rotating plus circle is the single expand affordance */}
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-left font-display text-base font-medium text-ink marker:content-none [&::-webkit-details-marker]:hidden md:text-lg">
+                <span className="text-pretty transition-[color,transform] duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-1.5 group-hover:text-accent">
+                  {faq.question}
+                </span>
                 <span
                   aria-hidden
-                  className="grid size-6 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-transform group-open:rotate-45"
+                  className="grid size-6 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-[transform,border-color,color] duration-300 group-open:rotate-45 group-hover:border-accent group-hover:text-accent"
                 >
                   <svg
                     width="10"

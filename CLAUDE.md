@@ -45,12 +45,12 @@ src/
 │   │                          About, ProofStrip, Work, Capabilities, Packages,
 │   │                          FAQ, ContactCTA, ProjectModal
 │   ├── ui/                  ← Button, Card, Tag, SectionHeader, PhoneFrame
-│   ├── motion/              ← Reveal, Stagger, SplitTextReveal, ScrollProgress, SmoothScroll,
+│   ├── motion/              ← Reveal, Stagger, SplitTextReveal, SmoothScroll,
 │   │                          EntrySequence, FloatingGeometry, RotationSpeedSlider,
 │   │                          CursorGlow, ScanLine, Modal, ScrollScaleMount, MagneticWrap,
 │   │                          GyroTilt, PendulumToggle, RippleTap, GlobalRippleTap,
-│   │                          VoidBackground, JourneyRail, ScrambleText, MosaicReveal
-│   │                          (CustomCursor = legacy, unmounted)
+│   │                          VoidBackground, JourneyRail, ScrambleText, TiltCard,
+│   │                          HoverRevealCover, ParallaxDrift (CustomCursor = legacy, unmounted)
 │   ├── nav/                 ← Header (mono wordmark + bracket links + [ Menu ]), OverlayMenu,
 │   │                          Footer, ThemeToggle
 │   └── theme/               ← ThemeProvider
@@ -103,18 +103,18 @@ Deploy is automatic: push to `main` → Actions runs → Pages deploys (~50–60
 The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canvas **parallax starfield** with three depth bands + two slow-drifting accent orbs + rare CSS shooting-star streaks). **No photo backdrops** — the NYC/LA city imagery was removed with the 2026-07 redesign. The language is brutalist-editorial with a scroll-as-voyage layer: giant uppercase display type, mono bracketed labels, hairline dividers, numbered waypoint indexes, HUD instrument chrome.
 
 ### Voyage layer (scroll-as-journey)
-- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge telemetry — vertical hairline + ticks, accent diamond marker driven by **raw scroll fraction only** (deliberately NOT section-tracked, to stay clear of the banned active-section indicator), mono `ALT nnn // EN ROUTE` readout. Hidden `< lg` and under reduced motion.
+- **JourneyRail** (`motion/JourneyRail.tsx`): fixed right-edge waypoint nav — one labeled, clickable diamond tick per landing section (`navigation.waypoints`), active label in accent, raw-scroll marker on the hairline, mono `0N / Label` readout. Section-tracked **by owner request (2026-07)** — the standing ban covers the header nav indicator, not this rail. Readout must stay a `div` (CursorGlow rewrites text nodes inside `p`, which orphans React-updated text). Hidden `< lg`; stays mounted under reduced motion (it's functional nav).
 - **Waypoint numbering**: nav links render `0N/ Label`; section eyebrows render `[ 0N // Label ]` via `SectionHeader`'s `index` prop (About=01 … ContactCTA=06; About and ContactCTA format theirs inline).
 - **Status beacon**: pulsing accent dot + `copy.meta.availability` in the hero annotation row (`.status-beacon`).
 - **Scroll hint**: `copy.hero.scrollHint` + animated dropping line (`.scroll-hint-line`) at the hero's base; hero is sized so it lands above the fold at 1440×900.
-- **HUD corner ticks**: `.hud-corners` + four `.hud-tick--*` spans on Work card covers — faint ink at rest, accent on card hover.
 - **Arrival glow**: `ContactCTA` ends the journey — bottom-anchored breathing accent radial (`.sun-breathe`) over a horizon hairline.
 
 ### Editorial idioms
 - **Bracket links** (`.link-bracket` in `globals.css`): mono uppercase label with `[` `]` pseudo-element brackets that split apart + turn accent on hover. Used for nav links, hero CTAs, section eyebrows, and Work filter tabs. `.link-bracket--accent` fills the label with accent. Must stay `display: inline-block` — inline-flex collapses inner spaces.
 - **ScrambleText** (`motion/ScrambleText.tsx`): glyph-scramble reveal on in-view; `rescrambleOnHover` for nav links.
 - **Mono indexes**: `01/` numbering on Work cards and Capability rows, mono `text-accent`.
-- **MosaicReveal** (`motion/MosaicReveal.tsx`): tile-grid dissolve over project covers on scroll-in.
+- **TiltCard** (`motion/TiltCard.tsx`): sprung pointer-tracked 3D tilt plate that also feeds `--shine-x`/`--shine-y` so `.card-shine` children paint a cursor-following light. Mouse-only; inert on touch + reduced motion. Used on Work covers and archive tiles.
+- **ParallaxDrift** (`motion/ParallaxDrift.tsx`): scroll-linked vertical drift wrapper for decorative depth layers — drives the `SectionHeader` watermark numbers.
 - Section headlines are uppercase `font-display font-extrabold` (see `SectionHeader`); hero + footer carry giant wordmarks.
 
 ### Header + OverlayMenu
@@ -122,10 +122,11 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - `[ Menu ]` opens **OverlayMenu** (`nav/OverlayMenu.tsx`): full-screen dialog, five-column ground wipe, giant numbered destinations (from `navigation.overlay`) with clip-reveal stagger, status-beacon meta row at the bottom. Locks body scroll + Lenis like `Modal`; ESC closes; focus moves in and restores on close. This is the ONLY nav below `lg`.
 
 ### Showcase (Work section)
-- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[8%]` wrapper + ±4.5% translate), MosaicReveal + HUD ticks on covers, mono index + category line, ghost-title hover, proof line = the project's first highlight, `[ Open case ]` opens ProjectModal.
-- Non-featured projects render in the compact **archive grid** below (aspect-video covers, mono meta), capped by the availability CTA tile.
-- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
-- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header; string headlines get a word-mask `SplitTextReveal` on scroll-in.
+- Featured projects (`featured: true`) render as full-width **case rows**: alternating cover/meta columns, per-row `useScroll` cover parallax (`-inset-y-[12%]` wrapper + ±9% translate), cinematic clip-path reveal + settle-scale on covers, `TiltCard` pointer tilt + `card-shine` glare on the plate, mono index + category line, ghost-title hover, proof line = the project's first highlight, staggered `.tech-chip` stack pills, `[ Open case ]` opens ProjectModal. Covers use **HoverRevealCover** (`motion/HoverRevealCover.tsx`): cursor-origin zoom (mousemove feeds `--zx`/`--zy` into transform-origin) and, when a non-phone gallery shot exists, a clip-path wipe to it behind an accent seam. Mouse-only; static under touch/reduced motion. **The retro chrome (MosaicReveal tile dissolve, HUD corner ticks, FIG. captions, scramble on Open case) was removed by owner request 2026-07 — don't reintroduce it here.**
+- Non-featured projects render in the compact **archive grid** below (aspect-video covers with their own scroll parallax, `TiltCard` + `card-shine` hover, HoverRevealCover zoom/wipe, scattered rotate-in entrance, mono meta), the **lead tile double-width** (`wide` prop → `lg:col-span-2`), capped by the availability CTA tile.
+- **ProofStrip** (`sections/ProofStrip.tsx`): count-up stat tiles under About; hovering floods a tile with accent and inverts it. Numbers live in `copy.proof` and MUST stay consistent with `packages.ts` timelines + contact reply copy.
+- **Case-row depth** (`sections/Work.tsx` CaseRow): covers parallax ±9% inside a plate that scroll-tilts ±1.8°, settles to scale 1 across the viewport, and leans toward the cursor via `TiltCard`; a giant hollow row index (`.case-index-ghost`) counter-parallaxes ±20% behind the meta column.
+- **Section watermarks**: `SectionHeader`'s `index` also renders a giant outline `.section-watermark` number behind the header, drifting on its own scroll plane via `ParallaxDrift`; string headlines get a word-mask `SplitTextReveal` on scroll-in.
 
 ### Footer
 - Mono link columns (`Menu/`, `Contact/`, `Base/`) above a giant full-width `LORENZO.LLAMAS` wordmark, compact legal row underneath.
@@ -144,7 +145,9 @@ The site backdrop is `VoidBackground` (near-black ground + faint dot grid + canv
 - Never hard-code copy in JSX — use `src/content/`
 - Never import `three` synchronously outside `FloatingGeometry.tsx` (~150 kB hit)
 - Never change Header `h-24` without updating `pt-24` + Lenis offset `-96` + `scroll-margin-top: 6rem` (all coupled)
-- Never reintroduce `btn-glow`, the active-section nav indicator, or the WordMarquee scrolling word strip (all explicitly removed)
+- Never reintroduce `btn-glow` or an active-section indicator **in the Header nav** (explicitly removed; the JourneyRail's section tracking is the owner-approved exception)
+- Never render React-state-driven text inside elements matched by CursorGlow's `TEXT_SELECTOR` (`p`, headings, `li`, `a`, …) — its word-wrapper orphans React's text nodes and updates stop painting; use a `div`/plain `span` or key the element
+- Never reintroduce the WordMarquee scrolling word strip (explicitly removed, 2026-07 — replaced twice, banned both times)
 - Never load webfonts — typography is the Gotham → Helvetica local/system stack set in `globals.css @theme` (owner decision, 2026-07)
 - Never add server actions / API routes — `output: 'export'` has no server runtime
 - Never put accent-soft/accent-secondary-soft gradients on project card covers or modal covers — use `bg-transparent` (card covers) or no inline background style (modal covers)

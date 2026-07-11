@@ -69,12 +69,12 @@ export const projects: Project[] = [
       { text: 'Mobile-responsive across breakpoints' },
     ],
     stack: ['React', 'JavaScript', 'Web'],
-    cover: '/projects/dogs-and-llamas.webp',
+    cover: '/projects/dogs-and-llamas-1.webp',
     coverFit: 'contain',
     gallery: [
-      { src: '/projects/dogs-and-llamas-1.webp', caption: 'Homepage' },
       { src: '/projects/dogs-and-llamas-2.webp', caption: 'Reviews' },
       { src: '/projects/dogs-and-llamas-3.webp', caption: 'Calendar' },
+      { src: '/projects/dogs-and-llamas-4.webp', caption: 'Store' },
     ],
     year: 2025,
     featured: true,
@@ -93,11 +93,8 @@ export const projects: Project[] = [
       { text: 'Web port separated from the native iOS implementation' },
     ],
     stack: ['React', 'JavaScript', 'Canvas', 'Web'],
-    cover: '/projects/bite-defense.webp',
+    cover: '/projects/bite-defense-web-1.webp',
     coverFit: 'contain',
-    gallery: [
-      { src: '/projects/bite-defense-web-1.webp', caption: 'Gameplay' },
-    ],
     year: 2025,
     featured: true,
     category: 'game',
@@ -119,6 +116,9 @@ export const projects: Project[] = [
     coverFit: 'contain',
     gallery: [
       { src: '/projects/llamas-cookbook-1.webp', caption: 'Cook mode timers', device: 'phone' },
+      { src: '/projects/llamas-cookbook-2.webp', caption: 'Recipe detail', device: 'phone' },
+      { src: '/projects/llamas-cookbook-3.webp', caption: 'Color picker', device: 'phone' },
+      { src: '/projects/llamas-cookbook-4.webp', caption: 'Cooking with friends', device: 'phone' },
     ],
     year: 2025,
     featured: true,
@@ -139,9 +139,6 @@ export const projects: Project[] = [
     stack: ['SwiftUI', 'SpriteKit', 'iOS'],
     cover: '/projects/bite-defense-1.webp',
     coverFit: 'contain',
-    gallery: [
-      { src: '/projects/bite-defense-2.webp', caption: 'Tutorial flow', device: 'phone' },
-    ],
     year: 2025,
     featured: true,
     category: 'mobile',
@@ -163,6 +160,7 @@ export const projects: Project[] = [
     gallery: [
       { src: '/projects/sleepy-llamas-1.webp', caption: 'Landing page' },
       { src: '/projects/sleepy-llamas-2.webp', caption: 'Packages' },
+      { src: '/projects/sleepy-llamas-3.webp', caption: 'Step tracker' },
     ],
     year: 2024,
     featured: false,
@@ -173,6 +171,10 @@ export const projects: Project[] = [
     title: 'Tranquil',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['React', 'TypeScript'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot via
+    // `npm run resize-screenshots`, then delete the placeholder file.
+    cover: '/projects/placeholder-tranquil.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',
@@ -182,6 +184,9 @@ export const projects: Project[] = [
     title: 'Condensed Reviews',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['Next.js', 'TypeScript'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot.
+    cover: '/projects/placeholder-condensed-reviews.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',
@@ -191,6 +196,9 @@ export const projects: Project[] = [
     title: 'Flight Searcher',
     tagline: 'Tagline TBD — replace before Phase 1 ship.',
     stack: ['Next.js', 'TypeScript', 'API'],
+    // PLACEHOLDER cover (generated SVG) — swap in a real screenshot.
+    cover: '/projects/placeholder-flight-searcher.svg',
+    coverFit: 'cover',
     year: 2024,
     featured: false,
     category: 'web',

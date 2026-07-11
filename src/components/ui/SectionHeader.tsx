@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { ParallaxDrift } from '@/components/motion/ParallaxDrift';
 import { Reveal } from '@/components/motion/Reveal';
 import { ScanLine } from '@/components/motion/ScanLine';
 import { ScrambleText } from '@/components/motion/ScrambleText';
@@ -37,9 +38,15 @@ export function SectionHeader({
       )}
     >
       {indexLabel ? (
-        <span aria-hidden className="section-watermark">
-          {indexLabel}
-        </span>
+        <ParallaxDrift
+          className="pointer-events-none absolute inset-0 -z-10"
+          from={64}
+          to={-64}
+        >
+          <span aria-hidden className="section-watermark">
+            {indexLabel}
+          </span>
+        </ParallaxDrift>
       ) : null}
       <ScanLine className="mb-2 max-w-[6rem]" />
       {eyebrowText ? (
